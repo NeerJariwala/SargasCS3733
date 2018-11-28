@@ -22,6 +22,9 @@ import edu.wpi.sargas.demo.entity.Schedule;
 
 public class CreateScheduleHandler implements RequestStreamHandler {
 	
+	private void addScheduleToDatabase(Schedule sched) {
+		//TODO: Use DAO to add a schedule to database
+	}
 	
     @Override
     public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
@@ -101,10 +104,11 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     		
     		if(!invalidInput) { //if there was no invalid input, prepare success response
     			Schedule responseSched = new Schedule(duration,name,sd,ed,startHour,endHour);
+    			addScheduleToDatabase(responseSched); //add to database
     			httpResponse = new CreateScheduleResponse(200, responseSched, responseSched.getSecretCode());
     			jsonResponse.put("body", new Gson().toJson(httpResponse));
     			System.out.println(responseSched.getSecretCode());
-    			//TODO: Use DAO to add schedule to database
+    			
     		}
     		
     	}
