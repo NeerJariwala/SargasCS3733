@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Participant GUI</title>
+
+
+<style>
+
+table, th, td {
+
+	border: 1px solid black;
+
+	border-collapse: collapse;
+
+}
+
+</style>
+
+
+<script>
+
+	
+
+	function createMeeting() {
+
+		var created = prompt("Would you like to make a meeting at this time? Please put a name.");
+
+	}
+
+	
+
+	function deleteMeeting() {
+
+		var deleted = confirm("Delete this meeting?");
+
+	}
+
+	
+
+</script>
+
+
+</head>
+
+<body>
+
+
+<h1>Schedule Name</h1>
+
+<br>
+
+
+<table style="border: 1px solid black;">
+
+	<tr>
+
+		<th></th>
+
+		<th>Monday</th>
+
+		<th>Tuesday</th>
+
+		<th>Wednesday</th>
+
+		<th>Thursday</th>
+
+		<th>Friday</th>
+
+	</tr>
+
+	
+
+	<tr>
+
+		<th> <p>9:00 AM</p> </th>
+
+		<td> <p>unavailable</p> </td>
+
+		<td> <p>unavailable</p> </td>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+	</tr>
+
+	
+
+	<tr>
+
+		<th> <p>10:00 AM</p> </th>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+		<td onclick="deleteMeeting()"> <b>John Doe</b> </td>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+	</tr>
+
+	
+
+	<tr>
+
+		<th> <p>11:00 AM</p> </th>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+		<td> <p>unavailable</p> </td>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+	</tr>
+
+	
+
+	<tr>
+
+		<th> <p>12:00 PM</p> </th>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+		<td onclick="createMeeting()"> <p>free</p> </td>
+
+	</tr>
+
+	
+
+</table>
+
+<br>
+
+<h3>View Schedule in week:</h3>
+
+<p>Day</p>
+
+<input type="text" id="weekly-day">
+
+<p>Month</p>
+<input type="text" id="weekly-month">
+
+<p>Year</p>
+<input type="text" id="weekly-year">
+<br>
+<button>Submit</button>
+
+
+
+<h3>Search:</h3>
+
+
+<p>Month:</p>
+
+<input type="text" id="search-month">
+
+<p>Year:</p>
+
+<input type="text" id="search-year">
+
+
+
+<p>Day-Of-Week</p>
+
+<input type="text" id="search-dow">
+
+<p>Day-Of-Month</p>
+
+<input type="text" id="search-dom">
+<br>
+<button>Search</button>
+
+
+</body>
+
+</html>
