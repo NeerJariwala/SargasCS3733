@@ -43,6 +43,7 @@ public class ScheduleDAO {
             ps.setDate(8, Date.valueOf(schedule.dateCreated));
             ps.setString(9, schedule.secretCode);
             ps.execute();
+            ps.close();
             return true;
 
         } catch (Exception e) {
