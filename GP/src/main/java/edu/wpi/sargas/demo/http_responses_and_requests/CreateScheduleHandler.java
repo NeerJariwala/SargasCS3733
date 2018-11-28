@@ -52,7 +52,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     		JSONObject jsonRequest = (JSONObject)parser.parse(reader);
     		//parse the request
     		
-    		//logger.log("Input was " + jsonRequest.toJSONString());
+    		logger.log("Input was " + jsonRequest.toJSONString());
     		String requestType = (String)jsonRequest.get("httpMethod");
     		
     		if(requestType != null && requestType.equalsIgnoreCase("OPTIONS")) {
@@ -95,6 +95,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
         		jsonResponse.put("body", new Gson().toJson(httpResponse));
         		invalidInput = true;
     		} catch(NullPointerException e) {
+    			logger.log(e.toString());
     			httpResponse = new CreateScheduleResponse(400, null, null);
         		jsonResponse.put("body", new Gson().toJson(httpResponse));
         		invalidInput = true;
@@ -114,6 +115,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     		if(!invalidInput) { //if there was no invalid input, prepare success response
     			Schedule responseSched = new Schedule(duration,name,sd,ed,startHour,endHour);
     			try {
+    				logger.log("Adding to database");
 					addScheduleToDatabase(responseSched);
 				} catch (Exception e) {
 					logger.log("SQL failure");
