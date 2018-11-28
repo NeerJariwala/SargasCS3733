@@ -23,7 +23,7 @@ import edu.wpi.sargas.demo.entity.Schedule;
 public class CreateScheduleHandler implements RequestStreamHandler {
 	
 	private void addScheduleToDatabase(Schedule sched) {
-		//TODO: Use DAO to add schedule to database
+		//TODO: Use DAO to add a schedule to database
 	}
 	
     @Override
