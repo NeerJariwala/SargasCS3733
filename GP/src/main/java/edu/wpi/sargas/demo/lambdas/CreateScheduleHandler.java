@@ -60,6 +60,13 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     		processed = true;
     	}
     	
+    	if(!processed) { 
+    		//if it's not OPTIONS and not a parse exception, further processing must be done
+    		
+    		
+    		
+    	}
+    	
     }
 
 }
