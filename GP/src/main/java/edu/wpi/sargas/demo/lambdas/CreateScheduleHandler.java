@@ -11,6 +11,7 @@ import org.json.simple.parser.ParseException;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
+import com.google.gson.Gson;
 
 import edu.wpi.sargas.demo.http_responses_and_requests.CreateScheduleResponse;
 
@@ -23,12 +24,15 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     	LambdaLogger logger = context.getLogger();
     	logger.log("Beginning to create schedule");
     	
-    	JSONObject response = new JSONObject();
+    	JSONObject jsonResponse = new JSONObject();
+    	CreateScheduleResponse httpResponse = null;
     	
     	try {
     		
     	} catch(ParseException e) {
-    		
+    		logger.log(e.toString());
+    		httpResponse = new CreateScheduleResponse(400, null, null);
+    		jsonResponse.put("body", new Gson().toJson(httpResponse));
     	}
     	
     }
