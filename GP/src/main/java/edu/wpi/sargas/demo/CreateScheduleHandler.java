@@ -20,6 +20,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     	logger.log("Beginning to create schedule");
     	
     	JSONObject response = new JSONObject();
+    	
     }
 
 }
