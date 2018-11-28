@@ -1,5 +1,7 @@
 package edu.wpi.sargas.demo.http_responses_and_requests;
 
+import edu.wpi.sargas.demo.entity.Schedule;
+
 public class CreateScheduleResponse {
 	
 	int httpCode; //http code of the response
