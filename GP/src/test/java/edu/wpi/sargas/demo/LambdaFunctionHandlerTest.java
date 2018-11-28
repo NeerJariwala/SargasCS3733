@@ -9,6 +9,8 @@ import java.io.OutputStream;
 import org.junit.Assert;
 import org.junit.Test;
 
+import edu.wpi.sargas.demo.lambdas.CreateScheduleHandler;
+
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
