@@ -31,6 +31,10 @@ public class Schedule {
 		dateCreated = LocalDate.now(); //make date created today
 	}
 	
+	public String getSecretCode() {
+		return secretCode;
+	}
+	
 	/**
 	 * Generates a secret code for a schedule
 	 * @return a unique secret code

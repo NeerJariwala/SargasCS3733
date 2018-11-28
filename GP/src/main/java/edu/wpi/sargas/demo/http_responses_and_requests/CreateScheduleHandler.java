@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
@@ -16,6 +17,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
+
+import edu.wpi.sargas.demo.entity.Schedule;
 
 public class CreateScheduleHandler implements RequestStreamHandler {
 	
@@ -68,10 +71,12 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     		//get the request in the form of a class
     		String name = request.name;
     		int duration = request.duration;
+    		LocalDate sd = null;
+    		LocalDate ed = null;
     		
     		try {
-    			LocalDate sd = LocalDate.parse(request.startDate);
-    			LocalDate ed = LocalDate.parse(request.endDate);
+    			sd = LocalDate.parse(request.startDate);
+    			ed = LocalDate.parse(request.endDate);
     		} catch(DateTimeParseException e) {
     			logger.log(e.toString());
         		httpResponse = new CreateScheduleResponse(400, null, null);
@@ -83,19 +88,25 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     		int endHour = request.endHour;
     		
     		if(startHour < 0 || startHour > 23 || endHour <= startHour || endHour > 23) {
-    			//if hour input is invalid
+    			//if hour input is invalid, 400
     			logger.log("Invalid hours");
     			httpResponse = new CreateScheduleResponse(400, null, null);
         		jsonResponse.put("body", new Gson().toJson(httpResponse));
         		invalidInput = true;
     		}
     		
-    		if(!invalidInput) {
-    			
+    		if(!invalidInput) { //if there was no invalid input, prepare success response
+    			Schedule responseSched = new Schedule(duration,name,sd,ed,startHour,endHour);
+    			httpResponse = new CreateScheduleResponse(200, responseSched, responseSched.getSecretCode());
+    			jsonResponse.put("body", new Gson().toJson(httpResponse));
     		}
     		
     	}
     	
+    	logger.log("result: " + jsonResponse.toJSONString());
+    	OutputStreamWriter writer = new OutputStreamWriter(output, "UTF-8");
+        writer.write(jsonResponse.toJSONString());  
+        writer.close();
     }
 
 }
