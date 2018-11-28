@@ -18,6 +18,7 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 
+import edu.wpi.sargas.db.ScheduleDAO;
 import edu.wpi.sargas.demo.entity.Schedule;
 
 public class CreateScheduleHandler implements RequestStreamHandler {
@@ -34,7 +35,13 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     	LambdaLogger logger = context.getLogger();
     	logger.log("Beginning to create schedule");
     	
+    	JSONObject headerJson = new JSONObject();
+		headerJson.put("Content-Type",  "application/json");
+		headerJson.put("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+	    headerJson.put("Access-Control-Allow-Origin",  "*");
+    	
     	JSONObject jsonResponse = new JSONObject();
+    	jsonResponse.put("headers", headerJson);
     	CreateScheduleResponse httpResponse = null;
     	String httpBody = null;
     	boolean processed = false;
@@ -106,7 +113,13 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     		
     		if(!invalidInput) { //if there was no invalid input, prepare success response
     			Schedule responseSched = new Schedule(duration,name,sd,ed,startHour,endHour);
-    			addScheduleToDatabase(responseSched); //add to database
+    			try {
+					addScheduleToDatabase(responseSched);
+				} catch (Exception e) {
+					logger.log("SQL failure");
+					httpResponse = new CreateScheduleResponse(400, null, null);
+	        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+				} //add to database
     			httpResponse = new CreateScheduleResponse(200, responseSched, responseSched.getSecretCode());
     			jsonResponse.put("body", new Gson().toJson(httpResponse));
     			System.out.println(responseSched.getSecretCode());
