@@ -8,6 +8,7 @@
 
 
 <script>
+var create_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha";
 
 	/* 
 	function processResponse(arg1, arg2, result) {
@@ -55,7 +56,7 @@ function processResponse(name, startDate, endDate, startHour, endHour, duration)
   var js = JSON.stringify(data);
   console.log("JS:" + js);
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", add_url, true);
+  xhr.open("POST", create_url, true);
 
   // send the collected data as JSON
   xhr.send(js);
