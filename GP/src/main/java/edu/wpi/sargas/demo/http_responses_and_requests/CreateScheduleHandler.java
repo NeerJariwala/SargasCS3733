@@ -40,7 +40,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     		JSONObject jsonRequest = (JSONObject)parser.parse(reader);
     		//parse the request
     		
-    		logger.log("Input was " + jsonRequest.toJSONString());
+    		//logger.log("Input was " + jsonRequest.toJSONString());
     		String requestType = (String)jsonRequest.get("httpMethod");
     		
     		if(requestType != null && requestType.equalsIgnoreCase("OPTIONS")) {
@@ -82,6 +82,10 @@ public class CreateScheduleHandler implements RequestStreamHandler {
         		httpResponse = new CreateScheduleResponse(400, null, null);
         		jsonResponse.put("body", new Gson().toJson(httpResponse));
         		invalidInput = true;
+    		} catch(NullPointerException e) {
+    			httpResponse = new CreateScheduleResponse(400, null, null);
+        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+        		invalidInput = true;
     		}
     		//TODO: Above only works for date format YYYY-MM-DD. Ensure that format is used in the requests
     		int startHour = request.startHour;
@@ -99,6 +103,8 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     			Schedule responseSched = new Schedule(duration,name,sd,ed,startHour,endHour);
     			httpResponse = new CreateScheduleResponse(200, responseSched, responseSched.getSecretCode());
     			jsonResponse.put("body", new Gson().toJson(httpResponse));
+    			System.out.println(responseSched.getSecretCode());
+    			//TODO: Use DAO to add schedule to database
     		}
     		
     	}

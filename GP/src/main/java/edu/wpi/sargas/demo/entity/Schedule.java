@@ -50,7 +50,7 @@ public class Schedule {
 				continue;
 			} else {
 				Character c = (char)asciiCode;
-				secret.concat(c.toString()); //add character to end of string
+				secret = secret.concat(c.toString()); //add character to end of string
 				++count;
 			}
 			
