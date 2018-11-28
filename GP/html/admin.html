@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="UTF-8">
+  <title>Sys Admin Dashboard</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+  <style>
+  body {
+    padding-top: 80px;
+    text-align: center;
+    font-family: Helvetica, monospace;
+    background-size: cover;
+  }
+  h1, h2 {
+    display: inline-block;
+    background: #fff;
+  }
+  h1 {
+    font-size: 30px
+  }
+  h2 {
+    font-size: 20px;
+  }
+  table, th, td {
+      border: 1px solid black;
+  }
+  </style>
+
+  <script>
+    function deleteSchedule() {
+      alert("Successfully deleted schedules!");
+    }
+
+    function showSchedules() {
+      var x = document.getElementById("schedules");
+          if (x.style.display === "none") {
+              x.style.display = "block";
+          } else {
+              x.style.display = "none";
+          }
+    }
+
+  </script>
+</head>
+<body>
+
+<h1> Meeting Scheduler </h1><br>
+<h2> Admin Dashboard </h2>
+
+<div id="main">
+  <br><text style="font-weight:bold;"> Delete schedules: </text>
+    <br><br><br><text> more than </text>
+    <input type="text" name="daysOld">
+    <text> days old &nbsp&nbsp </text>
+    <input type="submit" value="Go" onclick="deleteSchedule()">
+
+    <br><br><br><br><br>
+    <text style="font-weight:bold;"> Retrieve schedules: </text>
+    <br><br><br><text> from </text>
+    <input type="text" name="hoursAgo">
+    <text> hours ago &nbsp&nbsp</text>
+    <input type="submit" value="Go" onclick="showSchedules()">
+</div>
+
+<br><br><br>
+<div id="schedules" style="display: none;">
+  <table align="center" style="text-align: center; width:70%">
+  <tr>
+    <th>Name</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+  </tr>
+  <tr>
+    <td>Writing Center Week of 9/10/2018</td>
+    <td>2018-09-10</td>
+    <td>2018-09-14</td></td>
+  </tr>
+  <tr>
+    <td>Academic Advising Week of 10/8/2018</td>
+    <td>2018-10-08</td>
+    <td>2018-10-12</td>
+  </tr>
+  <tr>
+    <td>CS3733 Office Hours</td>
+    <td>2018-11-26</td>
+    <td>2018-11-30</td>
+  </tr>
+  </table>
+</div>
+
+</body>
