@@ -30,14 +30,15 @@ function processGoResponse() {
 
 	function handleClick(e) {
 	
-  var form = document.createForm;
+  var form = document.getElementById("createSchedule");
+  var form = document.getElementById("existingSchedule");
   var name = form.name.value;
   var startDate = form.startDate.value;
   var endDate = form.endDate.value;
   var startHour = form.startHour.value;
   var endHour = form.endHour.value;
   var duration = form.duration.value;
-  var secretCode = form.secretCode.value;
+  var secretCode = schedForm.secretCode.value;
 
   var data = {};
   data["name"] = name;
