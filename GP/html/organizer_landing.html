@@ -25,18 +25,24 @@ var create_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha";
 */
 
 
-function processResponse(name, startDate, endDate, startHour, endHour, duration) {
+function processCreateResponse(name, startDate, endDate, startHour, endHour, duration) {
 	//String order: name of schedule, start date, end date, time availability starts, time availability ends, duration of time slots
 	
 	//the calculator code only takes the result from the two values, parses and updates the page with it
 	
 	//Do we need to parse any values here? arg1 and arg 2 in the calculator processResponse function are not used at all in that function
 	
-	var created = prompt("Your schedule has been created.");
+	var created = alert("Your schedule has been created.");
+}
+
+function processGoResponse(secretCode) {
+	
+	var retrieved = alert("Here is the schedule you requested.");
 }
 	
 
-	function handleClick(e) {
+	function handleClick(e,buttonType) {
+	
   var form = document.createForm;
   var name = form.name.value;
   var startDate = form.startDate.value;
@@ -44,6 +50,7 @@ function processResponse(name, startDate, endDate, startHour, endHour, duration)
   var startHour = form.startHour.value;
   var endHour = form.endHour.value;
   var duration = form.duration.value;
+  var secretCode = form.secretCode.value;
 
   var data = {};
   data["name"] = name;
@@ -52,6 +59,7 @@ function processResponse(name, startDate, endDate, startHour, endHour, duration)
   data["startHour"] = startHour;
   data["endHour"] = endHour;
   data["duration"] = duration;
+  data["secretCode"] = secretCode;
 
   var js = JSON.stringify(data);
   console.log("JS:" + js);
@@ -67,11 +75,24 @@ function processResponse(name, startDate, endDate, startHour, endHour, duration)
     console.log(xhr.request);
     if (xhr.readyState == XMLHttpRequest.DONE) {
       console.log ("XHR:" + xhr.responseText);
-      processResponse(name, startDate, endDate, startHour, endHour, duration, xhr.responseText);
+      if(buttonType==1){
+      	processCreateResponse(name, startDate, endDate, startHour, endHour, duration, xhr.responseText);
+      }
+      else if(buttonType==2){
+      	processGoResponse(secretCode, xhr.responseText);
+      }
     } else {
-       processResponse(name, startDate, endDate, startHour, endHour, duration,  "N/A");
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+      console.log ("XHR:" + xhr.responseText);
+      if(buttonType==1){
+      	processCreateResponse(name, startDate, endDate, startHour, endHour, duration, "N/A");
+      }
+      else if(buttonType==2){
+      	processGoResponse(secretCode, "N/A");
+      }
     }
   };
+}
 }
 	
 
@@ -82,7 +103,7 @@ function processResponse(name, startDate, endDate, startHour, endHour, duration)
 </head>
 
 <form name="createForm" method="post" name="createSchedule">
- <input type="text" value="Name" />
+ <input type="text" name = "name" value="Name" />
 
 <p>From:<input type="date" name="startDate" min="2018-01-01"></p>
 
@@ -97,14 +118,14 @@ function processResponse(name, startDate, endDate, startHour, endHour, duration)
   <option value="30 Minutes">30</option>
   <option value="60 Minutes">60</option>
 </select></p>
-<input type="button" value="Create"  onClick="JavaScript:handleClick(this)">
+<input type="button" name = "createBtn" value="Create"  onClick="JavaScript:handleClick(this,1)">
 </form>
 
 <head><h2>Go to pre-existing Schedule</h2></head>
 
 <form name="existingForm" method ="post" name="existingSchedule">
- <input type="text" value="Secret Code" />
- <input type="button" value="Go"  onClick="JavaScript:handleClick(this)">
+ <input type="text" name = "secretCode" value="Secret Code" />
+ <input type="button" name = "goBtn" value="Go"  onClick="JavaScript:handleClick(this,2)">
 </form>
 
 </body>
