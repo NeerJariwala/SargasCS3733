@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.util.UUID;
 import java.sql.Date;
 
+import edu.wpi.cs.heineman.model.Constant;
 import edu.wpi.sargas.db.DatabaseUtil;
 import edu.wpi.sargas.demo.entity.Schedule;
 
@@ -71,7 +72,35 @@ public class ScheduleDAO {
             throw new Exception("Failed to create schedule: " + e.getMessage());
         }
     }
+   /* 
+    public Schedule showSchedule(String secretCode) throws Exception {
+        try {
+            Schedule result = null;
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule WHERE secretCode=?;");
+            ps.setString(1,  secretCode);
+            ResultSet resultSet = ps.executeQuery();
+            
+            while (resultSet.next()) {
+                result = generateSchedule(resultSet);
+            }
+            resultSet.close();
+            ps.close();
+            
+            return result;
 
+        } catch (Exception e) {
+        	e.printStackTrace();
+            throw new Exception("Failed in getting constant: " + e.getMessage());
+        }
+    }
     
+    private Schedule generateSchedule(ResultSet resultSet) throws Exception {
+    	Schedule result = null;
+        String name  = resultSet.getString("name");
+        Double value = resultSet.getDouble("value");
+        return new Schedule (resultSet.getInt("timeslotDuration"), resultSet.getString("name"), resultSet.getDate("startDate"), resultSet.getDate("endDate"), resultSet.getInt("startHour"), resultSet.getInt("endHour"));
+    }
+
+   */ 
 
 }
