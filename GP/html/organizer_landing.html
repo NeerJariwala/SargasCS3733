@@ -78,7 +78,7 @@ function processGoResponse() {
 <h2>Create Schedule</h2>
 </head>
 
-<form name="createForm" method="post" name="createSchedule">
+<form name="createForm" method="post" id="createSchedule">
  <input type="text" name = "name" value="Name" />
 
 <p>From:<input type="date" name="startDate" min="2018-01-01"></p>
@@ -99,7 +99,7 @@ function processGoResponse() {
 
 <head><h2>Go to pre-existing Schedule</h2></head>
 
-<form name="existingForm" method ="post" name="existingSchedule">
+<form name="existingForm" method ="post" id="existingSchedule">
  <input type="text" name = "secretCode" value="Secret Code" >
  <input type="button" name = "goBtn" value="Go"  onClick="JavaScript:processGoResponse()">
 </form>
