@@ -31,6 +31,11 @@ public class Schedule {
 		dateCreated = LocalDate.now(); //make date created today
 	}
 	
+	//TODO: Actually make this method
+	public void generateWeeks() {
+		
+	}
+	
 	public String getSecretCode() {
 		return secretCode;
 	}
