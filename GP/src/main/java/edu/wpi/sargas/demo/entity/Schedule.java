@@ -1,6 +1,7 @@
 package edu.wpi.sargas.demo.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class Schedule {
@@ -14,8 +15,7 @@ public class Schedule {
 	public final LocalDate endDate;
 	public final int startHour; //start and end hours of the schedule each day
 	public final int endHour;
-	//ArrayList<Week> weeks; would be here, but that would require making all of
-	//the entity classes. Get rid of this comment in iteration #2
+	ArrayList<Week> weeks; 
 	public final String secretCode;
 	public final LocalDate dateCreated;
 	
