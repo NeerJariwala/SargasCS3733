@@ -21,17 +21,18 @@ public class ScheduleDAO {
 	
     public boolean createSchedule(Schedule schedule) throws Exception {
         try {
- /*           PreparedStatement ps = conn.prepareStatement("SELECT * FROM Constants WHERE name = ?;");
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule WHERE name = ?;");
             ps.setString(1, schedule.name);
             ResultSet resultSet = ps.executeQuery();
             
             // already present?
             while (resultSet.next()) {
-                Constant c = generateConstant(resultSet);
-                resultSet.close();
-                return false;
+                if(resultSet.getString("name") = schedule.name) {
+                    resultSet.close();
+                    return false;
+                }
             }
-*/
+
             PreparedStatement ps = conn.prepareStatement("INSERT INTO Schedule (scheduleID, name, startDate, endDate, startHour, endHour, timeslotDuration, dateCreated, secretCode) values(?,?,?,?,?,?,?,?,?);");
             ps.setString(1, schedule.scheduleId);
             ps.setString(2, schedule.name);
@@ -50,4 +51,7 @@ public class ScheduleDAO {
             throw new Exception("Failed to create schedule: " + e.getMessage());
         }
     }
+
+    
+
 }

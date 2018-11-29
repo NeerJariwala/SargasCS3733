@@ -18,6 +18,7 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 
+import edu.wpi.cs.heineman.demo.CreateConstantResponse;
 import edu.wpi.sargas.db.ScheduleDAO;
 import edu.wpi.sargas.demo.entity.Schedule;
 
@@ -112,7 +113,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
         		invalidInput = true;
     		}
     		
-    		if(!invalidInput) { //if there was no invalid input, prepare success response
+    /*		if(!invalidInput) { //if there was no invalid input, prepare success response
     			Schedule responseSched = new Schedule(duration,name,sd,ed,startHour,endHour);
     			try {
     				logger.log("Adding to database");
@@ -126,6 +127,26 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     			jsonResponse.put("body", new Gson().toJson(httpResponse));
     			System.out.println(responseSched.getSecretCode());
     			
+    		}
+    		*/
+    		
+    		if(!invalidInput) {
+    			Schedule responseSched = new Schedule(duration,name,sd,ed,startHour,endHour);
+    			try {
+    				if (addScheduleToDatabase(responseSched)) {
+    					httpResponse = new CreateScheduleResponse(200, responseSched, responseSched.getSecretCode());
+    	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
+    	    			System.out.println(responseSched.getSecretCode());
+    				} else {
+    					logger.log("SQL failure");
+    					httpResponse = new CreateScheduleResponse(400, null, null);
+    	        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+    				}
+    			} catch (Exception e) {
+					logger.log("SQL failure");
+					httpResponse = new CreateScheduleResponse(400, null, null);
+	        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+    			}
     		}
     		
     	}
