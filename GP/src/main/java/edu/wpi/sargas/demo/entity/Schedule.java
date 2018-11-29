@@ -7,17 +7,17 @@ public class Schedule {
 	
 	private static final int secretIdLength = 6;
 	
-	int timeslotDuration; //duration of each timeslot
-	String scheduleId; //id of the schedule
-	String name; //name of the schedule
-	LocalDate startDate; //start and end dates of the schedule's duration
-	LocalDate endDate;
-	int startHour; //start and end hours of the schedule each day
-	int endHour;
+	public final int timeslotDuration; //duration of each timeslot
+	public final String scheduleId; //id of the schedule
+	public final String name; //name of the schedule
+	public final LocalDate startDate; //start and end dates of the schedule's duration
+	public final LocalDate endDate;
+	public final int startHour; //start and end hours of the schedule each day
+	public final int endHour;
 	//ArrayList<Week> weeks; would be here, but that would require making all of
 	//the entity classes. Get rid of this comment in iteration #2
-	String secretCode;
-	LocalDate dateCreated;
+	public final String secretCode;
+	public final LocalDate dateCreated;
 	
 	public Schedule(int td, String name, LocalDate sd, LocalDate ed, int sh, int eh) {
 		timeslotDuration = td;

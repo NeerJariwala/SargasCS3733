@@ -18,13 +18,16 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 
+import edu.wpi.sargas.db.ScheduleDAO;
 import edu.wpi.sargas.demo.entity.Schedule;
 
 public class CreateScheduleHandler implements RequestStreamHandler {
 	
-	private void addScheduleToDatabase(Schedule sched) {
-		//TODO: Use DAO to add a schedule to database
+	private boolean addScheduleToDatabase(Schedule sched) throws Exception {
+		ScheduleDAO dao = new ScheduleDAO();
+		return dao.createSchedule(sched);
 	}
+
 	
     @Override
     public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
@@ -32,7 +35,13 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     	LambdaLogger logger = context.getLogger();
     	logger.log("Beginning to create schedule");
     	
+    	JSONObject headerJson = new JSONObject();
+		headerJson.put("Content-Type",  "application/json");
+		headerJson.put("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+	    headerJson.put("Access-Control-Allow-Origin",  "*");
+    	
     	JSONObject jsonResponse = new JSONObject();
+    	jsonResponse.put("headers", headerJson);
     	CreateScheduleResponse httpResponse = null;
     	String httpBody = null;
     	boolean processed = false;
@@ -43,7 +52,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     		JSONObject jsonRequest = (JSONObject)parser.parse(reader);
     		//parse the request
     		
-    		//logger.log("Input was " + jsonRequest.toJSONString());
+    		logger.log("Input was " + jsonRequest.toJSONString());
     		String requestType = (String)jsonRequest.get("httpMethod");
     		
     		if(requestType != null && requestType.equalsIgnoreCase("OPTIONS")) {
@@ -86,6 +95,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
         		jsonResponse.put("body", new Gson().toJson(httpResponse));
         		invalidInput = true;
     		} catch(NullPointerException e) {
+    			logger.log(e.toString());
     			httpResponse = new CreateScheduleResponse(400, null, null);
         		jsonResponse.put("body", new Gson().toJson(httpResponse));
         		invalidInput = true;
@@ -102,13 +112,40 @@ public class CreateScheduleHandler implements RequestStreamHandler {
         		invalidInput = true;
     		}
     		
-    		if(!invalidInput) { //if there was no invalid input, prepare success response
+    /*		if(!invalidInput) { //if there was no invalid input, prepare success response
     			Schedule responseSched = new Schedule(duration,name,sd,ed,startHour,endHour);
-    			addScheduleToDatabase(responseSched); //add to database
+    			try {
+    				logger.log("Adding to database");
+					addScheduleToDatabase(responseSched);
+				} catch (Exception e) {
+					logger.log("SQL failure");
+					httpResponse = new CreateScheduleResponse(400, null, null);
+	        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+				} //add to database
     			httpResponse = new CreateScheduleResponse(200, responseSched, responseSched.getSecretCode());
     			jsonResponse.put("body", new Gson().toJson(httpResponse));
     			System.out.println(responseSched.getSecretCode());
     			
+    		}
+    		*/
+    		
+    		if(!invalidInput) {
+    			Schedule responseSched = new Schedule(duration,name,sd,ed,startHour,endHour);
+    			try {
+    				if (addScheduleToDatabase(responseSched)) {
+    					httpResponse = new CreateScheduleResponse(200, responseSched, responseSched.getSecretCode());
+    	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
+    	    			System.out.println(responseSched.getSecretCode());
+    				} else {
+    					logger.log("SQL failure");
+    					httpResponse = new CreateScheduleResponse(400, null, null);
+    	        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+    				}
+    			} catch (Exception e) {
+					logger.log("SQL failure");
+					httpResponse = new CreateScheduleResponse(400, null, null);
+	        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+    			}
     		}
     		
     	}
