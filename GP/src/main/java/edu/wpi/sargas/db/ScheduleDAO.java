@@ -27,13 +27,13 @@ public class ScheduleDAO {
             
             // already present?
             while (resultSet.next()) {
-                if(resultSet.getString("name") = schedule.name) {
+                if(resultSet.getString("name") == schedule.name) {
                     resultSet.close();
                     return false;
                 }
             }
 
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO Schedule (scheduleID, name, startDate, endDate, startHour, endHour, timeslotDuration, dateCreated, secretCode) values(?,?,?,?,?,?,?,?,?);");
+            ps = conn.prepareStatement("INSERT INTO Schedule (scheduleID, name, startDate, endDate, startHour, endHour, timeslotDuration, dateCreated, secretCode) values(?,?,?,?,?,?,?,?,?);");
             ps.setString(1, schedule.scheduleId);
             ps.setString(2, schedule.name);
             ps.setDate(3, Date.valueOf(schedule.startDate));

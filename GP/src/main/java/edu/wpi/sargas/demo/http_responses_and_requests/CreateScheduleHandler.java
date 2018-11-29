@@ -18,7 +18,6 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 
-import edu.wpi.cs.heineman.demo.CreateConstantResponse;
 import edu.wpi.sargas.db.ScheduleDAO;
 import edu.wpi.sargas.demo.entity.Schedule;
 
