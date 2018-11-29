@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.util.UUID;
 import java.sql.Date;
 
-import edu.wpi.cs.heineman.model.Constant;
 import edu.wpi.sargas.db.DatabaseUtil;
 import edu.wpi.sargas.demo.entity.Schedule;
 
