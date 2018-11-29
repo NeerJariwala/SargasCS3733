@@ -75,15 +75,13 @@ function processGoResponse(secretCode) {
     console.log(xhr.request);
     if (xhr.readyState == XMLHttpRequest.DONE) {
       console.log ("XHR:" + xhr.responseText);
-      if(buttonType==1){
-      	processCreateResponse(name, startDate, endDate, startHour, endHour, duration, xhr.responseText);
-      }
-      else if(buttonType==2){
-      	processGoResponse(secretCode, xhr.responseText);
-      }
+      	if(buttonType==1){
+      		processCreateResponse(name, startDate, endDate, startHour, endHour, duration, xhr.responseText);
+      	}
+      	else if(buttonType==2){
+      		processGoResponse(secretCode, xhr.responseText);
+      	}
     } else {
-      if (xhr.readyState == XMLHttpRequest.DONE) {
-      console.log ("XHR:" + xhr.responseText);
       if(buttonType==1){
       	processCreateResponse(name, startDate, endDate, startHour, endHour, duration, "N/A");
       }
@@ -124,7 +122,7 @@ function processGoResponse(secretCode) {
 <head><h2>Go to pre-existing Schedule</h2></head>
 
 <form name="existingForm" method ="post" name="existingSchedule">
- <input type="text" name = "secretCode" value="Secret Code" />
+ <input type="text" name = "secretCode" value="Secret Code" >
  <input type="button" name = "goBtn" value="Go"  onClick="JavaScript:handleClick(this,2)">
 </form>
 
