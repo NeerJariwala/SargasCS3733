@@ -10,19 +10,6 @@
 <script>
 var create_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha";
 
-	/* 
-	function processResponse(arg1, arg2, result) {
-  // Can grab any DIV or SPAN HTML element and can then manipulate its
-  // contents dynamically via javascript
-  console.log("result:" + result);
-  var js = JSON.parse(result);
-
-  var computation = js["value"];
-
-  // Update computation result
-  document.addForm.result.value = computation
-}
-*/
 
 
 function processCreateResponse(name, startDate, endDate, startHour, endHour, duration) {
@@ -32,16 +19,16 @@ function processCreateResponse(name, startDate, endDate, startHour, endHour, dur
 	
 	//Do we need to parse any values here? arg1 and arg 2 in the calculator processResponse function are not used at all in that function
 	
-	var created = alert("Your schedule has been created.");
+	alert("Your schedule has been created.");
 }
 
-function processGoResponse(secretCode) {
+function processGoResponse() {
 	
-	var retrieved = alert("Here is the schedule you requested.");
+	alert("Here is the schedule you requested.");
 }
 	
 
-	function handleClick(e,buttonType) {
+	function handleClick(e) {
 	
   var form = document.createForm;
   var name = form.name.value;
@@ -75,23 +62,13 @@ function processGoResponse(secretCode) {
     console.log(xhr.request);
     if (xhr.readyState == XMLHttpRequest.DONE) {
       console.log ("XHR:" + xhr.responseText);
-      	if(buttonType==1){
       		processCreateResponse(name, startDate, endDate, startHour, endHour, duration, xhr.responseText);
-      	}
-      	else if(buttonType==2){
-      		processGoResponse(secretCode, xhr.responseText);
-      	}
     } else {
-      if(buttonType==1){
       	processCreateResponse(name, startDate, endDate, startHour, endHour, duration, "N/A");
-      }
-      else if(buttonType==2){
-      	processGoResponse(secretCode, "N/A");
-      }
     }
   };
 }
-}
+
 	
 
 </script>
@@ -116,14 +93,14 @@ function processGoResponse(secretCode) {
   <option value="30 Minutes">30</option>
   <option value="60 Minutes">60</option>
 </select></p>
-<input type="button" name = "createBtn" value="Create"  onClick="JavaScript:handleClick(this,1)">
+<input type="button" name = "createBtn" value="Create"  onClick="JavaScript:handleClick(this)">
 </form>
 
 <head><h2>Go to pre-existing Schedule</h2></head>
 
 <form name="existingForm" method ="post" name="existingSchedule">
  <input type="text" name = "secretCode" value="Secret Code" >
- <input type="button" name = "goBtn" value="Go"  onClick="JavaScript:handleClick(this,2)">
+ <input type="button" name = "goBtn" value="Go"  onClick="JavaScript:processGoResponse()">
 </form>
 
 </body>
