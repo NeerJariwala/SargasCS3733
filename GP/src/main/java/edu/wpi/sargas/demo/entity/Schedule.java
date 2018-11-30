@@ -1,7 +1,6 @@
 package edu.wpi.sargas.demo.entity;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -64,9 +63,25 @@ public class Schedule {
 				//bring it to the next monday
 				cursor.plusDays(2);
 				break;
+			
+			default: break;
+			
 		}
 		
-		
+		//keep making weeks until we've passed the end date
+		while(cursor.isBefore(endDate) || cursor.isEqual(endDate)) {
+			
+			//keep making the week until either saturday or the end date comes 
+			while(cursor.getDayOfWeek() != java.time.DayOfWeek.SATURDAY && !cursor.isAfter(endDate)) {
+				Week w = new Week();
+				Day newDay = new Day(cursor, startHour, endHour, timeslotDuration);
+				w.addDay(newDay);
+				cursor.plusDays(1);
+			}
+			
+			//should be on saturday now. bring it to next monday
+			cursor.plusDays(2);
+		}
 		
 	}
 	
