@@ -1,6 +1,7 @@
 package edu.wpi.sargas.demo.entity;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -34,6 +35,18 @@ public class Schedule {
 	//TODO: Actually make this method
 	public void generateWeeks() {
 		
+		LocalDate cursor = startDate;
+		
+		switch(cursor.getDayOfWeek()) {
+			
+			//if it's a weekend, skip to monday.
+			case SUNDAY: 
+			case SATURDAY:
+				while(startDate.getDayOfWeek() != java.time.DayOfWeek.MONDAY) {
+					cursor.plusDays(1);
+				}
+				break;	
+		}
 	}
 	
 	public String getSecretCode() {
