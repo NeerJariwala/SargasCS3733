@@ -52,12 +52,14 @@ public class Schedule {
 			case THURSDAY:
 			case FRIDAY:
 				Week w = new Week();
+				//TODO: put this in RDS w/ DAO
 				
 				//add a new day to the week and advance
 				while(cursor.getDayOfWeek() != java.time.DayOfWeek.SATURDAY) {
 					Day newDay = new Day(cursor, startHour, endHour, timeslotDuration);
 					w.addDay(newDay);
 					cursor.plusDays(1);
+					//TODO: put the day and week in RDS w/ DAO
 				}
 				//cursor would be on a saturday right now
 				//bring it to the next monday
@@ -77,6 +79,7 @@ public class Schedule {
 				Day newDay = new Day(cursor, startHour, endHour, timeslotDuration);
 				w.addDay(newDay);
 				cursor.plusDays(1);
+				//TODO: put the day and week in RDS w/ DAO
 			}
 			
 			//should be on saturday now. bring it to next monday

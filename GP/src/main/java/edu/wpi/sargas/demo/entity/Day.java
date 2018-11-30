@@ -29,7 +29,9 @@ public class Day {
 		LocalTime cursor = startTime; //begin at the start of the day
 		
 		for(int i = 0; i<numTimeslots; i++) {
-			timeslots.add(new Timeslot(cursor, duration));
+			Timeslot t = new Timeslot(cursor, duration);
+			//TODO: put timeslot in RDS w/ DAO
+			timeslots.add(t);
 			cursor.plusMinutes(duration);
 		}
 		
