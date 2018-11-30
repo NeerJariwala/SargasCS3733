@@ -7,10 +7,10 @@ import java.util.ArrayList;
 
 public class Day {
 	
-	LocalDate date;
-	ArrayList<Timeslot> timeslots;
-	LocalTime startTime;
-	LocalTime endTime;
+	public LocalDate date;
+	public ArrayList<Timeslot> timeslots = new ArrayList<Timeslot>();
+	public LocalTime startTime;
+	public LocalTime endTime;
 	
 	public Day(LocalDate d, int startHour, int endHour, int duration) {
 		date = d;

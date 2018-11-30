@@ -5,11 +5,11 @@ import java.util.UUID;
 
 public class Timeslot {
 	
-	boolean open;
-	int duration;
-	LocalTime startTime;
-	String timeslotID;
-	Meeting meeting;
+	public boolean open;
+	public int duration;
+	public LocalTime startTime;
+	public String timeslotID;
+	public Meeting meeting;
 	
 	/**
 	 * 
