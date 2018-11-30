@@ -12,10 +12,10 @@ public class Day {
 	LocalTime startTime;
 	LocalTime endTime;
 	
-	public Day(LocalDate d, LocalTime startTime, LocalTime endTime, int duration) {
+	public Day(LocalDate d, int startHour, int endHour, int duration) {
 		date = d;
-		this.startTime = startTime;
-		this.endTime = endTime;
+		this.startTime = LocalTime.of(startHour, 0);
+		this.endTime = LocalTime.of(endHour, 0);
 		
 		generateTimeslots(duration);
 	}

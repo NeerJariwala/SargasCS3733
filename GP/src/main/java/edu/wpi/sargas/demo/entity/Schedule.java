@@ -42,11 +42,32 @@ public class Schedule {
 			//if it's a weekend, skip to monday.
 			case SUNDAY: 
 			case SATURDAY:
-				while(startDate.getDayOfWeek() != java.time.DayOfWeek.MONDAY) {
+				while(cursor.getDayOfWeek() != java.time.DayOfWeek.MONDAY) {
 					cursor.plusDays(1);
 				}
-				break;	
+				break;
+			
+			//if it's not monday, do the remainder
+			case TUESDAY:
+			case WEDNESDAY:
+			case THURSDAY:
+			case FRIDAY:
+				Week w = new Week();
+				
+				//add a new day to the week and advance
+				while(cursor.getDayOfWeek() != java.time.DayOfWeek.SATURDAY) {
+					Day newDay = new Day(cursor, startHour, endHour, timeslotDuration);
+					w.addDay(newDay);
+					cursor.plusDays(1);
+				}
+				//cursor would be on a saturday right now
+				//bring it to the next monday
+				cursor.plusDays(2);
+				break;
 		}
+		
+		
+		
 	}
 	
 	public String getSecretCode() {

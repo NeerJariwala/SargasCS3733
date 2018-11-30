@@ -2,20 +2,14 @@ package edu.wpi.sargas.demo.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 public class Week {
 	
-	Day[] days = new Day[5];
+	ArrayList<Day> days = new ArrayList<Day>();
 	
-	public Week(LocalDate startDate, LocalTime startTime, LocalTime endTime, int duration) {
-		
-		LocalDate cursor = startDate;
-		
-		for(Day d : days) {
-			d = new Day(cursor, startTime, endTime, duration);
-			cursor.plusDays(1); //make it the next day
-		}
-		
+	public void addDay(Day d) {
+		days.add(d);
 	}
 	
 }
