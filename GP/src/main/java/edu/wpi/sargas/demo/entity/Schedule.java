@@ -29,6 +29,8 @@ public class Schedule {
 		endHour = eh;
 		secretCode = generateSecret();
 		dateCreated = LocalDate.now(); //make date created today
+		weeks = new ArrayList<Week>();
+		generateWeeks();
 	}
 	
 	//TODO: Actually make this method
@@ -42,7 +44,7 @@ public class Schedule {
 			case SUNDAY: 
 			case SATURDAY:
 				while(cursor.getDayOfWeek() != java.time.DayOfWeek.MONDAY) {
-					cursor.plusDays(1);
+					cursor = cursor.plusDays(1);
 				}
 				break;
 			
@@ -58,12 +60,13 @@ public class Schedule {
 				while(cursor.getDayOfWeek() != java.time.DayOfWeek.SATURDAY) {
 					Day newDay = new Day(cursor, startHour, endHour, timeslotDuration);
 					w.addDay(newDay);
-					cursor.plusDays(1);
+					cursor = cursor.plusDays(1);
 					//TODO: put the day and week in RDS w/ DAO
 				}
 				//cursor would be on a saturday right now
 				//bring it to the next monday
-				cursor.plusDays(2);
+				cursor = cursor.plusDays(2);
+				weeks.add(w);
 				break;
 			
 			default: break;
@@ -73,17 +76,18 @@ public class Schedule {
 		//keep making weeks until we've passed the end date
 		while(cursor.isBefore(endDate) || cursor.isEqual(endDate)) {
 			
+			Week w = new Week();
 			//keep making the week until either saturday or the end date comes 
 			while(cursor.getDayOfWeek() != java.time.DayOfWeek.SATURDAY && !cursor.isAfter(endDate)) {
-				Week w = new Week();
+				
 				Day newDay = new Day(cursor, startHour, endHour, timeslotDuration);
 				w.addDay(newDay);
-				cursor.plusDays(1);
+				cursor = cursor.plusDays(1);
 				//TODO: put the day and week in RDS w/ DAO
 			}
-			
+			weeks.add(w);
 			//should be on saturday now. bring it to next monday
-			cursor.plusDays(2);
+			cursor = cursor.plusDays(2);
 		}
 		
 	}
@@ -102,13 +106,13 @@ public class Schedule {
 			
 			//if saturday, bring it to the nearest friday
 			case SATURDAY:
-				target.minusDays(1);
+				target = target.minusDays(1);
 				break;
 			
 			//but sunday is the start of a new week.
 			//so we bring that to the nearest monday
 			case SUNDAY:
-				target.plusDays(1);
+				target = target.plusDays(1);
 				break;
 		
 		}

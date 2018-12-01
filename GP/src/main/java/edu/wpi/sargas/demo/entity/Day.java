@@ -32,7 +32,7 @@ public class Day {
 			Timeslot t = new Timeslot(cursor, duration);
 			//TODO: put timeslot in RDS w/ DAO
 			timeslots.add(t);
-			cursor.plusMinutes(duration);
+			cursor = cursor.plusMinutes(duration);
 		}
 		
 	}
