@@ -113,6 +113,22 @@ public class CreateScheduleHandler implements RequestStreamHandler {
         		invalidInput = true;
     		}
     		
+    		if((60 % duration) != 0) { 
+    			//duration must divide into 60 for valid input
+    			logger.log("Invalid duration");
+    			httpResponse = new CreateScheduleResponse(400, null, null);
+        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+        		invalidInput = true;
+    		}
+    		
+    		if(ed.isBefore(sd)) {
+    			//end date must be after start date, not before
+    			logger.log("Invalid dates");
+    			httpResponse = new CreateScheduleResponse(400, null, null);
+        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+        		invalidInput = true;
+    		}
+    		
     /*		if(!invalidInput) { //if there was no invalid input, prepare success response
     			Schedule responseSched = new Schedule(duration,name,sd,ed,startHour,endHour);
     			try {
