@@ -88,6 +88,25 @@ public class Schedule {
 		
 	}
 	
+	/**
+	 * Returns the week containing a certain date
+	 * @param date the date that a week should contain
+	 * @return
+	 */
+	public Week getWeekOf(LocalDate date) {
+		
+		for(Week week : weeks) {
+			
+			if(week.containsDate(date)) {
+				return week;
+			}
+			
+		}
+		
+		//if we checked all weeks and haven't returned, no weeks contain the date
+		return null;
+	}
+	
 	public String getSecretCode() {
 		return secretCode;
 	}
