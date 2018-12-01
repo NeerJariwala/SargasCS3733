@@ -91,9 +91,18 @@ public class ShowScheduleHandler implements RequestStreamHandler {
     				Week week = sched.getWeekOf(date);
 
     				if(week != null) {
-    					
+    	        		httpResponse = new ShowScheduleResponse(200, week);
+    	        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+    				} else {
+    					logger.log("Week not found");
+    					httpResponse = new ShowScheduleResponse(400, null);
+    	        		jsonResponse.put("body", new Gson().toJson(httpResponse));
     				}
     				
+    			} else {
+    				logger.log("SQL failure");
+					httpResponse = new ShowScheduleResponse(400, null);
+	        		jsonResponse.put("body", new Gson().toJson(httpResponse));
     			}
     			
     		} catch(Exception e) {
@@ -103,8 +112,10 @@ public class ShowScheduleHandler implements RequestStreamHandler {
         		jsonResponse.put("body", new Gson().toJson(httpResponse));
     		}
     		
-    		
-    		
+    		logger.log("Result: " + jsonResponse.toJSONString());
+    		OutputStreamWriter writer = new OutputStreamWriter(output, "UTF-8");
+            writer.write(jsonResponse.toJSONString());  
+            writer.close();
     	}
 		
 	}	
