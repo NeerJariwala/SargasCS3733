@@ -95,9 +95,27 @@ public class Schedule {
 	 */
 	public Week getWeekOf(LocalDate date) {
 		
+		LocalDate target = LocalDate.from(date);
+		
+		switch(target.getDayOfWeek()) {
+			//weeks won't contain any weekends
+			
+			//if saturday, bring it to the nearest friday
+			case SATURDAY:
+				target.minusDays(1);
+				break;
+			
+			//but sunday is the start of a new week.
+			//so we bring that to the nearest monday
+			case SUNDAY:
+				target.plusDays(1);
+				break;
+		
+		}
+		
 		for(Week week : weeks) {
 			
-			if(week.containsDate(date)) {
+			if(week.containsDate(target)) {
 				return week;
 			}
 			
