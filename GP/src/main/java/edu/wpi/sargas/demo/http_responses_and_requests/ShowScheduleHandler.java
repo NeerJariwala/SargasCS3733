@@ -20,12 +20,13 @@ import com.google.gson.Gson;
 
 import edu.wpi.sargas.db.ScheduleDAO;
 import edu.wpi.sargas.demo.entity.Schedule;
+import edu.wpi.sargas.demo.entity.Week;
 
 public class ShowScheduleHandler implements RequestStreamHandler {
 
-	private Schedule showSchedule(Schedule sched) throws Exception {
+	private Schedule showSchedule(String secretCode) throws Exception {
 		ScheduleDAO dao = new ScheduleDAO();
-		return dao.showSchedule(sched.secretCode);
+		return dao.showSchedule(secretCode);
 	}
 
 	@Override
@@ -41,7 +42,7 @@ public class ShowScheduleHandler implements RequestStreamHandler {
     	
     	JSONObject jsonResponse = new JSONObject();
     	jsonResponse.put("headers", headerJson);
-    	CreateScheduleResponse httpResponse = null;
+    	ShowScheduleResponse httpResponse = null;
     	String httpBody = null;
     	boolean processed = false;
     	
@@ -57,7 +58,7 @@ public class ShowScheduleHandler implements RequestStreamHandler {
     		if(requestType != null && requestType.equalsIgnoreCase("OPTIONS")) {
     			//if we got an OPTIONS request, provide a 200 response
     			logger.log("Options request");
-    			httpResponse = new CreateScheduleResponse(200, null, null);
+    			httpResponse = new ShowScheduleResponse(200, null);
     			//no schedule/secret code needed because it was an options request
     			
     		} else { //otherwise, check out the response body later
@@ -69,27 +70,42 @@ public class ShowScheduleHandler implements RequestStreamHandler {
     	} catch(ParseException e) {
     		//if unable to parse, prepare an invalid input response
     		logger.log(e.toString());
-    		httpResponse = new CreateScheduleResponse(400, null, null);
+    		httpResponse = new ShowScheduleResponse(400, null);
     		jsonResponse.put("body", new Gson().toJson(httpResponse));
     		processed = true;
     	}
     	
-		Schedule responseSched = new Schedule(duration,name,sd,ed,startHour,endHour);
-			try {
-				if (showSchedule(responseSched) == null) {
-					httpResponse = new CreateScheduleResponse(200, responseSched, responseSched.getSecretCode());
-					jsonResponse.put("body", new Gson().toJson(httpResponse));
-    			System.out.println(responseSched.getSecretCode());
-				} else {
-					logger.log("SQL failure");
-					httpResponse = new CreateScheduleResponse(400, null, null);
-					jsonResponse.put("body", new Gson().toJson(httpResponse));
-				}
-			} catch (Exception e) {
-				logger.log("SQL failure");
-				httpResponse = new CreateScheduleResponse(400, null, null);
-				jsonResponse.put("body", new Gson().toJson(httpResponse));
-			}
+    	if(!processed) {
+    		//if it's not OPTIONS and not a parse exception, further processing must be done
+    		boolean invalidInput = false;
+    		
+    		ShowScheduleRequest request = new Gson().fromJson(httpBody,ShowScheduleRequest.class);
+    		//get the request in the form of a class
+    		Schedule sched = null;
+    		LocalDate date = LocalDate.parse(request.date);
+    		
+    		try {
+    			sched = showSchedule(request.secretCode);
+    			
+    			if(sched != null) {
+    				Week week = sched.getWeekOf(date);
+
+    				if(week != null) {
+    					
+    				}
+    				
+    			}
+    			
+    		} catch(Exception e) {
+    			//400 response if database issue.
+    			logger.log(e.toString());
+        		httpResponse = new ShowScheduleResponse(400, null);
+        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+    		}
+    		
+    		
+    		
+    	}
 		
 	}	
 }
