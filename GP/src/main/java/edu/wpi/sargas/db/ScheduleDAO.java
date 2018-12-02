@@ -99,7 +99,8 @@ public class ScheduleDAO {
         Double value = resultSet.getDouble("value");
         LocalDate startDate = resultSet.getDate("startDate").toLocalDate();
         LocalDate endDate = resultSet.getDate("endDate").toLocalDate();
-        return new Schedule(resultSet.getInt("timeslotDuration"), resultSet.getString("name"), startDate, endDate, resultSet.getInt("startHour"), resultSet.getInt("endHour"));
+        return Schedule (resultSet.getInt("scheduleId"), resultSet.getString("name"), resultSet.getDate("startDate"), resultSet.getDate("endDate"), resultSet.getInt("startHour"), resultSet.getInt("endHour"), resultSet.getInt("timeslotDuration"), resultSet.getDate("dateCreated"), resultSet.getString("secretCode"));
+
     }
 
     
