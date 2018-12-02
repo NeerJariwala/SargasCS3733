@@ -82,7 +82,15 @@ public class ShowScheduleHandler implements RequestStreamHandler {
     		ShowScheduleRequest request = new Gson().fromJson(httpBody,ShowScheduleRequest.class);
     		//get the request in the form of a class
     		Schedule sched = null;
-    		LocalDate date = LocalDate.parse(request.date);
+    		LocalDate date = null;
+    		
+    		try {
+    			date = LocalDate.parse(request.date);
+    		} catch(DateTimeParseException e) {
+    			logger.log("Invalid date Input");
+    			httpResponse = new ShowScheduleResponse(400, null);
+        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+    		}
     		
     		try {
     			sched = getSchedule(request.secretCode);
