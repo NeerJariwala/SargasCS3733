@@ -26,7 +26,7 @@ public class ShowScheduleHandler implements RequestStreamHandler {
 
 	private Schedule getSchedule(String secretCode) throws Exception {
 		ScheduleDAO dao = new ScheduleDAO();
-		return dao.showSchedule(secretCode);
+		return dao.getSchedule(secretCode);
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class ShowScheduleHandler implements RequestStreamHandler {
     		LocalDate date = LocalDate.parse(request.date);
     		
     		try {
-    			sched = showSchedule(request.secretCode);
+    			sched = getSchedule(request.secretCode);
     			
     			if(sched != null) {
     				Week week = sched.getWeekOf(date);
