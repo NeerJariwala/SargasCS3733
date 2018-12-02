@@ -6,10 +6,18 @@ import java.util.ArrayList;
 
 public class Week {
 	
-	ArrayList<Day> days = new ArrayList<Day>();
+	public ArrayList<Day> days = new ArrayList<Day>();
 	
 	public void addDay(Day d) {
 		days.add(d);
+	}
+	
+	public Week() {
+		
+	}
+	
+	public Week(ArrayList<Day> days) {
+		this.days = days;
 	}
 	
 	/**

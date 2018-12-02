@@ -19,6 +19,7 @@ public class Schedule {
 	public final String secretCode;
 	public final LocalDate dateCreated;
 	
+	//to make a new schedule
 	public Schedule(int td, String name, LocalDate sd, LocalDate ed, int sh, int eh) {
 		timeslotDuration = td;
 		scheduleId = UUID.randomUUID().toString(); 
@@ -31,6 +32,20 @@ public class Schedule {
 		dateCreated = LocalDate.now(); //make date created today
 		weeks = new ArrayList<Week>();
 		generateWeeks();
+	}
+	
+	//retrieved from database
+	public Schedule(int td, String ID, String name, LocalDate sd, LocalDate ed, int sh, int eh, ArrayList<Week> weeks, String secretCode, LocalDate dateCreated) {
+		timeslotDuration = td;
+		scheduleId = ID;
+		this.name = name;
+		startDate = sd;
+		endDate = ed;
+		startHour = sh;
+		endHour = eh;
+		this.weeks = weeks;
+		this.secretCode = secretCode;
+		this.dateCreated = dateCreated;
 	}
 	
 	//TODO: Actually make this method

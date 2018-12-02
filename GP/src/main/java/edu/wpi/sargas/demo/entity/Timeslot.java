@@ -12,7 +12,7 @@ public class Timeslot {
 	public Meeting meeting;
 	
 	/**
-	 * 
+	 * To make a new timeslot
 	 * @param startTime the time the timeslot starts
 	 * @param duration how long it lasts
 	 */
@@ -22,6 +22,15 @@ public class Timeslot {
 		open = true;
 		timeslotID = UUID.randomUUID().toString();
 		meeting = null;
+	}
+	
+	//to fetch from database
+	public Timeslot(boolean open, int duration, LocalTime startTime, String timeslotID, Meeting meeting) {
+		this.open = open;
+		this.duration = duration;
+		this.startTime = startTime;
+		this.timeslotID = timeslotID;
+		this.meeting = meeting;
 	}
 	
 }
