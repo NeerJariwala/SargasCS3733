@@ -24,7 +24,7 @@ import edu.wpi.sargas.demo.entity.Week;
 
 public class ShowScheduleHandler implements RequestStreamHandler {
 
-	private Schedule showSchedule(String secretCode) throws Exception {
+	private Schedule getSchedule(String secretCode) throws Exception {
 		ScheduleDAO dao = new ScheduleDAO();
 		return dao.showSchedule(secretCode);
 	}

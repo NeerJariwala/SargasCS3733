@@ -71,8 +71,8 @@ public class ScheduleDAO {
             throw new Exception("Failed to create schedule: " + e.getMessage());
         }
     }
-   /* 
-    public Schedule showSchedule(String secretCode) throws Exception {
+    
+    public Schedule getSchedule(String secretCode) throws Exception {
         try {
             Schedule result = null;
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule WHERE secretCode=?;");
@@ -94,12 +94,11 @@ public class ScheduleDAO {
     }
     
     private Schedule generateSchedule(ResultSet resultSet) throws Exception {
-    	Schedule result = null;
         String name  = resultSet.getString("name");
         Double value = resultSet.getDouble("value");
-        return new Schedule (resultSet.getInt("timeslotDuration"), resultSet.getString("name"), resultSet.getDate("startDate"), resultSet.getDate("endDate"), resultSet.getInt("startHour"), resultSet.getInt("endHour"));
+        return Schedule (resultSet.getInt("scheduleId"), resultSet.getString("name"), resultSet.getDate("startDate"), resultSet.getDate("endDate"), resultSet.getInt("startHour"), resultSet.getInt("endHour"), resultSet.getInt("timeslotDuration"), resultSet.getDate("dateCreated"), resultSet.getString("secretCode"));
     }
 
-   */ 
+    
 
 }
