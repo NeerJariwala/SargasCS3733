@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,11 +16,19 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 
+import edu.wpi.sargas.demo.entity.Meeting;
+
 public class CreateMeetingHandler implements RequestStreamHandler {
 	
 	private void errorResponse(JSONObject response) {
 		CreateMeetingResponse httpResponse = new CreateMeetingResponse(400, null);
 		response.put("body", new Gson().toJson(httpResponse));
+	}
+	
+	private void addMeetingToDatabase(Meeting meeting) {
+		//This would probably add the meeting to the database
+		//and also update the timeslot that contains this meeting
+		//to connect the two of them
 	}
 	
     @Override
@@ -70,8 +79,31 @@ public class CreateMeetingHandler implements RequestStreamHandler {
     	
     	if(!processed) {
     		
+    		CreateMeetingRequest request = new Gson().fromJson(httpBody,CreateMeetingRequest.class);
+    		//get the request in the form of a class
+    		String name = request.name;
+    		String id = request.timeslotId;
+    		
+    		if(name == null) {
+    			//if invalid input, respond as invalid input
+    			logger.log("Invalid input");
+    			errorResponse(jsonResponse);
+    		} else {
+    			logger.log("success");
+    			Meeting meeting = new Meeting(name, id);
+    			addMeetingToDatabase(meeting);
+    			httpResponse = new CreateMeetingResponse(200, meeting.meetingID);
+    			//TODO: decide whether to use the meetingID or a separate code for the
+    			//meeting secret code
+    			jsonResponse.put("body", new Gson().toJson(httpResponse));
+    		}
+    		
     	}
     	
+    	logger.log("Result: " + jsonResponse.toJSONString());
+    	OutputStreamWriter writer = new OutputStreamWriter(output, "UTF-8");
+        writer.write(jsonResponse.toJSONString());  
+        writer.close();
     }
 
 }

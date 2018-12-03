@@ -6,10 +6,12 @@ public class Meeting {
 	
 	public String name;
 	public String meetingID;
+	public String timeslotId;
 	
-	public Meeting(String name) {
+	public Meeting(String name, String timeslotId) {
 		this.name = name;
 		meetingID = UUID.randomUUID().toString();
+		this.timeslotId = timeslotId;
 	}
 	
 }
