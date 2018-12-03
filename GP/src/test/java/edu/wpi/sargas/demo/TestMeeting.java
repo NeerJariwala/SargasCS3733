@@ -11,7 +11,7 @@ public class TestMeeting {
 	@Test
 	public void test() {
 		String name = "Meeting1";
-		Meeting m = new Meeting(name);
+		Meeting m = new Meeting(name, "timeslotID");
 		assertEquals(m.name,name);
 	}
 
