@@ -23,13 +23,13 @@ public class ScheduleDAO {
 	
     public boolean createSchedule(Schedule schedule) throws Exception {
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule WHERE name = ?;");
-            ps.setString(1, schedule.name);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule WHERE scheduleID = ?;");
+            ps.setString(1, schedule.scheduleId);
             ResultSet resultSet = ps.executeQuery();
             
             // already present?
             while (resultSet.next()) {
-                if(resultSet.getString("name") == schedule.name) {
+                if(resultSet.getString("scheduleID") == schedule.scheduleId) {
                     resultSet.close();
                     return false;
                 }
@@ -76,7 +76,7 @@ public class ScheduleDAO {
     public Schedule getSchedule(String secretCode) throws Exception {
         try {
             Schedule result = null;
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule WHERE secretCode=?;");
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule WHERE secretCode = ?;");
             ps.setString(1,  secretCode);
             ResultSet resultSet = ps.executeQuery();
             
