@@ -95,7 +95,7 @@ public class ScheduleDAO {
     }
     
     private Schedule generateSchedule(ResultSet resultSet) throws Exception {
-        return Schedule (resultSet.getInt("scheduleId"), resultSet.getString("name"), resultSet.getDate("startDate").toLocalDate(), resultSet.getDate("endDate").toLocalDate(), resultSet.getInt("startHour"), resultSet.getInt("endHour"), resultSet.getInt("timeslotDuration"), resultSet.getDate("dateCreated").toLocalDate(), resultSet.getString("secretCode"));
+        return new Schedule (resultSet.getInt("timeslotDuration"), resultSet.getString("scheduleId"), resultSet.getString("name"), resultSet.getDate("startDate").toLocalDate(), resultSet.getDate("endDate").toLocalDate(), resultSet.getInt("startHour"), resultSet.getInt("endHour"), resultSet.getString("secretCode"), resultSet.getDate("dateCreated").toLocalDate());
     }
 
     

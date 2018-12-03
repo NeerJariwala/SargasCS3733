@@ -35,7 +35,8 @@ public class Schedule {
 	}
 	
 	//retrieved from database
-	public Schedule(int td, String ID, String name, LocalDate sd, LocalDate ed, int sh, int eh, ArrayList<Week> weeks, String secretCode, LocalDate dateCreated) {
+	//TODO: needs to put its weeks into the schedule
+	public Schedule(int td, String ID, String name, LocalDate sd, LocalDate ed, int sh, int eh, String secretCode, LocalDate dateCreated) {
 		timeslotDuration = td;
 		scheduleId = ID;
 		this.name = name;
@@ -43,7 +44,6 @@ public class Schedule {
 		endDate = ed;
 		startHour = sh;
 		endHour = eh;
-		this.weeks = weeks;
 		this.secretCode = secretCode;
 		this.dateCreated = dateCreated;
 	}
