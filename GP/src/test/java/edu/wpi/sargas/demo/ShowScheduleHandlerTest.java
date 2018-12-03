@@ -41,13 +41,7 @@ public class ShowScheduleHandlerTest {
 		InputStream input = new ByteArrayInputStream(testInput1.getBytes());
 		OutputStream output = new ByteArrayOutputStream();
 		
-		handler.handleRequest(input,output,createContext("random"));
-		
-		String outputString = output.toString();
-		System.out.println(outputString);
-		JSONObject response = null;
-        JSONObject body = null;
-        ScheduleDAO dao = new ScheduleDAO();
+		ScheduleDAO dao = new ScheduleDAO();
         
         try {
         	dao.createSchedule(testSched);
@@ -55,6 +49,14 @@ public class ShowScheduleHandlerTest {
         } catch(Exception e) {
         	return;
         }
+		
+		handler.handleRequest(input,output,createContext("random"));
+		
+		String outputString = output.toString();
+		System.out.println(outputString);
+		JSONObject response = null;
+        JSONObject body = null;
+        
         
         try {
         	response = (JSONObject)new JSONParser().parse(outputString);
