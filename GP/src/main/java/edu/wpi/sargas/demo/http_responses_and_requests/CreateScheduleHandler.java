@@ -61,7 +61,7 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     			logger.log("Options request");
     			httpResponse = new CreateScheduleResponse(200, null, null);
     			//no schedule/secret code needed because it was an options request
-    			
+    			processed = true;
     		} else { //otherwise, check out the response body later
     			httpBody = (String)jsonRequest.get("body");
     			if(httpBody == null) {
