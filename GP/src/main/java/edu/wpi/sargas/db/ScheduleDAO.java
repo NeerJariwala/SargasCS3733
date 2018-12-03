@@ -94,6 +94,20 @@ public class ScheduleDAO {
         }
     }
     
+    public boolean deleteSchedule(String scheduleID) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM Schedule WHERE scheduleID = ?;");
+            ps.setString(1, scheduleID);
+            int numAffected = ps.executeUpdate();
+            ps.close();
+            
+            return (numAffected == 1);
+
+        } catch (Exception e) {
+            throw new Exception("Failed to delete schedule: " + e.getMessage());
+        }
+    }
+    
     private Schedule generateSchedule(ResultSet resultSet) throws Exception {
         return new Schedule (resultSet.getInt("timeslotDuration"), resultSet.getString("scheduleId"), resultSet.getString("name"), resultSet.getDate("startDate").toLocalDate(), resultSet.getDate("endDate").toLocalDate(), resultSet.getInt("startHour"), resultSet.getInt("endHour"), resultSet.getString("secretCode"), resultSet.getDate("dateCreated").toLocalDate());
     }
