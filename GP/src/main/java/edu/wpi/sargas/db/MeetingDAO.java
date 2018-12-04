@@ -22,7 +22,7 @@ public class ScheduleDAO {
 	
     public void createMeeting(Meeting meeting) throws Exception {
         try {
-            ps = conn.prepareStatement("INSERT INTO Meeting (meetingID, name, Timeslot) values(?,?,?);");
+        	PreparedStatement ps = conn.prepareStatement("INSERT INTO Meeting (meetingID, name, Timeslot) values(?,?,?);");
             ps.setString(1, meeting.meetingID);
             ps.setString(2, meeting.name);
             ps.setDate(3, Date.valueOf(meeting.timelsotId));
