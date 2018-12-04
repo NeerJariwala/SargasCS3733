@@ -34,6 +34,20 @@ public class ScheduleDAO {
             throw new Exception("Failed to create schedule: " + e.getMessage());
         }
     }
+    
+    public boolean deleteMeeting(String meetingID) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM Meeting WHERE meetingID = ?;");
+            ps.setString(1, meetingID);
+            int numAffected = ps.executeUpdate();
+            ps.close();6
+            
+            return (numAffected == 1);
+
+        } catch (Exception e) {
+            throw new Exception("Failed to delete meeting: " + e.getMessage());
+        }
+    }
 
 
 }
