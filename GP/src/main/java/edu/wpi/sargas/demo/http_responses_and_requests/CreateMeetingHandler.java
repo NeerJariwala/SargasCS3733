@@ -25,7 +25,7 @@ public class CreateMeetingHandler implements RequestStreamHandler {
 		response.put("body", new Gson().toJson(httpResponse));
 	}
 	
-	private void addMeetingToDatabase(Meeting meeting) {
+	private void createMeeting(Meeting meeting) {
 		//This would probably add the meeting to the database
 		//and also update the timeslot that contains this meeting
 		//to connect the two of them
@@ -91,7 +91,7 @@ public class CreateMeetingHandler implements RequestStreamHandler {
     		} else {
     			logger.log("success");
     			Meeting meeting = new Meeting(name, id);
-    			addMeetingToDatabase(meeting);
+    			createMeeting(meeting);
     			httpResponse = new CreateMeetingResponse(200, meeting.meetingID);
     			//TODO: decide whether to use the meetingID or a separate code for the
     			//meeting secret code
