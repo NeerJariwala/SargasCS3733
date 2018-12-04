@@ -8,7 +8,7 @@ import java.sql.Date;
 import edu.wpi.sargas.db.DatabaseUtil;
 import edu.wpi.sargas.demo.entity.Meeting;
 
-public class ScheduleDAO {
+public class MeetingDAO {
 
 	java.sql.Connection conn;
 
@@ -40,7 +40,7 @@ public class ScheduleDAO {
             PreparedStatement ps = conn.prepareStatement("DELETE FROM Meeting WHERE meetingID = ?;");
             ps.setString(1, meetingID);
             int numAffected = ps.executeUpdate();
-            ps.close();6
+            ps.close();
             
             return (numAffected == 1);
 
