@@ -1,19 +1,40 @@
 package edu.wpi.sargas.demo.entity;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Week {
 	
+	public String WeekID;
+	public final LocalDate startDate; //start and end dates of the schedule's duration
+	public final LocalDate endDate;
+	public String schedule;   //aka the id
+	
 	public ArrayList<Day> days = new ArrayList<Day>();
+	
+	
+	public Week(LocalDate startDate, LocalDate endDate, String schedule) {
+		this.WeekID = UUID.randomUUID().toString();
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.schedule = schedule;
+	}
+	
+	
+	///after fetch from db
+	public Week(String WeekID, LocalDate startDate, LocalDate endDate, String schedule) {
+		this.WeekID = WeekID;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.schedule = schedule;
+				
+	}
+	
+	
 	
 	public void addDay(Day d) {
 		days.add(d);
-	}
-	
-	public Week() {
-		
 	}
 	
 	public Week(ArrayList<Day> days) {

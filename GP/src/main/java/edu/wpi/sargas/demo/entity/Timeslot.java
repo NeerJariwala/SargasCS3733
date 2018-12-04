@@ -5,32 +5,32 @@ import java.util.UUID;
 
 public class Timeslot {
 	
+	public String timeslotID;
 	public boolean open;
 	public int duration;
 	public LocalTime startTime;
-	public String timeslotID;
-	public Meeting meeting;
+	public String day;
 	
 	/**
 	 * To make a new timeslot
 	 * @param startTime the time the timeslot starts
 	 * @param duration how long it lasts
 	 */
-	public Timeslot(LocalTime startTime, int duration) {
+	public Timeslot(LocalTime startTime, int duration, String day) {
 		this.startTime = startTime;
 		this.duration = duration;
 		open = true;
 		timeslotID = UUID.randomUUID().toString();
-		meeting = null;
+		this.day = day;
 	}
 	
-	//to fetch from database
-	public Timeslot(boolean open, int duration, LocalTime startTime, String timeslotID, Meeting meeting) {
+	//after fetch from database
+	public Timeslot(String timeslotID, boolean open, int duration, LocalTime startTime, String day) {
+		this.timeslotID = timeslotID;
 		this.open = open;
 		this.duration = duration;
 		this.startTime = startTime;
-		this.timeslotID = timeslotID;
-		this.meeting = meeting;
+		this.day = day;
 	}
 	
 }

@@ -4,19 +4,23 @@ import java.util.UUID;
 
 public class Meeting {
 	
-	public String name;
 	public String meetingID;
+	public String name;
+	public String timeslot;
 	
 
 	//to make a new meeting
-	public Meeting(String name) {
+	public Meeting(String name, String timeslot) {
 		this.name = name;
 		meetingID = UUID.randomUUID().toString();
+		this.timeslot = timeslot;
 	}
 	
-	//to fetch from database
-	public Meeting(String name, String id) {
+	//after fetch from database
+	public Meeting(String meetingID, String name, String timeslot) {
+		this.meetingID = meetingID;
 		this.name = name;
-		meetingID = id;
+		this.timeslot = timeslot;
+		
 	}
 }

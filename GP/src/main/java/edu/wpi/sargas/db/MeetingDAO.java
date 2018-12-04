@@ -25,7 +25,7 @@ public class MeetingDAO {
         	PreparedStatement ps = conn.prepareStatement("INSERT INTO Meeting (meetingID, name, Timeslot) values(?,?,?);");
             ps.setString(1, meeting.meetingID);
             ps.setString(2, meeting.name);
-            ps.setDate(3, Date.valueOf(meeting.timelsotId));
+            ps.setString(3, meeting.timeslot);
             ps.execute();
 
             ps.close();

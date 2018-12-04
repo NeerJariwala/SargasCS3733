@@ -4,16 +4,21 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Day {
 	
+	public String DayID;
 	public LocalDate date;
-	public ArrayList<Timeslot> timeslots = new ArrayList<Timeslot>();
 	public LocalTime startTime;
 	public LocalTime endTime;
 	
+	public ArrayList<Timeslot> timeslots = new ArrayList<Timeslot>();
+	
+	
 	//to make a new one
 	public Day(LocalDate d, int startHour, int endHour, int duration) {
+		this.DayID = UUID.randomUUID().toString();
 		date = d;
 		this.startTime = LocalTime.of(startHour, 0);
 		this.endTime = LocalTime.of(endHour, 0);
@@ -21,12 +26,11 @@ public class Day {
 		generateTimeslots(duration);
 	}
 	
-	//to fetch from database
-	public Day(LocalDate d, ArrayList<Timeslot> timeslots, int startHour, int endHour) {
-		date = d;
+	//after fetch from database
+	public Day(String DayID, LocalDate d, ArrayList<Timeslot> timeslots) {
+		this.DayID = DayID;
+		this.date = d;
 		this.timeslots = timeslots;
-		startTime = LocalTime.of(startHour, 0);
-		endTime = LocalTime.of(endHour, 0);
 	}
 	
 	private void generateTimeslots(int duration) {
