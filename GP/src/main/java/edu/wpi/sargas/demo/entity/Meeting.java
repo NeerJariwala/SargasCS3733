@@ -7,6 +7,7 @@ public class Meeting {
 	public String name;
 	public String meetingID;
 	
+
 	//to make a new meeting
 	public Meeting(String name) {
 		this.name = name;
