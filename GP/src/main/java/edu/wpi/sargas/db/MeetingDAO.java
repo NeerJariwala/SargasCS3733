@@ -12,7 +12,7 @@ public class MeetingDAO {
 
 	java.sql.Connection conn;
 
-    public ScheduleDAO() {
+    public MeetingDAO() {
     	try  {
     		conn = DatabaseUtil.connect();
     	} catch (Exception e) {
