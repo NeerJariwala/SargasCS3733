@@ -6,7 +6,7 @@ import java.util.UUID;
 public class Timeslot {
 	
 	public String timeslotID;
-	public boolean open;
+	public int open;                 //1 is true, 0 is false
 	public int duration;
 	public LocalTime startTime;
 	public String day;
@@ -19,13 +19,13 @@ public class Timeslot {
 	public Timeslot(LocalTime startTime, int duration, String day) {
 		this.startTime = startTime;
 		this.duration = duration;
-		open = true;
+		open = 1;
 		timeslotID = UUID.randomUUID().toString();
 		this.day = day;
 	}
 	
 	//after fetch from database
-	public Timeslot(String timeslotID, boolean open, int duration, LocalTime startTime, String day) {
+	public Timeslot(String timeslotID, int open, int duration, LocalTime startTime, String day) {
 		this.timeslotID = timeslotID;
 		this.open = open;
 		this.duration = duration;
