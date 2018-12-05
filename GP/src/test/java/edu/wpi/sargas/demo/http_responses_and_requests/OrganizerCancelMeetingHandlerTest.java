@@ -32,7 +32,7 @@ public class OrganizerCancelMeetingHandlerTest {
         return ctx;
     }
 	
-    private static String SAMPLE_INPUT_STRING = "{\"meetingId\": ";
+    static String SAMPLE_INPUT_STRING = "{\"meetingId\": ";
     Schedule sched = new Schedule(20,"name",LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1), 4,16);
     Meeting meeting = new Meeting("meeting", sched.weeks.get(0).days.get(0).timeslots.get(0).timeslotID);
 
@@ -48,10 +48,10 @@ public class OrganizerCancelMeetingHandlerTest {
     	
         OrganizerCancelMeetingHandler handler = new OrganizerCancelMeetingHandler();
         
-        SAMPLE_INPUT_STRING += "\"" + meeting.meetingID + "\", \"secretCode\": \"" + sched.getSecretCode() + "\"";
-        System.out.println(SAMPLE_INPUT_STRING);
+        String testInput = SAMPLE_INPUT_STRING + "\"" + meeting.meetingID + "\" \"secretCode\": \"" + sched.getSecretCode() + "\"}";
+        System.out.println(testInput);
         
-        InputStream input = new ByteArrayInputStream(SAMPLE_INPUT_STRING.getBytes());;
+        InputStream input = new ByteArrayInputStream(testInput.getBytes());;
         OutputStream output = new ByteArrayOutputStream();
 
         handler.handleRequest(input, output, createContext("random"));
@@ -83,12 +83,10 @@ public class OrganizerCancelMeetingHandlerTest {
     	
         OrganizerCancelMeetingHandler handler = new OrganizerCancelMeetingHandler();
         
-        SAMPLE_INPUT_STRING += "\"" + meeting.meetingID + "\", \"secretCode\": \"" + "does not exist" + "\"";
-        System.out.println(SAMPLE_INPUT_STRING);
+        String testInput = SAMPLE_INPUT_STRING + "\"" + meeting.meetingID + "\" \"secretCode\": \"" + "does not exist" + "\"}";
+        System.out.println(testInput);
         
-        System.out.println(SAMPLE_INPUT_STRING);
-        
-        InputStream input = new ByteArrayInputStream(SAMPLE_INPUT_STRING.getBytes());;
+        InputStream input = new ByteArrayInputStream(testInput.getBytes());;
         OutputStream output = new ByteArrayOutputStream();
 
         handler.handleRequest(input, output, createContext("random"));

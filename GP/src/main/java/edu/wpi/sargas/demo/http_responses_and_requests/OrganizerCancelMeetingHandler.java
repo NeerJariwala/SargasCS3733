@@ -22,7 +22,7 @@ public class OrganizerCancelMeetingHandler implements RequestStreamHandler {
 	
 	private void errorResponse(JSONObject jsonResponse) {
 		OrganizerCancelMeetingResponse response = new OrganizerCancelMeetingResponse(400);
-		jsonResponse.put("body", response);
+		jsonResponse.put("body", new Gson().toJson(response));
 	}
 	
 	/**
@@ -73,7 +73,7 @@ public class OrganizerCancelMeetingHandler implements RequestStreamHandler {
     			//if we got an OPTIONS request, provide a 200 response
     			logger.log("Options request");
     			httpResponse = new OrganizerCancelMeetingResponse(200);
-    			jsonResponse.put("body", httpResponse);
+    			jsonResponse.put("body", new Gson().toJson(httpResponse));
     			//nothing needed because it was an options request
     			processed = true;
     		} else { //otherwise, check out the response body later
@@ -97,7 +97,7 @@ public class OrganizerCancelMeetingHandler implements RequestStreamHandler {
     		 
     		 if(deleteMeetingFromDatabase(id,secretCode)) {
     			 httpResponse = new OrganizerCancelMeetingResponse(200);
-     			jsonResponse.put("body", httpResponse);
+     			jsonResponse.put("body", new Gson().toJson(httpResponse));
     		 } else {
     			 logger.log("Incorrect secretCode");
     			 errorResponse(jsonResponse);
