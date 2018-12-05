@@ -17,7 +17,7 @@ public class TestTimeslot {
 		Timeslot t = new Timeslot(startTime,duration, "string");
 		assertEquals(t.startTime,startTime);
 		assertEquals(t.duration,duration);
-		assertEquals(t.open,true);
+		assertEquals(t.open,1);
 	}
 
 }

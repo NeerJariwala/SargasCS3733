@@ -151,15 +151,9 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     				
     				Schedule responseSched = new Schedule(duration,name,sd,ed,startHour,endHour);
     				
-    				if (addScheduleToDatabase(responseSched)) {
-    					httpResponse = new CreateScheduleResponse(200, responseSched, responseSched.getSecretCode());
-    	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
-    	    			System.out.println(responseSched.getSecretCode());
-    				} else {
-    					logger.log("SQL failure");
-    					httpResponse = new CreateScheduleResponse(400, null, null);
-    	        		jsonResponse.put("body", new Gson().toJson(httpResponse));
-    				}
+					httpResponse = new CreateScheduleResponse(200, responseSched, responseSched.getSecretCode());
+	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
+	    			System.out.println(responseSched.getSecretCode());
     			} catch (Exception e) {
 					logger.log("SQL failure");
 					httpResponse = new CreateScheduleResponse(400, null, null);
