@@ -73,7 +73,7 @@ public class Schedule {
 				
 				//add a new day to the week and advance
 				while(cursor.getDayOfWeek() != java.time.DayOfWeek.SATURDAY) {
-					Day newDay = new Day(cursor, startHour, endHour, timeslotDuration);
+					Day newDay = new Day(cursor, startHour, endHour, timeslotDuration, w.WeekID);
 					w.addDay(newDay);
 					cursor = cursor.plusDays(1);
 					//TODO: put the day and week in RDS w/ DAO
@@ -95,7 +95,7 @@ public class Schedule {
 			//keep making the week until either saturday or the end date comes 
 			while(cursor.getDayOfWeek() != java.time.DayOfWeek.SATURDAY && !cursor.isAfter(endDate)) {
 				
-				Day newDay = new Day(cursor, startHour, endHour, timeslotDuration);
+				Day newDay = new Day(cursor, startHour, endHour, timeslotDuration, w.WeekID);
 				w.addDay(newDay);
 				cursor = cursor.plusDays(1);
 				//TODO: put the day and week in RDS w/ DAO

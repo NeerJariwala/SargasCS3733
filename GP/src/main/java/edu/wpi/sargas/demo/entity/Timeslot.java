@@ -8,7 +8,7 @@ public class Timeslot {
 	public String timeslotID;
 	public int open;                 //1 is true, 0 is false
 	public int duration;
-	public int startTime;           //LocalTime startTime;
+	public double startTime;           //LocalTime startTime;
 	public String day;
 	
 	/**
@@ -16,7 +16,7 @@ public class Timeslot {
 	 * @param startTime the time the timeslot starts
 	 * @param duration how long it lasts
 	 */
-	public Timeslot(int startTime, int duration, String day) {
+	public Timeslot(double startTime, int duration, String day) {
 		this.startTime = startTime;
 		this.duration = duration;
 		open = 1;
@@ -25,7 +25,7 @@ public class Timeslot {
 	}
 	
 	//after fetch from database
-	public Timeslot(String timeslotID, int open, int duration, int startTime, String day) {
+	public Timeslot(String timeslotID, int open, int duration, double startTime, String day) {
 		this.timeslotID = timeslotID;
 		this.open = open;
 		this.duration = duration;

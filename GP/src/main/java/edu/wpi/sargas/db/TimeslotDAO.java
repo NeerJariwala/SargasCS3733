@@ -38,7 +38,7 @@ public class TimeslotDAO {
             ps.setString(1, timeslot.timeslotID);
             ps.setInt(2, timeslot.open);
             ps.setInt(3, timeslot.duration);
-            ps.setInt(4, timeslot.startTime);
+            ps.setDouble(4, timeslot.startTime);
             ps.setString(5, timeslot.day);
             ps.execute();
 

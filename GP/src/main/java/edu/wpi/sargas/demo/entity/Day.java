@@ -46,7 +46,8 @@ public class Day {
 		LocalTime cursor = startTime; //begin at the start of the day
 		
 		for(int i = 0; i<numTimeslots; i++) {
-			Timeslot t = new Timeslot(cursor, duration, this.DayID);
+			double start = cursor.getHour() + (cursor.getMinute() / 60.0);
+			Timeslot t = new Timeslot(start, duration, this.DayID);
 			//TODO: put timeslot in RDS w/ DAO
 			timeslots.add(t);
 			cursor = cursor.plusMinutes(duration);

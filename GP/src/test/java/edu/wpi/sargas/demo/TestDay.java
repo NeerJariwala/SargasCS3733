@@ -18,7 +18,7 @@ public class TestDay {
 		int endHour = 4;
 		int duration = 20;
 		//3 timeslots in this day
-		Day d = new Day(date,startHour,endHour,duration);
+		Day d = new Day(date,startHour,endHour,duration, "ID");
 		
 		assertEquals(d.date,date);
 		assertEquals(d.startTime,LocalTime.of(startHour, 0));
