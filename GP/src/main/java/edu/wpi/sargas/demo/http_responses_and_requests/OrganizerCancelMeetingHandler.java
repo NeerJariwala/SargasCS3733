@@ -16,6 +16,8 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 
+import edu.wpi.sargas.db.MeetingDAO;
+
 public class OrganizerCancelMeetingHandler implements RequestStreamHandler {
 	
 	private void errorResponse(JSONObject jsonResponse) {
@@ -30,9 +32,14 @@ public class OrganizerCancelMeetingHandler implements RequestStreamHandler {
 	 * @return whether the meeting could be deleted
 	 */
 	private boolean deleteMeetingFromDatabase(String meetingId, String secretCode) {
-		//This method would probably search in the database for a meeting associated
-		//with a certain schedule with the specified id.
-		return false;
+		try {
+			MeetingDAO dao = new MeetingDAO();
+			//TODO:verify secretCode exists first
+			dao.deleteMeeting(meetingId);
+			return true;
+		} catch(Exception e) {
+			return false;
+		}
 	}
 	
     @Override

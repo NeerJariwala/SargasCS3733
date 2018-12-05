@@ -15,7 +15,7 @@ public class Schedule {
 	public final LocalDate endDate;
 	public final int startHour; //start and end hours of the schedule each day
 	public final int endHour;
-	ArrayList<Week> weeks; 
+	public ArrayList<Week> weeks; 
 	public final String secretCode;
 	public final LocalDate dateCreated;
 	

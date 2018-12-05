@@ -16,6 +16,7 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 
+import edu.wpi.sargas.db.MeetingDAO;
 import edu.wpi.sargas.demo.entity.Meeting;
 
 public class CreateMeetingHandler implements RequestStreamHandler {
@@ -25,10 +26,9 @@ public class CreateMeetingHandler implements RequestStreamHandler {
 		response.put("body", new Gson().toJson(httpResponse));
 	}
 	
-	private void createMeeting(Meeting meeting) {
-		//This would probably add the meeting to the database
-		//and also update the timeslot that contains this meeting
-		//to connect the two of them
+	private void createMeeting(Meeting meeting) throws Exception {
+		MeetingDAO dao = new MeetingDAO();
+		dao.createMeeting(meeting);
 	}
 	
     @Override
@@ -89,13 +89,20 @@ public class CreateMeetingHandler implements RequestStreamHandler {
     			logger.log("Invalid input");
     			errorResponse(jsonResponse);
     		} else {
-    			logger.log("success");
-    			Meeting meeting = new Meeting(name, id);
-    			createMeeting(meeting);
-    			httpResponse = new CreateMeetingResponse(200, meeting.meetingID);
-    			//TODO: decide whether to use the meetingID or a separate code for the
-    			//meeting secret code
-    			jsonResponse.put("body", new Gson().toJson(httpResponse));
+    			try {
+	    			logger.log("success");
+	    			Meeting meeting = new Meeting(name, id);
+	    			
+	    			createMeeting(meeting);
+	    			httpResponse = new CreateMeetingResponse(200, meeting.meetingID);
+	    			//TODO: decide whether to use the meetingID or a separate code for the
+	    			//meeting secret code
+	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
+    			} catch(Exception e) {
+    				logger.log(e.toString());
+    				errorResponse(jsonResponse);
+    				
+    			}
     		}
     		
     	}
