@@ -12,25 +12,29 @@ public class Day {
 	public LocalDate date;
 	public LocalTime startTime;
 	public LocalTime endTime;
+	public String week;
 	
 	public ArrayList<Timeslot> timeslots = new ArrayList<Timeslot>();
 	
 	
 	//to make a new one
-	public Day(LocalDate d, int startHour, int endHour, int duration) {
+	public Day(LocalDate d, int startHour, int endHour, int duration, String week) {
 		this.DayID = UUID.randomUUID().toString();
-		date = d;
+		this.date = d;
 		this.startTime = LocalTime.of(startHour, 0);
 		this.endTime = LocalTime.of(endHour, 0);
+		this.week = week;
 		
 		generateTimeslots(duration);
 	}
 	
 	//after fetch from database
-	public Day(String DayID, LocalDate d, ArrayList<Timeslot> timeslots) {
+	public Day(String DayID, LocalDate d, LocalTime startTime, LocalTime endTime, String week) {
 		this.DayID = DayID;
 		this.date = d;
-		this.timeslots = timeslots;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.week = week;
 	}
 	
 	private void generateTimeslots(int duration) {
