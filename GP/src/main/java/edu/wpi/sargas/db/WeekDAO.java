@@ -2,6 +2,7 @@ package edu.wpi.sargas.db;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.sql.Date;
 
 import edu.wpi.sargas.db.DatabaseUtil;
@@ -46,7 +47,29 @@ public class WeekDAO {
             throw new Exception("Failed to create week: " + e.getMessage());
         }
     }
+    
+    public ArrayList<Week> getWeeks(String scheduleID) throws Exception {
+    	ArrayList<Week> result = new ArrayList<Week>();
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Week WHERE scheduleID = ?;");
+            ps.setString(1, scheduleID);
+            ResultSet resultSet = ps.executeQuery();
+            
 
+            while (resultSet.next()) {
+            	result.add(generateWeek(resultSet));
+            }
+            
+            return result;
+
+        } catch (Exception e) {
+            throw new Exception("Failed to get weeks: " + e.getMessage());
+        }
+    }
+
+    private Week generateWeek(ResultSet resultSet) throws Exception {
+        return new Week (resultSet.getString("WeekID"), resultSet.getDate("startDate").toLocalDate(), resultSet.getDate("endDate").toLocalDate(), resultSet.getString("schedule"));
+    }
 
 
 }
