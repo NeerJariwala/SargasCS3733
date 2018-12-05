@@ -2,10 +2,12 @@ package edu.wpi.sargas.db;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.sql.Date;
 
 import edu.wpi.sargas.db.DatabaseUtil;
 import edu.wpi.sargas.demo.entity.Day;
+import edu.wpi.sargas.demo.entity.Week;
 
 public class DayDAO {
 
@@ -47,6 +49,29 @@ public class DayDAO {
         } catch (Exception e) {
             throw new Exception("Failed to create day: " + e.getMessage());
         }
+    }
+    
+    public ArrayList<Day> getDays(String weekID) throws Exception {
+    	ArrayList<Day> result = new ArrayList<Day>();
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Day WHERE weekID = ?;");
+            ps.setString(1, weekID);
+            ResultSet resultSet = ps.executeQuery();
+            
+
+            while (resultSet.next()) {
+            	result.add(generateDay(resultSet));
+            }
+            
+            return result;
+
+        } catch (Exception e) {
+            throw new Exception("Failed to get days: " + e.getMessage());
+        }
+    }
+
+    private Day generateDay(ResultSet resultSet) throws Exception {
+        return new Day (resultSet.getString("DayID"), resultSet.getDate("date").toLocalDate(), resultSet.getString("week"));
     }
 
 

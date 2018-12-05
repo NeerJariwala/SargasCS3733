@@ -29,11 +29,11 @@ public class Day {
 	}
 	
 	//after fetch from database
-	public Day(String DayID, LocalDate d, LocalTime startTime, LocalTime endTime, String week) {
+	public Day(String DayID, LocalDate d, String week) {
 		this.DayID = DayID;
 		this.date = d;
-		this.startTime = startTime;
-		this.endTime = endTime;
+	//	this.startTime = startTime;
+	//	this.endTime = endTime;
 		this.week = week;
 	}
 	
