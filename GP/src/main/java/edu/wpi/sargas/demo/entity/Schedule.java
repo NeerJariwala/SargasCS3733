@@ -68,7 +68,7 @@ public class Schedule {
 			case WEDNESDAY:
 			case THURSDAY:
 			case FRIDAY:
-				Week w = new Week();
+				Week w = new Week(cursor,this.scheduleId);
 				//TODO: put this in RDS w/ DAO
 				
 				//add a new day to the week and advance
@@ -91,7 +91,7 @@ public class Schedule {
 		//keep making weeks until we've passed the end date
 		while(cursor.isBefore(endDate) || cursor.isEqual(endDate)) {
 			
-			Week w = new Week();
+			Week w = new Week(cursor,this.scheduleId);
 			//keep making the week until either saturday or the end date comes 
 			while(cursor.getDayOfWeek() != java.time.DayOfWeek.SATURDAY && !cursor.isAfter(endDate)) {
 				

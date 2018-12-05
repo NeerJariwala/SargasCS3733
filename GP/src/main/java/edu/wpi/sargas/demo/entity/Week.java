@@ -1,5 +1,6 @@
 package edu.wpi.sargas.demo.entity;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -14,10 +15,19 @@ public class Week {
 	public ArrayList<Day> days = new ArrayList<Day>();
 	
 	
-	public Week(LocalDate startDate, LocalDate endDate, String schedule) {
+	public Week(LocalDate startDate, String schedule) {
 		this.WeekID = UUID.randomUUID().toString();
 		this.startDate = startDate;
-		this.endDate = endDate;
+		
+		LocalDate cursor = startDate;
+		
+		//loop finds the end date
+		while(cursor.getDayOfWeek() != DayOfWeek.FRIDAY) {
+			cursor = cursor.plusDays(1);
+		}
+		
+		this.endDate = cursor;
+		
 		this.schedule = schedule;
 	}
 	
@@ -37,9 +47,6 @@ public class Week {
 		days.add(d);
 	}
 	
-	public Week(ArrayList<Day> days) {
-		this.days = days;
-	}
 	
 	/**
 	 * Whether the week contains a certain date
