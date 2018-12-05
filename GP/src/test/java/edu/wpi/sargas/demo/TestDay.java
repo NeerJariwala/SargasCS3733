@@ -8,8 +8,9 @@ import java.time.LocalTime;
 import org.junit.Test;
 
 import edu.wpi.sargas.demo.entity.Day;
+import junit.framework.TestCase;
 
-public class TestDay {
+public class TestDay extends TestCase {
 
 	@Test
 	public void test() {

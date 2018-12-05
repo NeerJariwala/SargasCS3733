@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 import org.junit.Test;
 
+import edu.wpi.sargas.db.ScheduleDAO;
 import edu.wpi.sargas.demo.entity.Schedule;
 
 public class TestShedule {
@@ -58,11 +59,11 @@ public class TestShedule {
 		LocalDate week1Saturday = LocalDate.of(2001, 1, 6);
 		LocalDate week2Sunday = LocalDate.of(2001, 1, 7);
 		
-		assertEquals(s.getWeekOf(dateInWeek1), s.getWeekOf(otherDateInWeek1));
-		assertFalse(s.getWeekOf(dateInWeek1) == s.getWeekOf(dateInWeek2));
+		assertEquals(s.getWeekOf(dateInWeek1).startDate, s.getWeekOf(otherDateInWeek1).startDate);
+		assertFalse(s.getWeekOf(dateInWeek1).startDate == s.getWeekOf(dateInWeek2).startDate);
 		assertNull(s.getWeekOf(outsideDate));
-		assertEquals(s.getWeekOf(dateInWeek1), s.getWeekOf(week1Saturday));
-		assertEquals(s.getWeekOf(dateInWeek2), s.getWeekOf(week2Sunday));
+		assertEquals(s.getWeekOf(dateInWeek1).startDate, s.getWeekOf(week1Saturday).startDate);
+		assertEquals(s.getWeekOf(dateInWeek2).startDate, s.getWeekOf(week2Sunday).startDate);
 	}
 
 }

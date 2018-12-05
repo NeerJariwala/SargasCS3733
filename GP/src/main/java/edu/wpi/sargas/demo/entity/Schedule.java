@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import edu.wpi.sargas.db.DayDAO;
+import edu.wpi.sargas.db.ScheduleDAO;
 import edu.wpi.sargas.db.TimeslotDAO;
 import edu.wpi.sargas.db.WeekDAO;
 
@@ -35,6 +36,7 @@ public class Schedule {
 		secretCode = generateSecret();
 		dateCreated = LocalDate.now(); //make date created today
 		weeks = new ArrayList<Week>();
+		new ScheduleDAO().createSchedule(this);
 		try {
 			generateWeeks();
 		} catch(Exception e) {
@@ -80,12 +82,13 @@ public class Schedule {
 			case THURSDAY:
 			case FRIDAY:
 				Week w = new Week(cursor,this.scheduleId);
-				
+				weekDao.createWeek(w);
 				//add a new day to the week and advance
 				while(cursor.getDayOfWeek() != java.time.DayOfWeek.SATURDAY) {
 					Day newDay = new Day(cursor, startHour, endHour, timeslotDuration, w.WeekID);
 					w.addDay(newDay);
 					cursor = cursor.plusDays(1);
+					
 					dayDao.createDay(newDay);
 					//TODO: put the day and week in RDS w/ DAO
 				}
@@ -93,7 +96,7 @@ public class Schedule {
 				//bring it to the next monday
 				cursor = cursor.plusDays(2);
 				weeks.add(w);
-				weekDao.createWeek(w);
+				
 				break;
 			
 			default: break;
@@ -104,16 +107,18 @@ public class Schedule {
 		while(cursor.isBefore(endDate) || cursor.isEqual(endDate)) {
 			
 			Week w = new Week(cursor,this.scheduleId);
+			weekDao.createWeek(w);
 			//keep making the week until either saturday or the end date comes 
 			while(cursor.getDayOfWeek() != java.time.DayOfWeek.SATURDAY && !cursor.isAfter(endDate)) {
 				
 				Day newDay = new Day(cursor, startHour, endHour, timeslotDuration, w.WeekID);
 				w.addDay(newDay);
 				cursor = cursor.plusDays(1);
+				
 				dayDao.createDay(newDay);
 			}
 			weeks.add(w);
-			weekDao.createWeek(w);
+			
 			//should be on saturday now. bring it to next monday
 			cursor = cursor.plusDays(2);
 		}
