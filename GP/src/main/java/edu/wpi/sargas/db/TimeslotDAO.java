@@ -1,6 +1,7 @@
 package edu.wpi.sargas.db;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import edu.wpi.sargas.db.DatabaseUtil;
 import edu.wpi.sargas.demo.entity.Timeslot;
@@ -17,9 +18,23 @@ public class TimeslotDAO {
     	}
     }
 	
-    public void createTimeslot(Timeslot timeslot) throws Exception {
+    public boolean createTimeslot(Timeslot timeslot) throws Exception {
         try {
-        	PreparedStatement ps = conn.prepareStatement("INSERT INTO Timeslot (TimeslotID, open, duration, startTime, Day) values(?,?,?,?,?);");
+        	
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Timeslot WHERE timeslotID = ?;");
+            ps.setString(1, timeslot.timeslotID);
+            ResultSet resultSet = ps.executeQuery();
+            
+            // already present?
+            while (resultSet.next()) {
+                if(resultSet.getString("timeslotID") == timeslot.timeslotID) {
+                    resultSet.close();
+                    ps.close();
+                    return false;
+                }
+            }
+            
+        	ps = conn.prepareStatement("INSERT INTO Timeslot (TimeslotID, open, duration, startTime, Day) values(?,?,?,?,?);");
             ps.setString(1, timeslot.timeslotID);
             ps.setInt(2, timeslot.open);
             ps.setInt(3, timeslot.duration);
@@ -28,6 +43,7 @@ public class TimeslotDAO {
             ps.execute();
 
             ps.close();
+            return true;
 
         } catch (Exception e) {
             throw new Exception("Failed to create timeslot: " + e.getMessage());

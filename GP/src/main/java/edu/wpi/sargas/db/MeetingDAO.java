@@ -20,15 +20,30 @@ public class MeetingDAO {
     	}
     }
 	
-    public void createMeeting(Meeting meeting) throws Exception {
+    public boolean createMeeting(Meeting meeting) throws Exception {
         try {
-        	PreparedStatement ps = conn.prepareStatement("INSERT INTO Meeting (meetingID, name, Timeslot) values(?,?,?);");
+        	
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Meeting WHERE meetingID = ?;");
+            ps.setString(1, meeting.meetingID);
+            ResultSet resultSet = ps.executeQuery();
+            
+            // already present?
+            while (resultSet.next()) {
+                if(resultSet.getString("meetingID") == meeting.meetingID) {
+                    resultSet.close();
+                    ps.close();
+                    return false;
+                }
+            }
+            
+        	ps = conn.prepareStatement("INSERT INTO Meeting (meetingID, name, Timeslot) values(?,?,?);");
             ps.setString(1, meeting.meetingID);
             ps.setString(2, meeting.name);
             ps.setString(3, meeting.timeslot);
             ps.execute();
 
             ps.close();
+            return true;
 
         } catch (Exception e) {
             throw new Exception("Failed to create schedule: " + e.getMessage());

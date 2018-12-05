@@ -1,6 +1,7 @@
 package edu.wpi.sargas.db;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Date;
 
 import edu.wpi.sargas.db.DatabaseUtil;
@@ -18,9 +19,20 @@ public class WeekDAO {
     	}
     }
 	
-    public void createWeek(Week week) throws Exception {
+    public boolean createWeek(Week week) throws Exception {
         try {
-        	PreparedStatement ps = conn.prepareStatement("INSERT INTO Meeting (WeekID, startDate, endDate, Schedule) values(?,?,?,?);");
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Week WHERE WeekID = ?;");
+            ps.setString(1, week.WeekID);
+            ResultSet resultSet = ps.executeQuery();
+            
+            // already present?
+            while (resultSet.next()) {
+                if(resultSet.getString("weekID") == week.WeekID) {
+                    resultSet.close();
+                    return false;
+                }
+            }
+        	ps = conn.prepareStatement("INSERT INTO Week (WeekID, startDate, endDate, Schedule) values(?,?,?,?);");
             ps.setString(1, week.WeekID);
             ps.setDate(2, Date.valueOf(week.startDate));
             ps.setDate(3, Date.valueOf(week.endDate));
@@ -28,6 +40,7 @@ public class WeekDAO {
             ps.execute();
 
             ps.close();
+            return true;
 
         } catch (Exception e) {
             throw new Exception("Failed to create week: " + e.getMessage());
