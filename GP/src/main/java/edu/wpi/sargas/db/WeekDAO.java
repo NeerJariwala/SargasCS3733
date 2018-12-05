@@ -51,7 +51,7 @@ public class WeekDAO {
     public ArrayList<Week> getWeeks(String scheduleID) throws Exception {
     	ArrayList<Week> result = new ArrayList<Week>();
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Week WHERE scheduleID = ?;");
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Week WHERE Schedule = ?;");
             ps.setString(1, scheduleID);
             ResultSet resultSet = ps.executeQuery();
             
