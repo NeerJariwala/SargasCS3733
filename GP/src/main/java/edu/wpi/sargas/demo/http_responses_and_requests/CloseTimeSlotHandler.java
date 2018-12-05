@@ -18,6 +18,7 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 
+import edu.wpi.sargas.db.TimeslotDAO;
 import edu.wpi.sargas.demo.entity.Timeslot;
 
 public class CloseTimeSlotHandler implements RequestStreamHandler {
@@ -27,9 +28,9 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
 		jsonResponse.put("body", response);
 	}
 
-	public boolean CloseTimeSlot(String change, String timeslotID) {
-		//need DAO for this function
-		//boolean if time slot is closed return true
+	public boolean CloseTimeSlot(String timeslotID, int status) throws Exception {
+		TimeslotDAO dao = new TimeslotDAO();
+		dao.changeTimeslot(timeslotID, status);
 		return false;
 	}
 	
@@ -86,15 +87,23 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
     		CloseTimeSlotRequest request = new Gson().fromJson(httpBody,CloseTimeSlotRequest.class);
     		//get the request in the form of a class
     		String secretCode = request.secretCode;
+    		int status = 0;//1 is open, 0 is closed
     		
-    	
-    		if(CloseTimeSlot("open","aklsdhjkjh")) {
+    		
+    		try {
+    		if(CloseTimeSlot(secretCode,status)) {
     			 httpResponse = new CloseTimeSlotResponse(200);
       			jsonResponse.put("body", httpResponse);
      		 } else {
      			 logger.log("Incorrect secretCode");
      			 errorResponse(jsonResponse);
      		 }
+    		} catch (Exception e) {
+					logger.log("SQL failure");
+					httpResponse = new CloseTimeSlotResponse(400);
+	        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+ 			}
+    		
     	
     	
     	logger.log("result: " + jsonResponse.toJSONString());
