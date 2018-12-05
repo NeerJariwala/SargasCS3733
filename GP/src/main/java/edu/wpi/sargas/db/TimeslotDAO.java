@@ -54,11 +54,11 @@ public class TimeslotDAO {
         }
     }
     
-    public boolean changeTimeslot(String timeslotID, String status) throws Exception{
+    public boolean changeTimeslot(String timeslotID, int status) throws Exception{
         try {
         	String query = "UPDATE Timeslot SET open = ? WHERE TimeslotID = ?;";
         	PreparedStatement ps = conn.prepareStatement(query);
-            ps.setString(1, status);
+            ps.setInt(1, status);
             ps.setString(2, timeslotID);
             int numAffected = ps.executeUpdate();
             ps.close();
