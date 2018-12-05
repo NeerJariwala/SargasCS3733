@@ -13,7 +13,7 @@ public class TestTimeslot {
 	@Test
 	public void test() {
 		int duration = 15;
-		double startTime = 2;
+		LocalTime startTime = LocalTime.of(2, 0);
 		Timeslot t = new Timeslot(startTime,duration, "string");
 		assertEquals(t.startTime,startTime);
 		assertEquals(t.duration,duration);
