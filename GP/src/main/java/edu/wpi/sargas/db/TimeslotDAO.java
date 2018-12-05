@@ -2,6 +2,8 @@ package edu.wpi.sargas.db;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalTime;
+import java.sql.Time;
 
 import edu.wpi.sargas.db.DatabaseUtil;
 import edu.wpi.sargas.demo.entity.Timeslot;
@@ -38,7 +40,7 @@ public class TimeslotDAO {
             ps.setString(1, timeslot.timeslotID);
             ps.setInt(2, timeslot.open);
             ps.setInt(3, timeslot.duration);
-            ps.setDouble(4, timeslot.startTime);
+            ps.setTime(4, Time.valueOf(timeslot.startTime));
             ps.setString(5, timeslot.day);
             ps.execute();
 
