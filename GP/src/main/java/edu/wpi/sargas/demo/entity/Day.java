@@ -37,6 +37,11 @@ public class Day {
 		this.week = week;
 	}
 	
+	//Method that adds a timeslot to its arraylist
+	public void addTimeslot(Timeslot t) {
+		timeslots.add(t);
+	}
+	
 	private void generateTimeslots(int duration) {
 		
 		long timeDifference = startTime.until(endTime, ChronoUnit.MINUTES);

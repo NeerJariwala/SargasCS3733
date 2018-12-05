@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import edu.wpi.sargas.db.DayDAO;
+import edu.wpi.sargas.db.TimeslotDAO;
 import edu.wpi.sargas.db.WeekDAO;
 
 public class Schedule {
@@ -144,16 +145,44 @@ public class Schedule {
 		
 		}
 		
-		for(Week week : weeks) {
+		WeekDAO weekDao = new WeekDAO();
+		DayDAO dayDao = new DayDAO();
+		TimeslotDAO timeslotDao = new TimeslotDAO();
+		
+		try {
+			ArrayList<Week> weeks = weekDao.getWeeks(scheduleId);
+			Week weekOf = null;
 			
-			if(week.containsDate(target)) {
-				return week;
+			//find the week we need
+			for(Week week: weeks) {
+				if((week.startDate.isBefore(target) || week.startDate.isEqual(target)) && (week.endDate.isAfter(target)) || week.endDate.isEqual(target)) {
+					//make sure the target is between the start and end date
+					weekOf = week;
+				}
 			}
 			
+			if(weekOf == null) {
+				return null;
+			} else {
+				//put the days and timeslots in the week
+				ArrayList<Day> days = dayDao.getDays(weekOf.WeekID);
+				
+				for(Day day: days) {
+					weekOf.addDay(day);
+					
+					ArrayList<Timeslot> timeslots = timeslotDao.getTimeslots(day.DayID);
+					
+					for(Timeslot timeslot : timeslots) {
+						day.addTimeslot(timeslot);
+					}
+					
+				}
+				return weekOf;
+			}
+			
+		} catch(Exception e) {
+			return null;
 		}
-		
-		//if we checked all weeks and haven't returned, no weeks contain the date
-		return null;
 	}
 	
 	public String getSecretCode() {
