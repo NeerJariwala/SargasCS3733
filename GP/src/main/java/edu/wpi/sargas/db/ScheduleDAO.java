@@ -120,7 +120,7 @@ public class ScheduleDAO {
             ResultSet resultSet = ps.executeQuery();
             
             while (resultSet.next()) {
-                if(resultSet.getString("secretCode") == secretCode) {
+                if(resultSet.getString("secretCode").equals(secretCode)) {
                     resultSet.close();
                     ps.close();
                     return true;

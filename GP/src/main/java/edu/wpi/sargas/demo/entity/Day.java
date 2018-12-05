@@ -27,7 +27,6 @@ public class Day {
 		this.endTime = LocalTime.of(endHour, 0);
 		this.week = week;
 		
-		generateTimeslots(duration);
 	}
 	
 	//after fetch from database
@@ -44,7 +43,7 @@ public class Day {
 		timeslots.add(t);
 	}
 	
-	private void generateTimeslots(int duration) {
+	public void generateTimeslots(int duration) {
 		
 		long timeDifference = startTime.until(endTime, ChronoUnit.MINUTES);
 		//how many minutes between start and end
@@ -58,7 +57,7 @@ public class Day {
 			try {
 				dao.createTimeslot(t);
 			} catch(Exception e) {
-				System.out.println("TIMESLOT SQL ISSUE");
+				System.out.println(e.getMessage());
 			}
 			
 			timeslots.add(t);

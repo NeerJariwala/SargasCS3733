@@ -41,7 +41,7 @@ public class OrganizerCancelMeetingHandlerTest {
     	Schedule sched = null;
     	
     	try {
-    		sched = new Schedule(20,"name",LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1), 4,16);
+    		sched = new Schedule(20,"name",LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 3), 4,16);
     	} catch(Exception e) {
     		System.out.println("problem");
     	}
@@ -85,7 +85,7 @@ public class OrganizerCancelMeetingHandlerTest {
     	
     	
     	try {
-    		sched = new Schedule(20,"name",LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1), 4,16);
+    		sched = new Schedule(20,"name",LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 3), 4,16);
     	} catch(Exception e) {
     		System.out.println("problem");
     	}
