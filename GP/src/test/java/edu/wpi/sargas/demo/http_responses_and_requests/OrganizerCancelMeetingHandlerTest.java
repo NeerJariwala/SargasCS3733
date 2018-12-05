@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
+import edu.wpi.sargas.db.MeetingDAO;
 import edu.wpi.sargas.db.ScheduleDAO;
 import edu.wpi.sargas.demo.TestContext;
 import edu.wpi.sargas.demo.entity.Schedule;
@@ -38,10 +39,16 @@ public class OrganizerCancelMeetingHandlerTest {
     public void testOrganizerCancelMeetingHandler() throws IOException {
     	ScheduleDAO dao = new ScheduleDAO();
     	Schedule sched = null;
-    	Meeting meeting = new Meeting("meeting", sched.weeks.get(0).days.get(0).timeslots.get(0).timeslotID);
+    	
     	try {
     		sched = new Schedule(20,"name",LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1), 4,16);
-    		dao.createSchedule(sched);
+    	} catch(Exception e) {
+    		System.out.println("problem");
+    	}
+    	Meeting meeting = new Meeting("meeting", sched.weeks.get(0).days.get(0).timeslots.get(0).timeslotID);
+    	
+    	try {
+    		new MeetingDAO().createMeeting(meeting);
     	} catch(Exception e) {
     		System.out.println("problem");
     	}
@@ -75,15 +82,14 @@ public class OrganizerCancelMeetingHandlerTest {
     public void testError() throws IOException {
     	ScheduleDAO dao = new ScheduleDAO();
     	Schedule sched = null;
-    	Meeting meeting = new Meeting("meeting", sched.weeks.get(0).days.get(0).timeslots.get(0).timeslotID);
+    	
     	
     	try {
     		sched = new Schedule(20,"name",LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1), 4,16);
-    		dao.createSchedule(sched);
     	} catch(Exception e) {
     		System.out.println("problem");
     	}
-    	
+    	Meeting meeting = new Meeting("meeting", sched.weeks.get(0).days.get(0).timeslots.get(0).timeslotID);
         OrganizerCancelMeetingHandler handler = new OrganizerCancelMeetingHandler();
         
         String testInput = SAMPLE_INPUT_STRING + "\"" + meeting.meetingID + "\" \"secretCode\": \"" + "does not exist" + "\"}";

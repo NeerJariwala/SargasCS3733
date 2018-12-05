@@ -6,6 +6,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import edu.wpi.sargas.db.TimeslotDAO;
+
 public class Day {
 	
 	public String DayID;
@@ -49,11 +51,16 @@ public class Day {
 		
 		int numTimeslots = (int)(timeDifference / duration); //get the number of timeslots we can fit in that period
 		LocalTime cursor = startTime; //begin at the start of the day
-		
+		TimeslotDAO dao = new TimeslotDAO();
 		for(int i = 0; i<numTimeslots; i++) {
 			//double start = cursor.getHour() + (cursor.getMinute() / 60.0);
 			Timeslot t = new Timeslot(cursor, duration, this.DayID);
-			//TODO: put timeslot in RDS w/ DAO
+			try {
+				dao.createTimeslot(t);
+			} catch(Exception e) {
+				System.out.println("TIMESLOT SQL ISSUE");
+			}
+			
 			timeslots.add(t);
 			cursor = cursor.plusMinutes(duration);
 		}

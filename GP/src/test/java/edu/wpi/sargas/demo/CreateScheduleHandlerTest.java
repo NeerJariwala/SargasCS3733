@@ -31,13 +31,13 @@ public class CreateScheduleHandlerTest {
     private static final String EXPECTED_OUTPUT_STRING = "{\"FOO\": \"BAR\"}";
     
     static final String testInput2 = "{\"name\": \"Schedule1\" \"duration\": \"10\""
-    		+ "\"startDate\": \"1999-01-01\" \"endDate\": \"2000-01-01\""
+    		+ "\"startDate\": \"1999-01-01\" \"endDate\": \"1999-02-01\""
     		+ "\"startHour\": \"8\" \"endHour\": \"20\"}";
     static final String testInput3 = "{\"name\": \"Schedule1\" \"duration\": \"10\""
-    		+ "\"startDate\": \"1999-01-01\" \"endDate\": \"2000-01-01\""
+    		+ "\"startDate\": \"1999-01-01\" \"endDate\": \"1999-02-01\""
     		+ "\"startHour\": \"8\" \"endHour\": \"7\"}";
     static final String testInput4 = "{\"name\": \"Schedule1\" \"duration\": \"10\""
-    		+ "\"startDate\": \"1999-01-01\" \"endDate\": \"2000-01-01\""
+    		+ "\"startDate\": \"1999-01-01\" \"endDate\": \"1999-02-01\""
     		+ "\"startHour\": \"8\" \"endHour\": \"25\"}";
     
     
