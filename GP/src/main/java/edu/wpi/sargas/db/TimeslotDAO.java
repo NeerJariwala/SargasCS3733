@@ -33,6 +33,22 @@ public class TimeslotDAO {
             throw new Exception("Failed to create timeslot: " + e.getMessage());
         }
     }
+    
+    public boolean changeTimeslot(String timeslotID, String status) throws Exception{
+        try {
+        	String query = "UPDATE Timeslot SET open = ? WHERE TimeslotID = ?;";
+        	PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, status);
+            ps.setString(2, timeslotID);
+            int numAffected = ps.executeUpdate();
+            ps.close();
+            
+            return (numAffected == 1);
+        } catch (Exception e) {
+            throw new Exception("Failed to update Timeslot: " + e.getMessage());
+        }
+    	
+    }
 
 
 
