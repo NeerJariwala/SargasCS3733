@@ -111,6 +111,28 @@ public class ScheduleDAO {
     private Schedule generateSchedule(ResultSet resultSet) throws Exception {
         return new Schedule (resultSet.getInt("timeslotDuration"), resultSet.getString("scheduleId"), resultSet.getString("name"), resultSet.getDate("startDate").toLocalDate(), resultSet.getDate("endDate").toLocalDate(), resultSet.getInt("startHour"), resultSet.getInt("endHour"), resultSet.getString("secretCode"), resultSet.getDate("dateCreated").toLocalDate());
     }
+    
+    
+    
+    public boolean validateSecretCode(String secretCode) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule;");
+            ResultSet resultSet = ps.executeQuery();
+            
+            while (resultSet.next()) {
+                if(resultSet.getString("secretCode") == secretCode) {
+                    resultSet.close();
+                    ps.close();
+                    return true;
+                }
+            }
+            ps.close();
+            return false;
+
+        } catch (Exception e) {
+            throw new Exception("Invalid SecretCode: " + e.getMessage());
+        }
+    }
 
     
 
