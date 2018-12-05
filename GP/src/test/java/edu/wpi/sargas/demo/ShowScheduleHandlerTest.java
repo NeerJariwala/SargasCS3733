@@ -25,7 +25,6 @@ import org.junit.Test;
 public class ShowScheduleHandlerTest {
 	
 	String testInput1 = "{\"date\": \"2002-01-03\",";
-	Schedule testSched = new Schedule(20,"TestSched1",LocalDate.of(2002, 1, 1), LocalDate.of(2002, 2, 1),8,16);
 	String testInput2 = "{\"date\": \"2002-02-03\",";
 	
 	@Before
@@ -42,6 +41,15 @@ public class ShowScheduleHandlerTest {
 	
 	@Test
 	public void testHandleRequest() throws IOException {
+		
+		Schedule testSched = null;
+		
+		try {
+			testSched = new Schedule(20,"TestSched1",LocalDate.of(2002, 1, 1), LocalDate.of(2002, 2, 1),8,16);
+			} catch(Exception e) {
+				System.out.println("problem");
+			}
+		
 		testInput1 += "\"secretCode\": \"" + testSched.getSecretCode() + "\"}"; //add the secret code
 		
 		ShowScheduleHandler handler = new ShowScheduleHandler();
@@ -79,6 +87,15 @@ public class ShowScheduleHandlerTest {
 	
 	@Test
 	public void outsideWeek() throws IOException {
+		
+		Schedule testSched = null;
+		
+		try {
+		 testSched = new Schedule(20,"TestSched1",LocalDate.of(2002, 1, 1), LocalDate.of(2002, 2, 1),8,16);
+		} catch(Exception e) {
+			System.out.println("problem");
+		}
+		
 		testInput2 += "\"secretCode\": \"" + testSched.getSecretCode() + "\"}"; //add the secret code
 		
 		ShowScheduleHandler handler = new ShowScheduleHandler();

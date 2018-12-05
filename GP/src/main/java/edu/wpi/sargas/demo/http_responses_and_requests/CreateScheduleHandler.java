@@ -147,8 +147,10 @@ public class CreateScheduleHandler implements RequestStreamHandler {
     		*/
     		
     		if(!invalidInput) {
-    			Schedule responseSched = new Schedule(duration,name,sd,ed,startHour,endHour);
     			try {
+    				
+    				Schedule responseSched = new Schedule(duration,name,sd,ed,startHour,endHour);
+    				
     				if (addScheduleToDatabase(responseSched)) {
     					httpResponse = new CreateScheduleResponse(200, responseSched, responseSched.getSecretCode());
     	    			jsonResponse.put("body", new Gson().toJson(httpResponse));

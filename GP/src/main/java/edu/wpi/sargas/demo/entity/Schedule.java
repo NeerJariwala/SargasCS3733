@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import edu.wpi.sargas.db.DayDAO;
+import edu.wpi.sargas.db.WeekDAO;
+
 public class Schedule {
 	
 	private static final int secretIdLength = 6;
@@ -20,7 +23,7 @@ public class Schedule {
 	public final LocalDate dateCreated;
 	
 	//to make a new schedule
-	public Schedule(int td, String name, LocalDate sd, LocalDate ed, int sh, int eh) {
+	public Schedule(int td, String name, LocalDate sd, LocalDate ed, int sh, int eh) throws Exception {
 		timeslotDuration = td;
 		scheduleId = UUID.randomUUID().toString(); 
 		this.name = name;
@@ -31,7 +34,11 @@ public class Schedule {
 		secretCode = generateSecret();
 		dateCreated = LocalDate.now(); //make date created today
 		weeks = new ArrayList<Week>();
-		generateWeeks();
+		try {
+			generateWeeks();
+		} catch(Exception e) {
+			throw new Exception("SQL failure");
+		}
 	}
 	
 	//retrieved from database
@@ -49,7 +56,10 @@ public class Schedule {
 	}
 	
 	//TODO: Actually make this method
-	public void generateWeeks() {
+	public void generateWeeks() throws Exception {
+		
+		DayDAO dayDao = new DayDAO();
+		WeekDAO weekDao = new WeekDAO();
 		
 		LocalDate cursor = startDate;
 		
@@ -69,19 +79,20 @@ public class Schedule {
 			case THURSDAY:
 			case FRIDAY:
 				Week w = new Week(cursor,this.scheduleId);
-				//TODO: put this in RDS w/ DAO
 				
 				//add a new day to the week and advance
 				while(cursor.getDayOfWeek() != java.time.DayOfWeek.SATURDAY) {
 					Day newDay = new Day(cursor, startHour, endHour, timeslotDuration, w.WeekID);
 					w.addDay(newDay);
 					cursor = cursor.plusDays(1);
+					dayDao.createDay(newDay);
 					//TODO: put the day and week in RDS w/ DAO
 				}
 				//cursor would be on a saturday right now
 				//bring it to the next monday
 				cursor = cursor.plusDays(2);
 				weeks.add(w);
+				weekDao.createWeek(w);
 				break;
 			
 			default: break;
@@ -98,9 +109,10 @@ public class Schedule {
 				Day newDay = new Day(cursor, startHour, endHour, timeslotDuration, w.WeekID);
 				w.addDay(newDay);
 				cursor = cursor.plusDays(1);
-				//TODO: put the day and week in RDS w/ DAO
+				dayDao.createDay(newDay);
 			}
 			weeks.add(w);
+			weekDao.createWeek(w);
 			//should be on saturday now. bring it to next monday
 			cursor = cursor.plusDays(2);
 		}
