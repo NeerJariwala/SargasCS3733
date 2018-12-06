@@ -147,7 +147,8 @@ public class SearchTimeslotsHandler implements RequestStreamHandler {
     				
     			}
     			
-    			if(timeslots.isEmpty()) {
+    			if(timeslots.isEmpty() || (month.equals("") && year.equals("") && dayOfWeek.equals("") && dayOfMonth.equals(""))) {
+    				//if we have neither timeslots nor search criteria, don't respond with anything 
     				timeslots = null;
     			}
     			
