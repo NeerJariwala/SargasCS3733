@@ -12,35 +12,54 @@
 <style>
 
 table, th, td {
-
 	border: 1px solid black;
-
 	border-collapse: collapse;
-
+	text-align: center;
 }
 
 </style>
-
-
 <script>
 
-	
+	var create_url = "";
+	var name = "";
 
-	function createMeeting() {
+	function processCreateResponse(name) {
+		// String order: name of person creating meeting
 
-		var created = prompt("Would you like to make a meeting at this time? Please put a name.");
-
+		name = prompt("Please enter your name for your meeting to be created:");
 	}
 
-	
+	function processGoResponse() {
 
-	function deleteMeeting() {
-
-		var deleted = confirm("Delete this meeting?");
-
+		alert("Here is the meeting you requested.");
 	}
 
-	
+	function handleClick(e) {
+
+	var data = {};
+  data["name"] = name;
+
+	var js = JSON.stringify(data);
+	console.log("JS:" + js);
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", create_url, true);
+
+	// send the collected data as JSON
+	xhr.send(js);
+
+	// This will process results and update HTML as appropriate.
+	xhr.onloadend = function () {
+		console.log(xhr);
+		console.log(xhr.request);
+		if (xhr.readyState == XMLHttpRequest.DONE) {
+			console.log ("XHR:" + xhr.responseText);
+					processCreateResponse(name, xhr.responseText);
+		} else {
+				processCreateResponse(name, "N/A");
+		}
+	};
+}
+
 
 </script>
 
@@ -50,7 +69,8 @@ table, th, td {
 <body>
 
 
-<h1>Schedule Name</h1>
+<h1>Meeting Scheduler</h1><br>
+<h2>Example Schedule</h2>
 
 <br>
 
@@ -61,91 +81,91 @@ table, th, td {
 
 		<th></th>
 
-		<th>Monday</th>
+		<th>&nbsp; Monday &nbsp;</th>
 
-		<th>Tuesday</th>
+		<th>&nbsp; Tuesday &nbsp;</th>
 
-		<th>Wednesday</th>
+		<th>&nbsp; Wednesday &nbsp;</th>
 
-		<th>Thursday</th>
+		<th>&nbsp; Thursday &nbsp;</th>
 
-		<th>Friday</th>
+		<th>&nbsp; Friday &nbsp;</th>
 
 	</tr>
 
-	
+
 
 	<tr>
 
-		<th> <p>9:00 AM</p> </th>
+		<th> <p>9:00 AM &nbsp;</p> </th>
 
-		<td> <p>unavailable</p> </td>
+		<td bgcolor="#A9A9A9"></td>
 
-		<td> <p>unavailable</p> </td>
+		<td bgcolor="#A9A9A9"></td>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
 	</tr>
 
-	
+
 
 	<tr>
 
-		<th> <p>10:00 AM</p> </th>
+		<th> <p>10:00 AM &nbsp;</p> </th>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="deleteMeeting()"> <b>John Doe</b> </td>
+		<td onclick="deleteMeeting()"> <p>John Doe</p> </td>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
 	</tr>
 
-	
+
 
 	<tr>
 
-		<th> <p>11:00 AM</p> </th>
+		<th> <p>11:00 AM &nbsp;</p> </th>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td> <p>unavailable</p> </td>
+		<td bgcolor="#A9A9A9"></td>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
 	</tr>
 
-	
+
 
 	<tr>
 
-		<th> <p>12:00 PM</p> </th>
+		<th> <p>12:00 PM &nbsp;</p> </th>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="createMeeting()"> <p>free</p> </td>
+		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
 	</tr>
 
-	
+<p id="meeting"></p>
 
 </table>
 
