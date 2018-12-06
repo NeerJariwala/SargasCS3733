@@ -138,7 +138,7 @@ public class SearchTimeslotsHandler implements RequestStreamHandler {
     			Iterator<Timeslot> timeslotIter = timeslots.iterator();
     			
     			//filter out timeslots that aren't open
-    			while(iter.hasNext()) {
+    			while(timeslotIter.hasNext()) {
     				Timeslot t = timeslotIter.next();
     				
     				if(t.open == 0) {
