@@ -135,6 +135,18 @@ public class SearchTimeslotsHandler implements RequestStreamHandler {
     				timeslots.addAll(new TimeslotDAO().getTimeslots(day.DayID));
     			}
     			
+    			Iterator<Timeslot> timeslotIter = timeslots.iterator();
+    			
+    			//filter out timeslots that aren't open
+    			while(iter.hasNext()) {
+    				Timeslot t = timeslotIter.next();
+    				
+    				if(t.open == 0) {
+    					timeslotIter.remove();
+    				}
+    				
+    			}
+    			
     			httpResponse = new SearchTimeslotsResponse(200, timeslots);
     			jsonResponse.put("body", new Gson().toJson(httpResponse));
     			
