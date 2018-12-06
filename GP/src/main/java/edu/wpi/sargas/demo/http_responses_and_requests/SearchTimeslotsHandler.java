@@ -147,6 +147,10 @@ public class SearchTimeslotsHandler implements RequestStreamHandler {
     				
     			}
     			
+    			if(timeslots.isEmpty()) {
+    				timeslots = null;
+    			}
+    			
     			httpResponse = new SearchTimeslotsResponse(200, timeslots);
     			jsonResponse.put("body", new Gson().toJson(httpResponse));
     			
