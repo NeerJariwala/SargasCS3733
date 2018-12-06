@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,12 +16,10 @@ import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
 
-import edu.wpi.sargas.db.MeetingDAO;
-import edu.wpi.sargas.db.ScheduleDAO;
+import edu.wpi.sargas.db.*;
 import edu.wpi.sargas.demo.TestContext;
-import edu.wpi.sargas.demo.entity.Schedule;
-import edu.wpi.sargas.demo.entity.Meeting;
-import edu.wpi.sargas.demo.http_responses_and_requests.CreateScheduleHandler;
+import edu.wpi.sargas.demo.entity.*;
+import edu.wpi.sargas.demo.http_responses_and_requests.CloseTimeSlotHandler;
 
 /**
  * A simple test harness for locally invoking your Lambda function handler.
@@ -33,22 +32,39 @@ public class CloseTimeSlotHandlerTest {
         return ctx;
     }
 	
-    static String SAMPLE_INPUT_STRING = "{\"secretCode\": ";
+    static String SAMPLE_INPUT_STRING = "{\"timeslotID\": \"";
 
     @Test
     public void testCloseTimeSlotHandler() throws IOException {
-    	ScheduleDAO dao = new ScheduleDAO();
+    	ScheduleDAO sched_dao = new ScheduleDAO();
+    	WeekDAO week_dao = new WeekDAO();
+    	DayDAO day_dao = new DayDAO();
+    	TimeslotDAO slot_dao = new TimeslotDAO();
+    	ArrayList<Timeslot> slots = new ArrayList<Timeslot>();
+    	ArrayList<Week> weeks = new ArrayList<Week>();
+    	ArrayList<Day> days = new ArrayList<Day>();
+    	Week w = null;
+    	String dayID = null;
+    	String tsID = "asdf";
+    	
+    	
     	Schedule sched = null;
     	
     	try {
     		sched = new Schedule(60,"name",LocalDate.of(2018, 12, 10), LocalDate.of(2018, 12, 11), 4,6);
+    		weeks = week_dao.getWeeks(sched.scheduleId);
+    		w = weeks.get(0);
+    		days = day_dao.getDays(w.WeekID);
+    		dayID = days.get(0).DayID;
+    		slots = slot_dao.getTimeslots(dayID);
+    		tsID = slots.get(0).timeslotID;
     	} catch(Exception e) {
     		System.out.println("problem");
     	}
     	
         CloseTimeSlotHandler handler = new CloseTimeSlotHandler();
         
-        String testInput = SAMPLE_INPUT_STRING + "\"" +sched.getSecretCode() + "\"}";
+        String testInput = SAMPLE_INPUT_STRING + tsID +"\" \"status\": \"" + 0 + "\"}";
         System.out.println(testInput);
         
         InputStream input = new ByteArrayInputStream(testInput.getBytes());;
@@ -75,7 +91,7 @@ public class CloseTimeSlotHandlerTest {
     public void testError() throws IOException {
     	ScheduleDAO dao = new ScheduleDAO();
     	Schedule sched = null;
-    	
+    	String tsID = "asdf";
     	
     	try {
     		sched = new Schedule(60,"name",LocalDate.of(2018, 12, 10), LocalDate.of(2018, 12, 11), 4,6);
@@ -84,7 +100,7 @@ public class CloseTimeSlotHandlerTest {
     	}
         CloseTimeSlotHandler handler = new CloseTimeSlotHandler();
         
-        String testInput = SAMPLE_INPUT_STRING + "\"" +"does not exist" + "\"}";
+        String testInput = SAMPLE_INPUT_STRING + tsID +"\" \"status\": \"" + 1 + "\"}";
         System.out.println(testInput);
         
         InputStream input = new ByteArrayInputStream(testInput.getBytes());;
