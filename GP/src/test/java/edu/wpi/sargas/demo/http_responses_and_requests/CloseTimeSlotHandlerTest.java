@@ -41,14 +41,14 @@ public class CloseTimeSlotHandlerTest {
     	Schedule sched = null;
     	
     	try {
-    		sched = new Schedule(20,"name",LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 3), 4,16);
+    		sched = new Schedule(60,"name",LocalDate.of(2018, 12, 10), LocalDate.of(2018, 12, 11), 4,6);
     	} catch(Exception e) {
     		System.out.println("problem");
     	}
     	
         CloseTimeSlotHandler handler = new CloseTimeSlotHandler();
         
-        String testInput = SAMPLE_INPUT_STRING + sched.getSecretCode() + "\"}";
+        String testInput = SAMPLE_INPUT_STRING + "\"" +sched.getSecretCode() + "\"}";
         System.out.println(testInput);
         
         InputStream input = new ByteArrayInputStream(testInput.getBytes());;
@@ -64,7 +64,7 @@ public class CloseTimeSlotHandlerTest {
         	response = (JSONObject)new JSONParser().parse(sampleOutputString);
         	body = (JSONObject)new JSONParser().parse(response.get("body").toString());
         } catch(ParseException e) {
-        	System.out.println("problem");
+        	System.out.println(e.toString());
         }
         
         Assert.assertEquals(body.get("httpCode").toString(), "200");
@@ -78,13 +78,13 @@ public class CloseTimeSlotHandlerTest {
     	
     	
     	try {
-    		sched = new Schedule(20,"name",LocalDate.of(2000, 1, 1), LocalDate.of(2000, 1, 3), 4,16);
+    		sched = new Schedule(60,"name",LocalDate.of(2018, 12, 10), LocalDate.of(2018, 12, 11), 4,6);
     	} catch(Exception e) {
     		System.out.println("problem");
     	}
         CloseTimeSlotHandler handler = new CloseTimeSlotHandler();
         
-        String testInput = SAMPLE_INPUT_STRING + "does not exist" + "\"}";
+        String testInput = SAMPLE_INPUT_STRING + "\"" +"does not exist" + "\"}";
         System.out.println(testInput);
         
         InputStream input = new ByteArrayInputStream(testInput.getBytes());;
@@ -100,7 +100,7 @@ public class CloseTimeSlotHandlerTest {
         	response = (JSONObject)new JSONParser().parse(sampleOutputString);
         	body = (JSONObject)new JSONParser().parse(response.get("body").toString());
         } catch(ParseException e) {
-        	System.out.println("problem");
+        	System.out.println(e.toString());
         }
         
         Assert.assertEquals(body.get("httpCode").toString(), "400");
