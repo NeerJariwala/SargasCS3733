@@ -32,7 +32,7 @@ public class CloseTimeSlotHandlerTest {
         return ctx;
     }
 	
-    static String SAMPLE_INPUT_STRING = "{\"timeslotID\": \"";
+    static String SAMPLE_INPUT_STRING = "{\"secretCode\": \"";
 
     @Test
     public void testCloseTimeSlotHandler() throws IOException {
@@ -45,13 +45,16 @@ public class CloseTimeSlotHandlerTest {
     	ArrayList<Day> days = new ArrayList<Day>();
     	Week w = null;
     	String dayID = null;
+    	String secretCode = "asdf";
     	String tsID = "asdf";
+    	
     	
     	
     	Schedule sched = null;
     	
     	try {
     		sched = new Schedule(60,"name",LocalDate.of(2018, 12, 10), LocalDate.of(2018, 12, 11), 4,6);
+    		secretCode = sched.getSecretCode();
     		weeks = week_dao.getWeeks(sched.scheduleId);
     		w = weeks.get(0);
     		days = day_dao.getDays(w.WeekID);
@@ -65,7 +68,7 @@ public class CloseTimeSlotHandlerTest {
     	
         CloseTimeSlotHandler handler = new CloseTimeSlotHandler();
         
-        String testInput = SAMPLE_INPUT_STRING + tsID +"\" \"status\": \"" + 0 + "\"}";
+        String testInput = SAMPLE_INPUT_STRING + secretCode +"\" \"timeslotID\": \"" + tsID + "\"}";
         System.out.println(testInput);
         
         InputStream input = new ByteArrayInputStream(testInput.getBytes());;
@@ -94,6 +97,7 @@ public class CloseTimeSlotHandlerTest {
     public void testError() throws IOException {
     	ScheduleDAO dao = new ScheduleDAO();
     	Schedule sched = null;
+    	String secretCode = "fake";
     	String tsID = "asdf";
     	
     	try {
@@ -104,7 +108,7 @@ public class CloseTimeSlotHandlerTest {
     	}
         CloseTimeSlotHandler handler = new CloseTimeSlotHandler();
         
-        String testInput = SAMPLE_INPUT_STRING + tsID +"\" \"status\": \"" + 1 + "\"}";
+        String testInput = SAMPLE_INPUT_STRING + secretCode +"\" \"timeslotID\": \"" + tsID + "\"}";
         System.out.println(testInput);
         
         InputStream input = new ByteArrayInputStream(testInput.getBytes());;

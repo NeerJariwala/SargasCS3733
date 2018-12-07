@@ -29,7 +29,7 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
 		jsonResponse.put("body", response);
 	}
 
-	public boolean CloseTimeSlot(String timeslotID, int status, String secretCode) throws Exception {
+	public boolean CloseTimeSlot(String secretCode, String timeslotID, int status) throws Exception {
 		TimeslotDAO ts_dao = new TimeslotDAO();
 		ScheduleDAO sched_dao = new ScheduleDAO();
 		
@@ -102,7 +102,7 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
     		
     		
     		try {
-    		if(CloseTimeSlot(timeslotID, status, secretCode)) {
+    		if(CloseTimeSlot(secretCode, timeslotID, status)) {
     			 httpResponse = new CloseTimeSlotResponse(200);
       			jsonResponse.put("body", httpResponse);
      		 } else {
