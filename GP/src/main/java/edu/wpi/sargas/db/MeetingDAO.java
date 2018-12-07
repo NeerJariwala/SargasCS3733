@@ -2,8 +2,6 @@ package edu.wpi.sargas.db;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.UUID;
-import java.sql.Date;
 
 import edu.wpi.sargas.db.DatabaseUtil;
 import edu.wpi.sargas.demo.entity.Meeting;
@@ -36,10 +34,11 @@ public class MeetingDAO {
                 }
             }
             
-        	ps = conn.prepareStatement("INSERT INTO Meeting (meetingID, name, Timeslot) values(?,?,?);");
+        	ps = conn.prepareStatement("INSERT INTO Meeting (meetingID, name, Timeslot, secretCode) values(?,?,?);");
             ps.setString(1, meeting.meetingID);
             ps.setString(2, meeting.name);
             ps.setString(3, meeting.timeslot);
+            ps.setString(4, meeting.secretCode);
             ps.execute();
 
             ps.close();
