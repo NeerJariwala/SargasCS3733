@@ -34,7 +34,7 @@ public class MeetingDAO {
                 }
             }
             
-        	ps = conn.prepareStatement("INSERT INTO Meeting (meetingID, name, Timeslot, secretCode) values(?,?,?);");
+        	ps = conn.prepareStatement("INSERT INTO Meeting (meetingID, name, Timeslot, secretCode) values(?,?,?,?);");
             ps.setString(1, meeting.meetingID);
             ps.setString(2, meeting.name);
             ps.setString(3, meeting.timeslot);
@@ -53,6 +53,20 @@ public class MeetingDAO {
         try {
             PreparedStatement ps = conn.prepareStatement("DELETE FROM Meeting WHERE meetingID = ?;");
             ps.setString(1, meetingID);
+            int numAffected = ps.executeUpdate();
+            ps.close();
+            
+            return (numAffected == 1);
+
+        } catch (Exception e) {
+            throw new Exception("Failed to delete meeting: " + e.getMessage());
+        }
+    }
+    
+    public boolean deleteMeetingPart(String secretCode) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM Meeting WHERE secretCode = ?;");
+            ps.setString(1, secretCode);
             int numAffected = ps.executeUpdate();
             ps.close();
             

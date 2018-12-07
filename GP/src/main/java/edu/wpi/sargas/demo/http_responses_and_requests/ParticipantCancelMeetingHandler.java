@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,35 +16,20 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 
-import edu.wpi.sargas.db.TimeslotDAO;
-import edu.wpi.sargas.db.ScheduleDAO;
-import edu.wpi.sargas.demo.entity.Timeslot;
+import edu.wpi.sargas.db.MeetingDAO;
 
-public class CloseTimeSlotHandler implements RequestStreamHandler {
+public class ParticipantCancelMeetingHandler implements RequestStreamHandler {
 	
-	private void errorResponse(JSONObject jsonResponse) {
-		CloseTimeSlotResponse response = new CloseTimeSlotResponse(400);
-		jsonResponse.put("body", response);
-	}
-
-	public boolean CloseTimeSlot(String secretCode, String timeslotID, int status) throws Exception {
-		TimeslotDAO ts_dao = new TimeslotDAO();
-		ScheduleDAO sched_dao = new ScheduleDAO();
-		
-		if(!sched_dao.validateSecretCode(secretCode)) {
-			return false;
-		}
-		else {
-			ts_dao.changeTimeslot(timeslotID, status);
-			return true;
-		}
-		
+	public void errorResponse(JSONObject jsonResponse) {
+		ParticipantCancelMeetingResponse httpResponse = new ParticipantCancelMeetingResponse(400);
+		jsonResponse.put("body", new Gson().toJson(httpResponse));
 	}
 	
     @Override
     public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
-        
+
     	LambdaLogger logger = context.getLogger();
+    	logger.log("Beginning to create schedule");
     	
     	JSONObject headerJson = new JSONObject();
 		headerJson.put("Content-Type",  "application/json");
@@ -56,7 +39,7 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
 	    
     	JSONObject jsonResponse = new JSONObject();
     	jsonResponse.put("headers", headerJson);
-    	CloseTimeSlotResponse httpResponse = null;
+    	ParticipantCancelMeetingResponse httpResponse = null;
     	String httpBody = null;
     	boolean processed = false;
     	
@@ -72,57 +55,46 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
     		if(requestType != null && requestType.equalsIgnoreCase("OPTIONS")) {
     			//if we got an OPTIONS request, provide a 200 response
     			logger.log("Options request");
-    			httpResponse = new CloseTimeSlotResponse(200);
-    			//no schedule/secret code needed because it was an options request
-    			
+    			httpResponse = new ParticipantCancelMeetingResponse(200);
+    			processed = true;
     		} else { //otherwise, check out the response body later
-    			jsonResponse.put("body", new Gson().toJson(httpResponse));
+    			httpBody = (String)jsonRequest.get("body");
     			if(httpBody == null) {
     				httpBody = jsonRequest.toJSONString();
     			}
     		}
     	} catch(ParseException e) {
     		//if unable to parse, prepare an invalid input response
-    		e.printStackTrace();
     		logger.log(e.toString());
-    		httpResponse = new CloseTimeSlotResponse(400);
+    		httpResponse = new ParticipantCancelMeetingResponse(400);
     		jsonResponse.put("body", new Gson().toJson(httpResponse));
     		processed = true;
     	}
     	
-    	if(!processed) { 
-    		//if it's not OPTIONS and not a parse exception, further processing must be done
-    		boolean invalidInput = false;
-    		
-    		CloseTimeSlotRequest request = new Gson().fromJson(httpBody,CloseTimeSlotRequest.class);
-    		//get the request in the form of a class
+    	if(!processed) {
+    		ParticipantCancelMeetingRequest request = new Gson().fromJson(httpBody, ParticipantCancelMeetingRequest.class);
     		String secretCode = request.secretCode;
-    		String timeslotID = request.timeslotID;
-    		int status = 0;//1 is open, 0 is closed
-    		
+    		MeetingDAO dao = new MeetingDAO();
     		
     		try {
-    		if(CloseTimeSlot(secretCode, timeslotID, status)) {
-    			 httpResponse = new CloseTimeSlotResponse(200);
-    			 jsonResponse.put("body", new Gson().toJson(httpResponse));
-     		 } else {
-     			 logger.log("Incorrect secretCode");
-     			 errorResponse(jsonResponse);
-     		 }
-    		} catch (Exception e) {
-    				e.printStackTrace();
-					logger.log("SQL failure");
-					httpResponse = new CloseTimeSlotResponse(400);
-	        		jsonResponse.put("body", new Gson().toJson(httpResponse));
- 			}
+	    		if(dao.deleteMeetingPart(secretCode)) {
+	    			httpResponse = new ParticipantCancelMeetingResponse(200);
+	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
+	    		} else {
+	    			errorResponse(jsonResponse);
+	    		}
+    		} catch(Exception e) {
+    			logger.log(e.toString());
+    			errorResponse(jsonResponse);
+    		}
     		
-    	
+    	}
     	
     	logger.log("result: " + jsonResponse.toJSONString());
     	OutputStreamWriter writer = new OutputStreamWriter(output, "UTF-8");
         writer.write(jsonResponse.toJSONString());  
         writer.close();
+    	
     }
 
-}
 }
