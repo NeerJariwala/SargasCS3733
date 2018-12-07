@@ -76,7 +76,7 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
     			//no schedule/secret code needed because it was an options request
     			
     		} else { //otherwise, check out the response body later
-    			httpBody = (String)jsonRequest.get("body");
+    			jsonResponse.put("body", new Gson().toJson(httpResponse));
     			if(httpBody == null) {
     				httpBody = jsonRequest.toJSONString();
     			}
@@ -104,7 +104,7 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
     		try {
     		if(CloseTimeSlot(secretCode, timeslotID, status)) {
     			 httpResponse = new CloseTimeSlotResponse(200);
-      			jsonResponse.put("body", httpResponse);
+    			 jsonResponse.put("body", new Gson().toJson(httpResponse));
      		 } else {
      			 logger.log("Incorrect secretCode");
      			 errorResponse(jsonResponse);
