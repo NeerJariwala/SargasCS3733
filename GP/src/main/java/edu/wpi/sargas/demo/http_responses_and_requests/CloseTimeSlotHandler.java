@@ -26,7 +26,8 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
 	
 	private void errorResponse(JSONObject jsonResponse) {
 		CloseTimeSlotResponse response = new CloseTimeSlotResponse(400);
-		jsonResponse.put("body", response);
+		//jsonResponse.put("body", response);
+		jsonResponse.put("body", new Gson().toJson(response));
 	}
 
 	public boolean CloseTimeSlot(String secretCode, String timeslotID, int status) throws Exception {
