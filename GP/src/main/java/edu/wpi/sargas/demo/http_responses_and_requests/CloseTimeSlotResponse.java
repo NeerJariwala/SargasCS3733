@@ -7,7 +7,7 @@ public class CloseTimeSlotResponse {
 	int httpCode; //http code of the response
 	
 	public CloseTimeSlotResponse(int http) {
-		this.httpCode = httpCode;
+		this.httpCode = http;
 		
 	}
 	

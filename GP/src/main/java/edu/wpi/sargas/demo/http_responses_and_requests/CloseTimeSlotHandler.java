@@ -19,6 +19,7 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 
 import edu.wpi.sargas.db.TimeslotDAO;
+import edu.wpi.sargas.db.ScheduleDAO;
 import edu.wpi.sargas.demo.entity.Timeslot;
 
 public class CloseTimeSlotHandler implements RequestStreamHandler {
@@ -28,10 +29,18 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
 		jsonResponse.put("body", response);
 	}
 
-	public boolean CloseTimeSlot(String timeslotID, int status) throws Exception {
-		TimeslotDAO dao = new TimeslotDAO();
-		dao.changeTimeslot(timeslotID, status);
-		return false;
+	public boolean CloseTimeSlot(String timeslotID, int status, String secretCode) throws Exception {
+		TimeslotDAO ts_dao = new TimeslotDAO();
+		ScheduleDAO sched_dao = new ScheduleDAO();
+		
+		if(!sched_dao.validateSecretCode(secretCode)) {
+			return false;
+		}
+		else {
+			ts_dao.changeTimeslot(timeslotID, status);
+			return true;
+		}
+		
 	}
 	
     @Override
@@ -74,6 +83,7 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
     		}
     	} catch(ParseException e) {
     		//if unable to parse, prepare an invalid input response
+    		e.printStackTrace();
     		logger.log(e.toString());
     		httpResponse = new CloseTimeSlotResponse(400);
     		jsonResponse.put("body", new Gson().toJson(httpResponse));
@@ -87,11 +97,12 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
     		CloseTimeSlotRequest request = new Gson().fromJson(httpBody,CloseTimeSlotRequest.class);
     		//get the request in the form of a class
     		String secretCode = request.secretCode;
+    		String timeslotID = request.timeslotID;
     		int status = 0;//1 is open, 0 is closed
     		
     		
     		try {
-    		if(CloseTimeSlot(secretCode,status)) {
+    		if(CloseTimeSlot(timeslotID, status, secretCode)) {
     			 httpResponse = new CloseTimeSlotResponse(200);
       			jsonResponse.put("body", httpResponse);
      		 } else {
@@ -99,6 +110,7 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
      			 errorResponse(jsonResponse);
      		 }
     		} catch (Exception e) {
+    				e.printStackTrace();
 					logger.log("SQL failure");
 					httpResponse = new CloseTimeSlotResponse(400);
 	        		jsonResponse.put("body", new Gson().toJson(httpResponse));
