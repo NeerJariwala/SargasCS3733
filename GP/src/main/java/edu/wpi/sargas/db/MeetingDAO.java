@@ -62,6 +62,20 @@ public class MeetingDAO {
             throw new Exception("Failed to delete meeting: " + e.getMessage());
         }
     }
+    
+    public boolean deleteMeetingPart(String secretCode) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM Meeting WHERE secretCode = ?;");
+            ps.setString(1, secretCode);
+            int numAffected = ps.executeUpdate();
+            ps.close();
+            
+            return (numAffected == 1);
+
+        } catch (Exception e) {
+            throw new Exception("Failed to delete meeting: " + e.getMessage());
+        }
+    }
 
 
 }
