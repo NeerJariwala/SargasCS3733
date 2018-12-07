@@ -62,7 +62,7 @@ public class CloseTimeSlotHandlerTest {
     		slots = slot_dao.getTimeslots(dayID);
     		tsID = slots.get(0).timeslotID;
     	} catch(Exception e) {
-    		e.printStackTrace();
+    		//e.printStackTrace();
     		System.out.println("problem");
     	}
     	
@@ -81,7 +81,6 @@ public class CloseTimeSlotHandlerTest {
         JSONObject response = null;
         JSONObject body = null;
         try {
-        	System.out.println(sampleOutputString);
         	response = (JSONObject)new JSONParser().parse(sampleOutputString);
         	body = (JSONObject)new JSONParser().parse(response.get("body").toString());
         } catch(ParseException e) {
@@ -103,7 +102,7 @@ public class CloseTimeSlotHandlerTest {
     	try {
     		sched = new Schedule(60,"name",LocalDate.of(2018, 12, 10), LocalDate.of(2018, 12, 11), 4,6);
     	} catch(Exception e) {
-    		e.printStackTrace();
+    		//e.printStackTrace();
     		System.out.println("problem");
     	}
         CloseTimeSlotHandler handler = new CloseTimeSlotHandler();
