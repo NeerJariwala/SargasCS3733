@@ -42,7 +42,7 @@ function processGoResponse() {
 
 function handleClick() {
 		let data = {};
-	  let form = document.createForm; 
+	  let form = document.createForm;
 	  let name = form.name.value;
 	  let startDate = form.startDate.value;
 	  let endDate = form.endDate.value;
@@ -100,7 +100,7 @@ function handleRefreshDisplay(week) {
 			console.log ("XHR:" + xhr.responseText);
 					processCreateResponse(xhr.responseText);
 		} else {
-				processCreateResponse(xhr.responseText;
+				processCreateResponse(xhr.responseText);
 		}
 	};
 
@@ -185,7 +185,7 @@ function processRetrieveScheduleResponse (response) {
 
 </script>
 </head>
-<body onload="handleRefreshDisplay(1)">
+<body onload="JavaScript:handleRefreshDisplay(1)">
 
 
 <section id="banner">
@@ -201,7 +201,7 @@ function processRetrieveScheduleResponse (response) {
 		<p>From:<input type="time" name="startHour" min="0:00" max="24:00">
 		&nbsp;To:<input type="time" name="endHour" min="0:00" max="24:00"></p>
 		<p>Duration:<input type="number" name="duration"> Minutes </p>
-		<input type="button" name = "createBtn" value="Create"  onClick="handleClick()">
+		<input type="button" name = "createBtn" value="Create"  onClick="JavaScript:handleClick(this)">
 </form>
 
 <h2>Go to pre-existing Schedule</h2>
