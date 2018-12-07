@@ -4,61 +4,44 @@
 
   <meta charset="UTF-8">
   <title>Sys Admin Dashboard</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-  <style>
-  body {
-    padding-top: 80px;
-    text-align: center;
-    font-family: Helvetica, monospace;
-    background-size: cover;
+<script>
+  function deleteSchedule() {
+    alert("Successfully deleted schedules!");
   }
-  h1, h2 {
-    display: inline-block;
-    background: #fff;
-  }
-  h1 {
-    font-size: 30px
-  }
-  h2 {
-    font-size: 20px;
-  }
-  table, th, td {
-      border: 1px solid black;
-  }
-  </style>
 
-  <script>
-    function deleteSchedule() {
-      alert("Successfully deleted schedules!");
-    }
+  function showSchedules() {
+    var x = document.getElementById("schedules");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+  }
 
-    function showSchedules() {
-      var x = document.getElementById("schedules");
-          if (x.style.display === "none") {
-              x.style.display = "block";
-          } else {
-              x.style.display = "none";
-          }
-    }
-
-  </script>
+</script>
 </head>
 <body>
 
-<h1> Meeting Scheduler </h1><br>
-<h2> Admin Dashboard </h2>
+<section id="banner">
+	<h2><strong>Meeting Scheduler: </strong> Admin Portal</h2>
+	<p></p>
+</section>
+
 
 <div id="main">
-  <br><text style="font-weight:bold;"> Delete schedules: </text>
-    <br><br><br><text> more than </text>
+    <h3> Delete schedules: </h3>
+    <br><text> more than </text>
     <input type="text" name="daysOld">
     <text> days old &nbsp&nbsp </text>
     <input type="submit" value="Go" onclick="deleteSchedule()">
 
-    <br><br><br><br><br>
-    <text style="font-weight:bold;"> Retrieve schedules: </text>
-    <br><br><br><text> from </text>
+    <br><br><br><br>
+    <h3> Retrieve schedules: </h3>
+    <br><text> from </text>
     <input type="text" name="hoursAgo">
     <text> hours ago &nbsp&nbsp</text>
     <input type="submit" value="Go" onclick="showSchedules()">

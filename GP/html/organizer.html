@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>Organizer GUI</title>
+<link rel="stylesheet" href="css/main.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+
+<script>
+const URL = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/";
+const create_schedule = URL + "schedule";
+const show_schedule = URL + "weeklyschedule";
+
+// ADD ALL URLs
+
+function processCreateResponse(response) {
+	let data = JSON.parse(response);
+
+	let secretCode = data["secretCode"];
+	let shareCode = data["shareCode"];
+	let scheduleId = data["scheduleId"];
+
+	window.sessionStorage.setItem("week", 1);
+
+	window.sessionStorage.setItem("secretCode", secretCode);
+	window.sessionStorage.setItem("shareCode", shareCode);
+	window.sessionStorage.setItem("scheduleId", scheduleId);
+
+	alert("Your schedule has been created! \n Secret code: " + secretCode);
+
+	handleRefreshDisplay(1);
+}
+
+function processGoResponse() {
+
+	alert("Here is the meeting you requested.");
+}
+
+function handleClick() {
+		let data = {};
+	  let form = document.createForm; 
+	  let name = form.name.value;
+	  let startDate = form.startDate.value;
+	  let endDate = form.endDate.value;
+	  let startHour = form.startHour.value;
+	  let endHour = form.endHour.value;
+	  let duration = form.duration.value;
+
+	  data["name"] = name;
+	  data["startDate"] = startDate;
+	  data["endDate"] = endDate;
+	  data["startHour"] = startHour;
+	  data["endHour"] = endHour;
+	  data["duration"] = duration;
+	  data["secretCode"] = secretCode;
+
+	  var js = JSON.stringify(data);
+	  console.log("JS:" + js);
+	  var xhr = new XMLHttpRequest();
+	  xhr.open("POST", create_schedule, true);
+
+	  // send the collected data as JSON
+	  xhr.send(js);
+
+	  // This will process results and update HTML as appropriate.
+	  xhr.onloadend = function () {
+	    console.log(xhr);
+	    console.log(xhr.request);
+	    if (xhr.readyState == XMLHttpRequest.DONE) {
+	      console.log ("XHR:" + xhr.responseText);
+	      		processCreateResponse(xhr.responseText);
+	    } else {
+	      	processCreateResponse(xhr.responseText;
+	    }
+	  };
+}
+
+function handleRefreshDisplay(week) {
+	let data = {};
+	data.id = window.sessionStorage.getItem("scheduleId");
+	data.week = week;
+
+	let js = JSON.stringify(data);
+	console.log("JS:" + js);
+	let xhr = new XMLHttpRequest();
+	xhr.open("POST", show_schedule, true);
+
+	// send the collected data as JSON
+	xhr.send(js);
+
+	// This will process results and update HTML as appropriate.
+	xhr.onloadend = function () {
+		console.log(xhr);
+		console.log(xhr.request);
+		if (xhr.readyState == XMLHttpRequest.DONE) {
+			console.log ("XHR:" + xhr.responseText);
+					processCreateResponse(xhr.responseText);
+		} else {
+				processCreateResponse(xhr.responseText;
+		}
+	};
+
+}
+
+processCreateScheduleResponse(response, week){
+		let data = JSON.parse(response);
+
+		let schedule = data.schedule;
+
+		x = schedule;
+
+		let table = document.getElementById("schedule");
+
+		let name = schedule.name;
+		let startTime = schedule.startTime;
+		let endTime = schedule.endTime;
+		let duration = schedule.duration;
+		let days = schedule.days;
+
+		let thead = document.createElement("thead");
+		let tbody = document.createElement("tbody");
+
+		table.innerHTML = "";
+
+		let head = "<th></th>"
+		let monday = "<th>" + days[0].id + "Monday" + days[0].date + "</th>";
+		let tuesday = "<th>" + days[1].id + "Tuesday" + days[1].date + "</th>";
+		let wednesday = "<th>" + days[2].id + "Wednesday" + days[2].date + "</th>";
+		let thursday = "<th>" + days[3].id + "Thursday" + days[3].date + "</th>";
+		let friday = "<th>" + days[4].id + "Friday" + days[4].date + "</th>";
+		thead.innerHMTL = head + monday + tuesday + wednesday + thursday + friday;
+		table.appendChild(thead);
+
+		document.querySelector("#schedule-name").innerHTML = "<h3>" + name + "</h3";
+		document.querySelector("#schedule-code").innerHTML = "Secret Code: <h3>" + window.sessionStorage.getItem("secretCode") + "</h3 <br> Share Code: <h3>" + shareCode + "</h3>";
+}
+
+/*
+function handleRetrieveSchedule(){
+	let data = {};
+	let form = document.retrieveForm;
+	let secretCode = form.secretCode.value;
+
+	let js = JSON.stringify(data);
+	console.log("JS:" + js);
+
+	data["secretCode"] = secretCode;
+	// match local secret code to data secret code - window.sessionStorage?
+
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", show_schedule, true);
+
+	xhr.send(js);
+
+	xhr.onloadend = function () {
+		console.log(xhr);
+		console.log(xhr.request);
+		if (xhr.readyState == XMLHttpRequest.DONE) {
+			console.log ("XHR:" + xhr.responseText);
+					processCreateResponse(xhr.responseText);
+		} else {
+				processCreateResponse(xhr.responseText;
+		}
+	};
+}
+
+function processRetrieveScheduleResponse (response) {
+	let data = JSON.parse(response);
+	let scheduleId = data.scheduleId;
+	// store schedule ID
+	handleRefreshDisplay(1);
+}
+*/
+
+// Cancel Meeting
+// Delete Schedule
+// Open Time Slot
+// Close Time Slot
+
+
+
+</script>
+</head>
+<body onload="handleRefreshDisplay(1)">
+
+
+<section id="banner">
+	<h2><strong>Meeting Scheduler: </strong> Organizer Portal</h2>
+	<p></p>
+</section>
+
+<form name="createForm" method="POST" id="createSchedule">
+<br><br>
+		<p> Schedule Name: <input type="text" name = "name"></p>
+		<p>From:<input type="date" name="startDate" min="2018-01-01"></p>
+		<p>To:<input type="date" name="endDate" min="2018-01-01"></p>
+		<p>From:<input type="time" name="startHour" min="0:00" max="24:00">
+		&nbsp;To:<input type="time" name="endHour" min="0:00" max="24:00"></p>
+		<p>Duration:<input type="number" name="duration"> Minutes </p>
+		<input type="button" name = "createBtn" value="Create"  onClick="handleClick()">
+</form>
+
+<h2>Go to pre-existing Schedule</h2>
+
+<form name="existingForm" method ="post" id="existingSchedule">
+ <input type="text" name = "secretCode" value="Secret Code">
+ <input type="button" name = "goBtn" value="Go"  onClick="processGoResponse()">
+</form>
+
+<h3 id="schedule-name"> </h3>
+
+<table id="schedule">
+</table>
+
+</div>
+
+</body>
+</html>
