@@ -26,7 +26,6 @@ public class Day {
 		this.startTime = LocalTime.of(startHour, 0);
 		this.endTime = LocalTime.of(endHour, 0);
 		this.week = week;
-		
 	}
 	
 	//after fetch from database

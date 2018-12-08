@@ -13,10 +13,10 @@ public class TestShedule {
 
 	@Test
 	public void test() {
-		int duration = 20;
+		int duration = 60;
 		String name = "name";
 		LocalDate startDate = LocalDate.of(2000, 1, 1);
-		LocalDate endDate = LocalDate.of(2001, 1, 1);
+		LocalDate endDate = LocalDate.of(2000, 2, 1);
 		int startHour = 1;
 		int endHour = 13;
 		Schedule s = null;
