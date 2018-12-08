@@ -50,7 +50,7 @@ public class DeleteScheduleHandler implements RequestStreamHandler {
     public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
         
     	LambdaLogger logger = context.getLogger();
-    	logger.log("Beginning to create schedule");
+    	logger.log("Beginning to delete schedule");
     	
     	JSONObject headerJson = new JSONObject();
 		headerJson.put("Content-Type",  "application/json");
