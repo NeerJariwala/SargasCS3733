@@ -34,7 +34,7 @@ public class MeetingDAO {
                 }
             }
             
-        	ps = conn.prepareStatement("INSERT INTO Meeting (meetingID, name, Timeslot, secretCode) values(?,?,?);");
+        	ps = conn.prepareStatement("INSERT INTO Meeting (meetingID, name, Timeslot, secretCode) values(?,?,?,?);");
             ps.setString(1, meeting.meetingID);
             ps.setString(2, meeting.name);
             ps.setString(3, meeting.timeslot);

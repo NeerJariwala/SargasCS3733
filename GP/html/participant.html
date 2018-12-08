@@ -5,19 +5,12 @@
 <head>
 
 <meta charset="UTF-8">
-
 <title>Participant GUI</title>
+<link rel="stylesheet" href="css/main.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 
-<style>
-
-table, th, td {
-	border: 1px solid black;
-	border-collapse: collapse;
-	text-align: center;
-}
-
-</style>
 <script>
 
 	var create_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/meeting";
@@ -34,10 +27,10 @@ table, th, td {
 		alert("Here is the meeting you requested.");
 	}
 
-	function handleClick(e) {
-
-	var data = {};
-  data["name"] = name;
+	function handleClick() {
+		var data = {};
+		var form = document.createForm;
+		
 
 	var js = JSON.stringify(data);
 	console.log("JS:" + js);
@@ -62,112 +55,94 @@ table, th, td {
 
 
 </script>
-
-
 </head>
 
 <body>
 
+<section id="banner">
+	<h2><strong>Meeting Scheduler: </strong> Participant Portal</h2>
+	<p> Example Schedule </p>
+</section>
 
-<h1>Meeting Scheduler</h1><br>
-<h2>Example Schedule</h2>
+<div class="table-wrapper">
+	<table style="text-align: center;">
+		<thead>
+		<tr>
+			<th></th>
 
-<br>
+			<th>Monday</th>
 
+			<th>Tuesday</th>
 
-<table style="border: 1px solid black;">
+			<th>Wednesday</th>
 
-	<tr>
+			<th>Thursday</th>
 
-		<th></th>
+			<th>Friday</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
 
-		<th>&nbsp; Monday &nbsp;</th>
+			<th> <p>9:00 AM</p> </th>
 
-		<th>&nbsp; Tuesday &nbsp;</th>
+			<td bgcolor="#A9A9A9"></td>
 
-		<th>&nbsp; Wednesday &nbsp;</th>
+			<td bgcolor="#A9A9A9"></td>
 
-		<th>&nbsp; Thursday &nbsp;</th>
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<th>&nbsp; Friday &nbsp;</th>
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-	</tr>
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
+		</tr>
+		<tr>
 
+			<th> <p>10:00 AM</p> </th>
 
-	<tr>
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<th> <p>9:00 AM &nbsp;</p> </th>
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td bgcolor="#A9A9A9"></td>
+			<td onclick="deleteMeeting()"> <p>John Doe</p> </td>
 
-		<td bgcolor="#A9A9A9"></td>
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
+		</tr>
+		<tr>
 
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
+			<th> <p>11:00 AM</p> </th>
 
-	</tr>
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-	<tr>
+			<td bgcolor="#A9A9A9"></td>
 
-		<th> <p>10:00 AM &nbsp;</p> </th>
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
+		</tr>
+		<tr>
 
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
+			<th> <p>12:00 PM</p> </th>
 
-		<td onclick="deleteMeeting()"> <p>John Doe</p> </td>
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-	</tr>
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
 
-
-
-	<tr>
-
-		<th> <p>11:00 AM &nbsp;</p> </th>
-
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-		<td bgcolor="#A9A9A9"></td>
-
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-	</tr>
-
-
-
-	<tr>
-
-		<th> <p>12:00 PM &nbsp;</p> </th>
-
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-		<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-	</tr>
-
-<p id="meeting"></p>
-
-</table>
+			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
+		</tr>
+	</tbody>
+	</table>
 
 <br>
 
@@ -182,19 +157,19 @@ table, th, td {
 
 <p>Year</p>
 <input type="text" id="weekly-year">
+<br><br><br>
+<input type="button" name = "submitBtn" value="Submit">
 <br>
-<button>Submit</button>
-
-
+<br>
 
 <h3>Search:</h3>
 
 
-<p>Month:</p>
+<p>Month</p>
 
 <input type="text" id="search-month">
 
-<p>Year:</p>
+<p>Year</p>
 
 <input type="text" id="search-year">
 
@@ -207,10 +182,9 @@ table, th, td {
 <p>Day-Of-Month</p>
 
 <input type="text" id="search-dom">
-<br>
-<button>Search</button>
+<br><br><br>
+<input type="button" name = "searchBtn" value="Search">
 
 
 </body>
-
 </html>

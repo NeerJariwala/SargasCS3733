@@ -70,6 +70,40 @@ public class TimeslotDAO {
     	
     }
     
+    /*
+    
+    public boolean DaycloseTimeslot(String dayID) throws Exception{
+        try {
+        	String query = "UPDATE Timeslot SET open = 0 WHERE Day = ?;";
+        	PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, dayID);
+            int numAffected = ps.executeUpdate();
+            ps.close();
+            
+            return (numAffected >= 1);
+        } catch (Exception e) {
+            throw new Exception("Failed to update Timeslot: " + e.getMessage());
+        }
+    	
+    }
+    
+    public boolean TimecloseTimeslot(LocalTime startTime) throws Exception{
+        try {
+        	String query = "UPDATE Timeslot SET open = ? WHERE startTime = ?;";
+        	PreparedStatement ps = conn.prepareStatement(query);
+        	ps.setTime(1, Time.valueOf(startTime));
+            int numAffected = ps.executeUpdate();
+            ps.close();
+            
+            return (numAffected >= 1);
+        } catch (Exception e) {
+            throw new Exception("Failed to update Timeslot: " + e.getMessage());
+        }
+    	
+    }
+    
+    */
+    
     public ArrayList<Timeslot> getTimeslots(String dayID) throws Exception {
     	ArrayList<Timeslot> result = new ArrayList<Timeslot>();
         try {
