@@ -194,6 +194,11 @@ public class Schedule {
 		return secretCode;
 	}
 	
+	public String getScheduleID() {
+		return scheduleId;
+	}
+	
+	
 	/**
 	 * Generates a secret code for a schedule
 	 * @return a unique secret code
@@ -217,5 +222,6 @@ public class Schedule {
 		//TODO: Ensure this secret code is unique by checking the database
 		return secret;
 	}
+	
 	
 }
