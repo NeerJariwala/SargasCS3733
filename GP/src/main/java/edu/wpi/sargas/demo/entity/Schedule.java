@@ -90,6 +90,7 @@ public class Schedule {
 					cursor = cursor.plusDays(1);
 					
 					dayDao.createDay(newDay);
+					newDay.generateTimeslots(timeslotDuration);
 				}
 				//cursor would be on a saturday right now
 				//bring it to the next monday
