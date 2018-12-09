@@ -186,6 +186,8 @@ function processRetrieveScheduleResponse (response) {
 </script>
 </head>
 <body onload="JavaScript:handleRefreshDisplay(1)">
+//the console says the function is not defined properly on this line, probably because its given an int instead of a week
+
 
 
 <section id="banner">
@@ -199,7 +201,7 @@ function processRetrieveScheduleResponse (response) {
 		<p>From:<input type="date" name="startDate" min="2018-01-01"></p>
 		<p>To:<input type="date" name="endDate" min="2018-01-01"></p>
 		<p>From:<input type="time" name="startHour" min="0:00" max="24:00">
-		&nbsp;To:<input type="time" name="endHour" min="0:00" max="24:00"></p>
+		&nbsp;To:<input type="time" name="endHour" min="0:00" max="24:00"></p> //there is an error on this line as well for some reason, make sure you're using nbsp right or that its compatible with HTML
 		<p>Duration:<input type="number" name="duration"> Minutes </p>
 		<input type="button" name = "createBtn" value="Create"  onClick="JavaScript:handleClick(this)">
 </form>
