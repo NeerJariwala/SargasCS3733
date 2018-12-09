@@ -94,7 +94,7 @@ public class CreateMeetingHandler implements RequestStreamHandler {
 	    			Meeting meeting = new Meeting(name, id);
 	    			
 	    			createMeeting(meeting);
-	    			httpResponse = new CreateMeetingResponse(200, meeting.meetingID);
+	    			httpResponse = new CreateMeetingResponse(200, meeting.secretCode);
 	    			//TODO: decide whether to use the meetingID or a separate code for the
 	    			//meeting secret code
 	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
