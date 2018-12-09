@@ -46,23 +46,6 @@ public class ScheduleDAO {
             ps.setDate(8, Date.valueOf(schedule.dateCreated));
             ps.setString(9, schedule.secretCode);
             ps.execute();
-   /*         
-            int endhour = (schedule.endHour * 100);
-            
-            int starthour = (schedule.startHour * 100);
-            
-            for(int i = starthour; i <= endhour; i = i + schedule.timeslotDuration) {
-            ps = conn.prepareStatement("INSERT INTO Timeslot (TimeslotID, open, duration, startTime, scheduleID, meetingID) values(?,?,?,?,?,?)");
-            ps.setString(1, UUID.randomUUID().toString());
-            ps.setBoolean(2, false);
-            ps.setInt(3, schedule.timeslotDuration);
-            ps.setInt(4, schedule.startHour);
-            ps.setString(5, schedule.scheduleId);
-            ps.setString(6, UUID.randomUUID().toString());
-            }
-            
-         */   
-            
             
             
             ps.close();
