@@ -162,7 +162,7 @@ function handleRetrieveSchedule(){
 			console.log ("XHR:" + xhr.responseText);
 					processCreateResponse(xhr.responseText);
 		} else {
-				processCreateResponse(xhr.responseText;
+				processCreateResponse(xhr.responseText);
 		}
 	};
 }
@@ -207,7 +207,7 @@ function processRetrieveScheduleResponse (response) {
 
 <form name="existingForm" method ="post" id="existingSchedule">
  <input type="text" name = "secretCode" value="Secret Code">
- <input type="button" name = "goBtn" value="Go"  onClick="processGoResponse()">
+ <input type="button" name = "goBtn" value="Go"  onClick="handleRetrieveSchedule(this)">
 </form>
 
 <h3 id="schedule-name"> </h3>
