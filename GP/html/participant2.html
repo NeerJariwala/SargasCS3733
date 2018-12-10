@@ -13,13 +13,15 @@
 	
 
 	function handleRetrieveSchedule() {
-		var data = {};
-		var form = document.codeForm;
-		var secretCode = form.secretCode;
-		var startDate = form.startDate;
+		let data = {};
+		let form = document.codeForm;
+		let startDate = form.startDate;
+		let secretCode = form.secretCode;
 		
-		data["secretCode"] = secretCode.value;
+		
 		data["startDate"] = startDate.value;
+		data["secretCode"] = secretCode.value;
+		
 		
 
 	var js = JSON.stringify(data);

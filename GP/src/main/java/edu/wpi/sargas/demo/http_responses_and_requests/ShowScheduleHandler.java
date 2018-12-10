@@ -90,7 +90,12 @@ public class ShowScheduleHandler implements RequestStreamHandler {
     			logger.log("Invalid date Input");
     			httpResponse = new ShowScheduleResponse(400, null);
         		jsonResponse.put("body", new Gson().toJson(httpResponse));
-    		}
+    		}catch(NullPointerException e) {
+			logger.log(e.toString());
+			httpResponse = new ShowScheduleResponse(400, null);
+    		jsonResponse.put("body", new Gson().toJson(httpResponse));
+    		invalidInput = true;
+		}
     		
     		try {
     			sched = getSchedule(request.secretCode);
