@@ -82,7 +82,7 @@ public class ShowScheduleHandler implements RequestStreamHandler {
     		ShowScheduleRequest request = new Gson().fromJson(httpBody,ShowScheduleRequest.class);
     		//get the request in the form of a class
     		Schedule sched = null;
-    		LocalDate date = null;
+    		LocalDate date = LocalDate.of(2018, 12, 31);
     		
     		try {
     			date = LocalDate.parse(request.date);
