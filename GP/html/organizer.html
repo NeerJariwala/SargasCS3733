@@ -153,16 +153,15 @@ function processCreateScheduleResponse(response, week){
 }
 
 function handleDeleteSchedule() {
-    let data = {};
-		let scheduleId = data["scheduleId"];
+		let data = {};
 
-		window.sessionStorage.setItem("scheduleId", scheduleId);
-
-    let confirmDelete = prompt("Delete this schedule? \nEnter \"yes\" to confirm");
-    if (confirmDelete != "yes"){
-        alert("Schedule will not be deleted.");
+    let secretCode = prompt("Delete this schedule? \nEnter secret code to confirm");
+    if (secretCode == null){
+        alert("Schedule will not be deleted, please try again.");
         return;
     }
+
+		data["secretCode"] = secretCode;
 
 		let js = JSON.stringify(data);
 		console.log("JS:" + js);
@@ -187,8 +186,6 @@ function processDeleteResponse(response) {
     let data = JSON.parse(response);
 
     alert("The schedule has been deleted!");
-
-    window.sessionStorage.scheduleId = undefined;
 
     document.getElementById("schedule").innerHTML = EMPTY;
 }
