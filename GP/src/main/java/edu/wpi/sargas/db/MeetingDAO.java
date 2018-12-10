@@ -40,12 +40,17 @@ public class MeetingDAO {
             ps.setString(3, meeting.timeslot);
             ps.setString(4, meeting.secretCode);
             ps.execute();
+            
+        	ps = conn.prepareStatement("UPDATE Timeslot SET open = 0 WHERE TimeslotID = ?;");
+            ps.setString(1, meeting.timeslot);
+            ps.executeUpdate();
+            ps.close();
 
             ps.close();
             return true;
 
         } catch (Exception e) {
-            throw new Exception("Failed to create schedule: " + e.getMessage());
+            throw new Exception("Failed to create meeting: " + e.getMessage());
         }
     }
     

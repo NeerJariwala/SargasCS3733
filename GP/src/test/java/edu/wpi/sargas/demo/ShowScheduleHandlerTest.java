@@ -57,15 +57,7 @@ public class ShowScheduleHandlerTest {
 		InputStream input = new ByteArrayInputStream(testInput1.getBytes());
 		OutputStream output = new ByteArrayOutputStream();
 		
-		ScheduleDAO dao = new ScheduleDAO();
         
-        try {
-        	dao.createSchedule(testSched);
-        	//put it in the database first
-        } catch(Exception e) {
-        	return;
-        }
-		
 		handler.handleRequest(input,output,createContext("random"));
 		
 		String outputString = output.toString();
