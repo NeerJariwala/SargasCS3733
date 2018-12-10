@@ -16,6 +16,10 @@
 		var data = {};
 		var form = document.codeForm;
 		var secretCode = form.secretCode;
+		var startDate = form.startDate;
+		
+		data["secretCode"] = secretCode;
+		data["startDate"] = startDate;
 		
 
 	var js = JSON.stringify(data);
@@ -23,9 +27,9 @@
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", url, true);
 	
-
 	// send the collected data as JSON
 	xhr.send(js);
+	
 	
 	xhr.onloadend = function () {
 	    console.log(xhr);
@@ -37,6 +41,8 @@
 	      	displaySchedule(xhr.responseText);
 	    }
 	};
+	
+	
 }
 
 	function displaySchedule(response){
@@ -59,7 +65,7 @@
 <h1>Weekly Schedule</h1>
 <body>
 
-<form name="codeForm">
+<form name="codeForm" method = "post">
  <input type="text" name = "secretCode" value="Secret Code">
  <input type="date" name="startDate" min="2018-01-01">
  <input type="button" name = "goBtn" value="Go"  onClick="handleRetrieveSchedule(this)">
