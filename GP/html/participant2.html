@@ -54,10 +54,23 @@
 
 		var week = data["week"];
 		var days = week["days"];
-		var slots = [];
+		var slots = days[0].timeslots;
+		var start = slots[0].startTime;
+		var duration = slots[0].duration;
+		
+		var hr = 0;
+		var min = 0;
+		
+		if(duration%60==0){
+		hr =1;
+		}
+		else{
+		min = duration;
+		}
 		
 		console.log(week);
 		console.log (days);
+		console.log(start);
 		
 		
 		var slot_length = days[0].timeslots.length;
@@ -65,16 +78,36 @@
 		
 		
 		var table = '';
-		var label_table = '<tr><td>Monday</td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
+		var label_days = '<tr><td>Time</td><td>Monday</td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
 		var rows = slot_length;
 		var cols = days.length;
-		console.log("rows"+ rows + "cols" + cols);
+		
 		
 		for(var r=0; r<rows;r++){
 			table += '<tr>';
 			
 			for(var c=0;c<cols;c++){
-				if(days[c].timeslots[r].open == 1){
+				if(c==0){
+					if(r==0){
+					table += '<td>' + start.hour +':'+ start.minute + '</td>';
+						if(days[c].timeslots[r].open == 1){
+							table += '<td>' + '<input type="button" value="Free" id="meetingBtn">' + '</td>';
+						}
+						else{
+							table += '<td>' + 'Taken' + '</td>';
+							}
+					}
+					else{
+					table += '<td>' + (start.hour+hr) +':'+ (start.minute+min) + '</td>';
+						if(days[c].timeslots[r].open == 1){
+							table += '<td>' + '<input type="button" value="Free" id="meetingBtn">' + '</td>';
+						}
+						else{
+							table += '<td>' + 'Taken' + '</td>';
+							}
+					}
+				}
+				else if(days[c].timeslots[r].open == 1){
 				table += '<td>' + '<input type="button" value="Free" id="meetingBtn">' + '</td>';
 				}
 				else{
@@ -87,7 +120,7 @@
 			
 		}
 			
-		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>'+ label_table + '</table>'+ '<table border=2>' +table + '</table>');
+		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' +label_days+table + '</table>');
 		
 	}
 
