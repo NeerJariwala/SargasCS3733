@@ -26,6 +26,7 @@
 
 	body {
 		line-height: 1;
+		padding-bottom: 20px !important;
 	}
 
 	ol, ul {
@@ -1902,6 +1903,10 @@
 			-ms-pointer-events: none;
 			pointer-events: none;
 			opacity: 0.25;
+		}
+
+		input[type="button"]:hover {
+			background-color: #48baac !important;
 		}
 
 		@media screen and (max-width: 480px) {

@@ -12,28 +12,16 @@
 
 <script>
 const URL = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/";
-const create_schedule = URL + "schedule";
+const schedule_url = URL + "schedule";
 const show_schedule = URL + "weeklyschedule";
+const close_url = URL + "closetimeslots";
 
-// ADD ALL URLs
+const EMPTY = `
+<tr>
+<th><h3> No Schedule Available </h3></th>
+<td><p> Make a schedule or search for one to see it here </p></td>
+</tr>`;
 
-function processCreateResponse(response) {
-	let data = JSON.parse(response);
-
-	let secretCode = data["secretCode"];
-	let shareCode = data["shareCode"];
-	let scheduleId = data["scheduleId"];
-
-	window.sessionStorage.setItem("week", 1);
-
-	window.sessionStorage.setItem("secretCode", secretCode);
-	window.sessionStorage.setItem("shareCode", shareCode);
-	window.sessionStorage.setItem("scheduleId", scheduleId);
-
-	alert("Your schedule has been created! \n Secret code: " + secretCode);
-
-	/* handleRefreshDisplay(1); */
-}
 
 function processGoResponse() {
 
@@ -56,12 +44,12 @@ function handleClick() {
 	  data["startHour"] = startHour;
 	  data["endHour"] = endHour;
 	  data["duration"] = duration;
-	//  data["secretCode"] = secretCode;
+		//data["secretCode"] = secretCode;
 
 	  var js = JSON.stringify(data);
 	  console.log("JS:" + js);
 	  var xhr = new XMLHttpRequest();
-	  xhr.open("POST", create_schedule, true);
+	  xhr.open("POST", schedule_url, true);
 
 	  // send the collected data as JSON
 	  xhr.send(js);
@@ -79,6 +67,28 @@ function handleClick() {
 	  };
 }
 
+function processCreateResponse(response) {
+	var data = JSON.parse(response);
+
+	//let shareCode = data["shareCode"];
+	var schedule = data["schedule"];
+	var secretCode = data["secretCode"];
+	console.log(schedule);
+	console.log(secretCode);
+
+	//let week = data["week"];
+	//let secretCode = week["secretCode"];
+
+	window.sessionStorage.setItem("secretCode", secretCode);
+	//window.sessionStorage.setItem("shareCode", shareCode);
+	window.sessionStorage.setItem("schedule", schedule);
+
+	alert("Your schedule has been created! \nSecret code: " + secretCode);
+
+	/* handleRefreshDisplay(1); */
+}
+
+/*
 function handleRefreshDisplay(week) {
 	let data = {};
 	data.id = window.sessionStorage.getItem("scheduleId");
@@ -105,11 +115,13 @@ function handleRefreshDisplay(week) {
 	};
 
 }
+*/
 
 function processCreateScheduleResponse(response, week){
 		let data = JSON.parse(response);
 
 		let schedule = data.schedule;
+		let scheduleId = schedule["scheduleId"];
 
 		x = schedule;
 
@@ -139,55 +151,82 @@ function processCreateScheduleResponse(response, week){
 		document.querySelector("#schedule-code").innerHTML = "Secret Code: <h3>" + window.sessionStorage.getItem("secretCode") + "</h3 <br> Share Code: <h3>" + shareCode + "</h3>";
 }
 
-/*
-function handleRetrieveSchedule(){
-	let data = {};
-	let form = document.retrieveForm;
-	let secretCode = form.secretCode.value;
+function handleDeleteSchedule() {
+    let data = {};
+		let scheduleId = data["scheduleId"];
 
-	let js = JSON.stringify(data);
-	console.log("JS:" + js);
+		window.sessionStorage.setItem("scheduleId", scheduleId);
 
-	data["secretCode"] = secretCode;
+    let confirmDelete = prompt("Delete this schedule? \nEnter \"yes\" to confirm");
+    if (confirmDelete != "yes"){
+        alert("Schedule will not be deleted.");
+        return;
+    }
 
+		let js = JSON.stringify(data);
+		console.log("JS:" + js);
+		let xhr = new XMLHttpRequest();
+    xhr.open("DELETE", schedule_url, true);
 
-	var xhr = new XMLHttpRequest();
-	xhr.open("POST", show_schedule, true);
+    xhr.send(js);
 
-	xhr.send(js);
-
-	xhr.onloadend = function () {
-		console.log(xhr);
-		console.log(xhr.request);
-		if (xhr.readyState == XMLHttpRequest.DONE) {
-			console.log ("XHR:" + xhr.responseText);
-					processCreateResponse(xhr.responseText);
-		} else {
-				processCreateResponse(xhr.responseText);
-		}
-	};
+		xhr.onloadend = function () {
+			console.log(xhr);
+			console.log(xhr.request);
+			if (xhr.readyState == XMLHttpRequest.DONE) {
+				console.log ("XHR:" + xhr.responseText);
+						processDeleteResponse(xhr.responseText);
+			} else {
+					processDeleteResponse(xhr.responseText);
+			}
+		};
 }
 
-function processRetrieveScheduleResponse (response) {
-	let data = JSON.parse(response);
-	let scheduleId = data.scheduleId;
-	// store schedule ID
-	handleRefreshDisplay(1);
+function processDeleteResponse(response) {
+    let data = JSON.parse(response);
+
+    alert("The schedule has been deleted!");
+
+    window.sessionStorage.scheduleId = undefined;
+
+    document.getElementById("schedule").innerHTML = EMPTY;
 }
-*/
 
-// Cancel Meeting
-// Delete Schedule
-// Open Time Slot
-// Close Time Slot
+function handleCloseSlot(e) {
+    let data = {};
+    data.scheduleId = e.scheduleId;
 
+    let js = JSON.stringify(data);
+		console.log("JS:" + js);
+		let xhr = new XMLHttpRequest();
+
+    xhr.open("DELETE", close_url, true);
+    xhr.send(js);
+
+		xhr.onloadend = function () {
+			console.log(xhr);
+			console.log(xhr.request);
+			if (xhr.readyState == XMLHttpRequest.DONE) {
+				console.log ("XHR:" + xhr.responseText);
+						processCloseResponse(xhr.responseText);
+			} else {
+					processCloseResponse(xhr.responseText);
+			}
+		};
+}
+
+function processCloseResponse(response) {
+    let data = JSON.parse(response);
+
+    alert("Time slot has been closed!");
+
+    //Refresh display somehow
+}
 
 
 </script>
 </head>
 <body>
-
-
 
 <section id="banner">
 	<h2><strong>Meeting Scheduler: </strong> Organizer Portal</h2>
@@ -201,8 +240,10 @@ function processRetrieveScheduleResponse (response) {
 		<p>To:<input type="date" name="endDate" min="2018-01-01"></p>
 		<p>From:<input type="number" name="startHour" min="0" max="24">To:<input type="number" name="endHour" min="0" max="24"></p>
 		<p>Duration:<input type="number" name="duration"> Minutes </p>
-		<input type="button" name = "createBtn" value="Create"  onClick="JavaScript:handleClick(this)">
+		<input type="button" name = "createBtn" value="Create"  onclick="JavaScript:handleClick()">
 </form>
+
+<!---
 
 <h2>Go to pre-existing Schedule</h2>
 
@@ -210,13 +251,21 @@ function processRetrieveScheduleResponse (response) {
  <input type="text" name = "secretCode" value="Secret Code">
  <input type="button" name = "goBtn" value="Go"  onClick="handleRetrieveSchedule(this)">
 </form>
+--->
 
 <h3 id="schedule-name"> </h3>
 
 <table id="schedule">
+	<tr>
+	<th><h3> No Schedule Available </h3></th>
+	<td><p> Make a schedule to see it here </p></td>
+	</tr>
 </table>
 
-</div>
+
+<input type="button" onclick="handleDeleteSchedule()" value="Delete Schedule">
+
+
 
 </body>
 </html>
