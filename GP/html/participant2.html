@@ -45,17 +45,28 @@
 	
 }
 
-	function displaySchedule(response){
-		data = JSON.parse(response);
+	function displaySchedule(){
+		//data = JSON.parse(response);
 
-		var days = data["days"];
-		console.log (days);
+		//var days = data["days"];
+		//console.log (days);
 		
 		var table = '';
-		var rows = 7;
-		var cols = days.length;
-		
+		var rows = 3;
+		var cols = 7;
+		//var cols = days.length;
 		console.log("rows"+ rows + "cols" + cols);
+		
+		for(var r=0; r<rows;r++){
+			table += '<tr>';
+			for(var c=0;c<cols;c++){
+				table += '<td>' + c + '</td>';
+			}
+			
+			table += '</tr>';
+		}
+			
+		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' + table + '</table>');
 		
 	}
 
@@ -68,7 +79,7 @@
 <form name="codeForm" method = "post">
  <input type="text" name = "secretCode" value="Secret Code">
  <input type="date" name="startDate" min="2018-01-01">
- <input type="button" name = "goBtn" value="Go"  onClick="handleRetrieveSchedule(this)">
+ <input type="button" name = "goBtn" value="Go"  onClick="displaySchedule(this)">
 </form>
 
 </body>
