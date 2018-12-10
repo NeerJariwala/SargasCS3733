@@ -18,8 +18,8 @@
 		var secretCode = form.secretCode;
 		var startDate = form.startDate;
 		
-		data["secretCode"] = secretCode;
-		data["startDate"] = startDate;
+		data["secretCode"] = secretCode.value;
+		data["startDate"] = startDate.value;
 		
 
 	var js = JSON.stringify(data);
