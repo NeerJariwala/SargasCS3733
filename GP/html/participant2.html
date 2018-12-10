@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Participant GUI</title>
+
+<script>
+
+	var url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/weeklySchedule";
+	
+
+	function handleRetrieveSchedule() {
+		var data = {};
+		var form = document.codeForm;
+		var secretCode = form.secretCode;
+		
+
+	var js = JSON.stringify(data);
+	console.log("JS:" + js);
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", url, true);
+	
+
+	// send the collected data as JSON
+	xhr.send(js);
+	
+	xhr.onloadend = function () {
+	    console.log(xhr);
+	    console.log(xhr.request);
+	    if (xhr.readyState == XMLHttpRequest.DONE) {
+	      console.log ("XHR:" + xhr.responseText);
+	      	displaySchedule(xhr.responseText);
+	    } else {
+	      	displaySchedule(xhr.responseText);
+	    }
+	};
+}
+
+	function displaySchedule(response){
+		data = JSON.parse(response);
+
+		var days = data["days"];
+		console.log (days);
+		
+		var table = '';
+		var rows = 7;
+		var cols = days.length;
+		
+		console.log("rows"+ rows + "cols" + cols);
+		
+	}
+
+
+</script>
+</head>
+<h1>Weekly Schedule</h1>
+<body>
+
+<form name="codeForm">
+ <input type="text" name = "secretCode" value="Secret Code">
+ <input type="date" name="startDate" min="2018-01-01">
+ <input type="button" name = "goBtn" value="Go"  onClick="handleRetrieveSchedule(this)">
+</form>
+
+</body>
+</html>
