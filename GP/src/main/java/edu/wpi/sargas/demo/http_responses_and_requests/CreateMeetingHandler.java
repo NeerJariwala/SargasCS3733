@@ -84,7 +84,7 @@ public class CreateMeetingHandler implements RequestStreamHandler {
     		String name = request.name;
     		String id = request.timeslotId;
     		
-    		if(name == null) {
+    		if(name == null || id == null) {
     			//if invalid input, respond as invalid input
     			logger.log("Invalid input");
     			errorResponse(jsonResponse);

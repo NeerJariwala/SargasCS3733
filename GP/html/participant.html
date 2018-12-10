@@ -22,35 +22,47 @@
 		name = prompt("Please enter your name for your meeting to be created:");
 	}
 
-	function processGoResponse() {
-
-		alert("Here is the meeting you requested.");
+	function processGoResponse(response) {
+		var data = JSON.parse(response);
+		var body = JSON.parse(data["body"]);
+		var code = body["httpCode"];
+		
+		if(code == 200) {
+			var secretCode = body["secretCode"];
+			alert("Here is the meeting you requested. Its secret code is: " + secretCode);
+		} else if(code == 400) {
+			alert("timeslotId error");
+		}
 	}
 
 	function handleClick() {
 		var data = {};
+		data["name"] = prompt("Please enter your name for your meeting to be created:");
+		//data["timeslotId"] = something embedded in the html, probably
 		var form = document.createForm;
 		
-
-	var js = JSON.stringify(data);
-	console.log("JS:" + js);
-	var xhr = new XMLHttpRequest();
-	xhr.open("POST", create_url, true);
-
-	// send the collected data as JSON
-	xhr.send(js);
-
-	// This will process results and update HTML as appropriate.
-	xhr.onloadend = function () {
-		console.log(xhr);
-		console.log(xhr.request);
-		if (xhr.readyState == XMLHttpRequest.DONE) {
-			console.log ("XHR:" + xhr.responseText);
-					processCreateResponse(name, xhr.responseText);
-		} else {
-				processCreateResponse(name, "N/A");
-		}
-	};
+	
+		var js = JSON.stringify(data);
+		console.log("JS:" + js);
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", create_url, true);
+		
+		if(data["name"] != null) {
+			// send the collected data as JSON
+			xhr.send(js);
+		
+			// This will process results and update HTML as appropriate.
+			xhr.onloadend = function () {
+				console.log(xhr);
+				console.log(xhr.request);
+				if (xhr.readyState == XMLHttpRequest.DONE) {
+					console.log ("XHR:" + xhr.responseText);
+					processGoResponse(xhr.responseText);
+				} else {
+					processGoResponse(xhr.responseText);
+				}
+			};
+	}
 }
 
 
