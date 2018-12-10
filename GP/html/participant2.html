@@ -9,18 +9,18 @@
 
 <script>
 
-	var url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/weeklyschedule";
+	const url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/weeklyschedule";
 	
 
 	function handleRetrieveSchedule() {
 		let data = {};
 		let form = document.codeForm;
-		let startDate = form.startDate;
+		let date = form.date;
 		let secretCode = form.secretCode;
 		
 		
 		data["secretCode"] = secretCode.value;
-		data["date"] = startDate.value;
+		data["date"] = date.value;
 		
 		
 		
@@ -29,7 +29,7 @@
 	var js = JSON.stringify(data);
 	console.log("JS:" + js);
 	var xhr = new XMLHttpRequest();
-	xhr.open("GET", url, true);
+	xhr.open("POST", url, true);
 	
 	// send the collected data as JSON
 	xhr.send(js);
@@ -50,27 +50,44 @@
 }
 
 	function displaySchedule(response){
-		data = JSON.parse(response);
+		let data = JSON.parse(response);
 
-		var days = data["days"];
+		var week = data["week"];
+		var days = week["days"];
+		var slots = [];
+		
+		console.log(week);
 		console.log (days);
 		
+		
+		var slot_length = days[0].timeslots.length;
+		console.log (slot_length);
+		
+		
 		var table = '';
-		var rows = days.length;
-		//var cols = 7;
-		var cols = 3;
+		var label_table = '<tr><td>Monday</td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
+		var rows = slot_length;
+		var cols = days.length;
 		console.log("rows"+ rows + "cols" + cols);
 		
 		for(var r=0; r<rows;r++){
 			table += '<tr>';
+			
 			for(var c=0;c<cols;c++){
-				table += '<td>' + c + '</td>';
+				if(days[c].timeslots[r].open == 1){
+				table += '<td>' + '<input type="button" value="Free" id="meetingBtn">' + '</td>';
+				}
+				else{
+				table += '<td>' + 'Taken' + '</td>';
+				
+				}
 			}
 			
 			table += '</tr>';
+			
 		}
 			
-		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' + table + '</table>');
+		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>'+ label_table + '</table>'+ '<table border=2>' +table + '</table>');
 		
 	}
 
@@ -82,8 +99,9 @@
 
 <form name="codeForm" method = "post">
  <input type="text" name = "secretCode" value="Secret Code">
- <input type="date" name="startDate" min="2018-01-01">
+ <input type="date" name="date" min="2018-01-01">
  <input type="button" value="Go" id="goBtn" onClick="JavaScript:handleRetrieveSchedule()">
+ 
  
 </form>
 
