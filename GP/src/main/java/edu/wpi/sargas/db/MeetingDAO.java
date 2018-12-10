@@ -42,7 +42,7 @@ public class MeetingDAO {
             ps.execute();
             
         	ps = conn.prepareStatement("UPDATE Timeslot SET open = 0 WHERE TimeslotID = ?;");
-            ps.setString(2, meeting.timeslot);
+            ps.setString(1, meeting.timeslot);
             ps.executeUpdate();
             ps.close();
 
@@ -50,7 +50,7 @@ public class MeetingDAO {
             return true;
 
         } catch (Exception e) {
-            throw new Exception("Failed to create schedule: " + e.getMessage());
+            throw new Exception("Failed to create meeting: " + e.getMessage());
         }
     }
     
