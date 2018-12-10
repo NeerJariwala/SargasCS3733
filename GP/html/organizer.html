@@ -69,10 +69,11 @@ function handleClick() {
 
 function processCreateResponse(response) {
 	var data = JSON.parse(response);
-
 	//let shareCode = data["shareCode"];
-	var schedule = data["schedule"];
-	var secretCode = data["secretCode"];
+	var body = JSON.parse(data["body"]);
+	console.log(body);
+	var schedule = body["schedule"];
+	var secretCode = body["secretCode"];
 	console.log(schedule);
 	console.log(secretCode);
 
