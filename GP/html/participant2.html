@@ -9,7 +9,7 @@
 
 <script>
 
-	var url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/weeklySchedule";
+	var url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/weeklyschedule";
 	
 
 	function handleRetrieveSchedule() {
@@ -52,9 +52,9 @@
 		console.log (days);
 		
 		var table = '';
-		var rows = 3;
+		var rows = days.length;
 		//var cols = 7;
-		var cols = days.length;
+		var cols = 3;
 		console.log("rows"+ rows + "cols" + cols);
 		
 		for(var r=0; r<rows;r++){
@@ -79,7 +79,8 @@
 <form name="codeForm" method = "post">
  <input type="text" name = "secretCode" value="Secret Code">
  <input type="date" name="startDate" min="2018-01-01">
- <input type="button" name = "goBtn" value="Go"  onClick="handleRetrieveSchedule(this)">
+ <input type="button" value="Go" id="goBtn" onClick="JavaScript:handleRetrieveSchedule()">
+ 
 </form>
 
 </body>
