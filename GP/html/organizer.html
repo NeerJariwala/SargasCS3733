@@ -24,7 +24,6 @@ const EMPTY = `
 
 var startDate;
 var secretCode;
-var tsID="";
 
 function processGoResponse() {
 
@@ -127,18 +126,13 @@ function processDeleteResponse(response) {
     document.getElementById("schedule").innerHTML = EMPTY;
 }
 
-function handleCloseSlot(tsID) {
+function handleCloseSlot(e) {
     let data = {};
-
-		let secretCode = prompt("Please enter your secret code to close timeslot:");
-		if (secretCode == null){
-				alert("Time slot not closed, please try again.");
-				return;
-		}
-
-		data["secretCode"] = secretCode;
-		data["timeslotId"] = tsID;
-
+    //data.scheduleId = e.scheduleId;
+    
+    //e is now the timeslot ID of the button that was pressed
+    //get secretCode somehow
+    // send secretcode and timeslot
 
     let js = JSON.stringify(data);
 		console.log("JS:" + js);
@@ -169,19 +163,11 @@ function processCloseResponse(response) {
 
 function handleRetrieveSchedule(secretCode, startDate) {
 	let data = {};
-
+	
 	data["secretCode"] = secretCode;
 	var year = startDate["year"];
 	var month = startDate["month"];
 	var day = startDate["day"];
-
-	if (month < 10) {
-		var month = "0" + startDate["month"];
-	}
-
-	if (day < 10) {
-		var day = "0" + startDate["day"];
-	}
 
 	startDate = year + "-" + month + "-" + day;
 	data["date"] = startDate;
@@ -211,6 +197,38 @@ function handleRetrieveSchedule(secretCode, startDate) {
 	};
 }
 
+function handleRetrieveExisting() {
+		let data = {};
+		let form = document.existingForm;
+		let date = form.date;
+		let secretCode = form.secretCode;
+		
+		
+		data["secretCode"] = secretCode.value;
+		data["date"] = date.value;
+		
+
+	var js = JSON.stringify(data);
+	console.log("JS:" + js);
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", show_schedule, true);
+	
+	// send the collected data as JSON
+	xhr.send(js);
+	
+	
+	xhr.onloadend = function () {
+	    console.log(xhr);
+	    console.log(xhr.request);
+	    if (xhr.readyState == XMLHttpRequest.DONE) {
+	      console.log ("XHR:" + xhr.responseText);
+	      	displaySchedule(xhr.responseText);
+	    } else {
+	      	displaySchedule(xhr.responseText);
+	    }
+	};
+}
+
 function displaySchedule(response){
 	var data = JSON.parse(response);
 
@@ -219,72 +237,98 @@ function displaySchedule(response){
 	var slots = days[0].timeslots;
 	var start = slots[0].startTime;
 	var duration = slots[0].duration;
+	
+	var slot_length = days[0].timeslots.length;
+	console.log (slot_length);
+	
+	for(var s=0;s<slot_length;s++){
+			var temp = slots[s].startTime;
+			if(start.hour>temp.hour){
+				if(start.minute>temp.minute){
+					start = temp;
+				}
+			}
+		}
 
 	var hr = 0;
 	var min = 0;
+	var hour = start.hour;
+	var minute = start.minute;
 
-	if(duration%60==0){//calculates what it needs to add every row
-	hr =1;
-	}
-	else{
-	min = duration;
-	}
 
 	console.log(week);
 	console.log(days);
 	console.log(start);
 
 
-	var slot_length = days[0].timeslots.length;
-	console.log (slot_length);
-
 
 	var table = '';
 	var label_days = '<tr><td>Time</td><td>Monday</td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
 	var rows = slot_length;
 	var cols = days.length;
+	var zero = "";
 
 
-	for(var r=0; r<rows;r++){
-		table += '<tr>';
-
-		for(var c=0;c<cols;c++){
-			if(c==0){
-				if(r==0){
-				table += '<td>' + start.hour +':'+ start.minute + '</td>';
-					if(days[c].timeslots[r].open == 1){
-						table += '<td>' + '<input type="button" value="Close" id="meetingBtn" onClick="JavaScript:handleCloseSlot(tsID)">' + '</td>';
+	for(r=0; r<rows;r++){
+			table += '<tr>';
+			
+			for(c=0;c<cols;c++){
+				if(c==0){
+					if(r==0){
+					zero = "0";
+					table += '<td>' + hour +':'+ minute + zero + '</td>';
+						if(days[c].timeslots[r].open == 1){
+							tsID = days[c].timeslots[r].timeslotID;
+							table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleCloseSlot(this.id);">' + '</td>';
+						}
+						else{
+							table += '<td>' + 'Taken' + '</td>';
+							}
 					}
 					else{
-						table += '<td>' + 'Closed' + '</td>';
+						if(duration/60==0){ //calculates what it needs to add every row
+							hr =1;
+							zero = "0";
 						}
+						else{
+							if((min+duration)>=60){
+							min = (min+duration)-60;
+							hr += 1;
+							zero = "0";
+							}
+							else{
+							min+=duration;
+							zero = "";
+							}
+						}
+						
+					table += '<td>' + (hour+hr) +':'+ (minute+min+zero) + '</td>';
+						if(days[c].timeslots[r].open == 1){
+						tsID = days[c].timeslots[r].timeslotID;
+							table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleCloseSlot(this.id);">' + '</td>';
+						}
+						else{
+							table += '<td>' + 'Taken' + '</td>';
+							}
+					}
+				}
+				else if(days[c].timeslots[r].open == 1){
+				tsID = days[c].timeslots[r].timeslotID;
+				table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleCloseSlot(this.id);">' + '</td>';
 				}
 				else{
-				table += '<td>' + (start.hour+hr) +':'+ (start.minute+min) + '</td>';
-					if(days[c].timeslots[r].open == 1){
-						table += '<td>' + '<input type="button" value="Close" id="meetingBtn" onClick="JavaScript:handleCloseSlot(tsID)">' + '</td>';
-					}
-					else{
-						table += '<td>' + 'Closed' + '</td>';
-						}
+				table += '<td>' + 'Taken' + '</td>';
+				
 				}
 			}
-			else if(days[c].timeslots[r].open == 1){
-			table += '<td>' + '<input type="button" value="Close" id="meetingBtn" onClick="JavaScript:handleCloseSlot(tsID)">' + '</td>';
-			}
-			else{
-			table += '<td>' + 'Closed' + '</td>';
-
-			}
+			
+			table += '</tr>';
+			
 		}
-
-		table += '</tr>';
-
+			
+		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' +label_days+table + '</table>');
+		
 	}
-
-	document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' +label_days+table + '</table>');
-
-}
 
 
 </script>
@@ -299,32 +343,22 @@ function displaySchedule(response){
 <form name="createForm" method="POST" id="createSchedule">
 <br><br>
 		<p> Schedule Name: <input type="text" name = "name"></p>
-		<p>From:<input type="date" name="startDate" min="2018-01-01" max="2050-12-31"></p>
-		<p>To:<input type="date" name="endDate" min="2018-01-01" max="2050-12-31"></p>
+		<p>From:<input type="date" name="startDate" min="2018-01-01"></p>
+		<p>To:<input type="date" name="endDate" min="2018-01-01"></p>
 		<p>From:<input type="number" name="startHour" min="0" max="24">To:<input type="number" name="endHour" min="0" max="24"></p>
-		<p>Duration:<input type="number" name="duration" min="0" max="60"> Minutes </p>
+		<p>Duration:<input type="number" name="duration"> Minutes </p>
 		<input type="button" name = "createBtn" value="Create"  onclick="JavaScript:handleClick()">
 </form>
-
-<!---
+<br><br>
 
 <h2>Go to pre-existing Schedule</h2>
 
 <form name="existingForm" method ="post" id="existingSchedule">
  <input type="text" name = "secretCode" value="Secret Code">
- <input type="button" name = "goBtn" value="Go"  onClick="handleRetrieveSchedule(this)">
+ <input type="date" name="date" min="2018-01-01">
+ <input type="button" name = "goBtn" value="Go"  onClick="handleRetrieveExisting(this)">
 </form>
---->
-
-<h3 id="schedule-name"> </h3>
-
-<table id="schedule">
-	<tr>
-	<th><h3> No Schedule Available </h3></th>
-	<td><p> Make a schedule to see it here </p></td>
-	</tr>
-</table>
-
+<br><br><br>
 
 <input type="button" onclick="handleDeleteSchedule()" value="Delete Schedule">
 
