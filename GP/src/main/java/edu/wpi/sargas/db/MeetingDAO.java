@@ -105,6 +105,27 @@ public class MeetingDAO {
             throw new Exception("Failed in getting Meeting: " + e.getMessage());
         }
     }
+    
+    public Meeting getsecretMeeting(String secretCode) throws Exception {
+        try {
+            Meeting result = null;
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Meeting WHERE secretCode = ?;");
+            ps.setString(1,  secretCode);
+            ResultSet resultSet = ps.executeQuery();
+            
+            while (resultSet.next()) {
+                result = generateMeeting(resultSet);
+            }
+            resultSet.close();
+            ps.close();
+            
+            return result;
+
+        } catch (Exception e) {
+        	e.printStackTrace();
+            throw new Exception("Failed in getting Meeting: " + e.getMessage());
+        }
+    }
 
     private Meeting generateMeeting(ResultSet resultSet) throws Exception {
         return new Meeting (resultSet.getString("MeetingID"), resultSet.getString("name"), resultSet.getString("Timeslot"), resultSet.getString("secretCode"));
