@@ -13,7 +13,7 @@
 
 <script>
 
-	var create_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/meeting";
+	var meeting_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/meeting";
 	var getSchedule_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/weeklyschedule";
 	var tsID="";
 	
@@ -151,6 +151,44 @@
 		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' +label_days+table + '</table>');
 		
 	}
+	
+	function handleCancelMeeting() {
+		let data = {};
+
+    let secretCode = prompt("Please enter your secret code to cancel meeting:");
+    if (secretCode == null){
+        alert("Schedule will not be deleted, please try again.");
+        return;
+    }
+
+		data["secretCode"] = secretCode;
+
+		let js = JSON.stringify(data);
+		console.log("JS:" + js);
+		let xhr = new XMLHttpRequest();
+    xhr.open("DELETE", meeting_url, true);
+
+    xhr.send(js);
+
+		xhr.onloadend = function () {
+			console.log(xhr);
+			console.log(xhr.request);
+			if (xhr.readyState == XMLHttpRequest.DONE) {
+				console.log ("XHR:" + xhr.responseText);
+						processCancelMeeting(xhr.responseText);
+			} else {
+					processCancelMeeting(xhr.responseText);
+			}
+		};
+}
+
+function processCancelMeeting(response) {
+    let data = JSON.parse(response);
+
+    alert("The meeting has been canceled!");
+
+    document.getElementById("schedule").innerHTML = EMPTY;
+}
 
 	function handleClick(tsID) {
 		var data = {};
@@ -161,7 +199,7 @@
 		var js = JSON.stringify(data);
 		console.log("JS:" + js);
 		var xhr = new XMLHttpRequest();
-		xhr.open("POST", create_url, true);
+		xhr.open("POST", meeting_url, true);
 		
 		if(data["name"] != null) {
 			// send the collected data as JSON
@@ -195,6 +233,8 @@
  <input type="text" name = "secretCode" value="Secret Code">
  <input type="date" name="date" min="2018-01-01">
  <input type="button" value="Go" id="goBtn" onClick="JavaScript:handleRetrieveSchedule()">
+ <br>
+ <input type="button" value="Cancel a Meeting" id="cancelBtn" onClick="Javascript:handleCancelMeeting()">
 <br><br><br>
 <h3>Search:</h3>
 
