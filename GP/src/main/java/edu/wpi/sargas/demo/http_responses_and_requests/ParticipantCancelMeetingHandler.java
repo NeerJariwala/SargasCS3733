@@ -17,6 +17,8 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 
 import edu.wpi.sargas.db.MeetingDAO;
+import edu.wpi.sargas.db.TimeslotDAO;
+import edu.wpi.sargas.demo.entity.Meeting;
 
 public class ParticipantCancelMeetingHandler implements RequestStreamHandler {
 	
@@ -75,8 +77,12 @@ public class ParticipantCancelMeetingHandler implements RequestStreamHandler {
     		ParticipantCancelMeetingRequest request = new Gson().fromJson(httpBody, ParticipantCancelMeetingRequest.class);
     		String secretCode = request.secretCode;
     		MeetingDAO dao = new MeetingDAO();
+    		TimeslotDAO tDao = new TimeslotDAO();   		
     		
     		try {
+    			Meeting m = dao.getsecretMeeting(secretCode);
+    			String timeslot = m.timeslot;
+    			tDao.changeTimeslot(timeslot, 1);
 	    		if(dao.deleteMeetingPart(secretCode)) {
 	    			httpResponse = new ParticipantCancelMeetingResponse(200);
 	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
