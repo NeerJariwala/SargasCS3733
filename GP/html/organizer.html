@@ -24,6 +24,7 @@ const EMPTY = `
 
 var startDate;
 var secretCode;
+var tsID="";
 
 function processGoResponse() {
 
@@ -126,9 +127,18 @@ function processDeleteResponse(response) {
     document.getElementById("schedule").innerHTML = EMPTY;
 }
 
-function handleCloseSlot(e) {
+function handleCloseSlot(tsID) {
     let data = {};
-    data.scheduleId = e.scheduleId;
+
+		let secretCode = prompt("Please enter your secret code to close timeslot:");
+		if (secretCode == null){
+				alert("Time slot not closed, please try again.");
+				return;
+		}
+
+		data["secretCode"] = secretCode;
+		data["timeslotId"] = tsID;
+
 
     let js = JSON.stringify(data);
 		console.log("JS:" + js);
@@ -164,6 +174,14 @@ function handleRetrieveSchedule(secretCode, startDate) {
 	var year = startDate["year"];
 	var month = startDate["month"];
 	var day = startDate["day"];
+
+	if (month < 10) {
+		var month = "0" + startDate["month"];
+	}
+
+	if (day < 10) {
+		var day = "0" + startDate["day"];
+	}
 
 	startDate = year + "-" + month + "-" + day;
 	data["date"] = startDate;
@@ -235,7 +253,7 @@ function displaySchedule(response){
 				if(r==0){
 				table += '<td>' + start.hour +':'+ start.minute + '</td>';
 					if(days[c].timeslots[r].open == 1){
-						table += '<td>' + '<input type="button" value="Close" id="meetingBtn">' + '</td>';
+						table += '<td>' + '<input type="button" value="Close" id="meetingBtn" onClick="JavaScript:handleCloseSlot(tsID)">' + '</td>';
 					}
 					else{
 						table += '<td>' + 'Closed' + '</td>';
@@ -244,7 +262,7 @@ function displaySchedule(response){
 				else{
 				table += '<td>' + (start.hour+hr) +':'+ (start.minute+min) + '</td>';
 					if(days[c].timeslots[r].open == 1){
-						table += '<td>' + '<input type="button" value="Close" id="meetingBtn">' + '</td>';
+						table += '<td>' + '<input type="button" value="Close" id="meetingBtn" onClick="JavaScript:handleCloseSlot(tsID)">' + '</td>';
 					}
 					else{
 						table += '<td>' + 'Closed' + '</td>';
@@ -252,7 +270,7 @@ function displaySchedule(response){
 				}
 			}
 			else if(days[c].timeslots[r].open == 1){
-			table += '<td>' + '<input type="button" value="Close" id="meetingBtn">' + '</td>';
+			table += '<td>' + '<input type="button" value="Close" id="meetingBtn" onClick="JavaScript:handleCloseSlot(tsID)">' + '</td>';
 			}
 			else{
 			table += '<td>' + 'Closed' + '</td>';
@@ -281,10 +299,10 @@ function displaySchedule(response){
 <form name="createForm" method="POST" id="createSchedule">
 <br><br>
 		<p> Schedule Name: <input type="text" name = "name"></p>
-		<p>From:<input type="date" name="startDate" min="2018-01-01"></p>
-		<p>To:<input type="date" name="endDate" min="2018-01-01"></p>
+		<p>From:<input type="date" name="startDate" min="2018-01-01" max="2050-12-31"></p>
+		<p>To:<input type="date" name="endDate" min="2018-01-01" max="2050-12-31"></p>
 		<p>From:<input type="number" name="startHour" min="0" max="24">To:<input type="number" name="endHour" min="0" max="24"></p>
-		<p>Duration:<input type="number" name="duration"> Minutes </p>
+		<p>Duration:<input type="number" name="duration" min="0" max="60"> Minutes </p>
 		<input type="button" name = "createBtn" value="Create"  onclick="JavaScript:handleClick()">
 </form>
 
