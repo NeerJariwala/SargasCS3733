@@ -18,6 +18,8 @@ import com.google.gson.Gson;
 
 import edu.wpi.sargas.db.MeetingDAO;
 import edu.wpi.sargas.db.ScheduleDAO;
+import edu.wpi.sargas.db.TimeslotDAO;
+import edu.wpi.sargas.demo.entity.Meeting;
 
 public class OrganizerCancelMeetingHandler implements RequestStreamHandler {
 	
@@ -36,10 +38,15 @@ public class OrganizerCancelMeetingHandler implements RequestStreamHandler {
 		try {
 			MeetingDAO dao = new MeetingDAO();
 			ScheduleDAO sDao = new ScheduleDAO();
+			TimeslotDAO tDao = new TimeslotDAO();
 			
 			if(!sDao.validateSecretCode(secretCode)) {
 				return false;
 			}
+			
+			Meeting m = dao.getMeeting(meetingId);
+			String timeslot = m.timeslot;
+			tDao.changeTimeslot(timeslot,1);
 			
 			dao.deleteMeeting(meetingId);
 			return true;

@@ -2,9 +2,12 @@ package edu.wpi.sargas.db;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import edu.wpi.sargas.db.DatabaseUtil;
+import edu.wpi.sargas.demo.entity.Day;
 import edu.wpi.sargas.demo.entity.Meeting;
+import edu.wpi.sargas.demo.entity.Schedule;
 
 public class MeetingDAO {
 
@@ -80,6 +83,52 @@ public class MeetingDAO {
         } catch (Exception e) {
             throw new Exception("Failed to delete meeting: " + e.getMessage());
         }
+    }
+    
+    public Meeting getMeeting(String meetingID) throws Exception {
+        try {
+            Meeting result = null;
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Meeting WHERE MeetingID = ?;");
+            ps.setString(1,  meetingID);
+            ResultSet resultSet = ps.executeQuery();
+            
+            while (resultSet.next()) {
+                result = generateMeeting(resultSet);
+            }
+            resultSet.close();
+            ps.close();
+            
+            return result;
+
+        } catch (Exception e) {
+        	e.printStackTrace();
+            throw new Exception("Failed in getting Meeting: " + e.getMessage());
+        }
+    }
+    
+    public Meeting getsecretMeeting(String secretCode) throws Exception {
+        try {
+            Meeting result = null;
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Meeting WHERE secretCode = ?;");
+            ps.setString(1,  secretCode);
+            ResultSet resultSet = ps.executeQuery();
+            
+            while (resultSet.next()) {
+                result = generateMeeting(resultSet);
+            }
+            resultSet.close();
+            ps.close();
+            
+            return result;
+
+        } catch (Exception e) {
+        	e.printStackTrace();
+            throw new Exception("Failed in getting Meeting: " + e.getMessage());
+        }
+    }
+
+    private Meeting generateMeeting(ResultSet resultSet) throws Exception {
+        return new Meeting (resultSet.getString("MeetingID"), resultSet.getString("name"), resultSet.getString("Timeslot"), resultSet.getString("secretCode"));
     }
 
 
