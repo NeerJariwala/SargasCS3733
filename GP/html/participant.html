@@ -14,7 +14,9 @@
 <script>
 
 	var create_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/meeting";
-	var name = "";
+	var getSchedule_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/weeklyschedule";
+	var tsID="";
+	
 
 	function processCreateResponse(name) {
 		// String order: name of person creating meeting
@@ -34,12 +36,126 @@
 			alert("timeslotId error");
 		}
 	}
+	
+	function handleRetrieveSchedule() {
+		let data = {};
+		let form = document.codeForm;
+		let date = form.date;
+		let secretCode = form.secretCode;
+		
+		
+		data["secretCode"] = secretCode.value;
+		data["date"] = date.value;
+		
+		
+		
+		
 
-	function handleClick() {
+	var js = JSON.stringify(data);
+	console.log("JS:" + js);
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", getSchedule_url, true);
+	
+	// send the collected data as JSON
+	xhr.send(js);
+	
+	
+	xhr.onloadend = function () {
+	    console.log(xhr);
+	    console.log(xhr.request);
+	    if (xhr.readyState == XMLHttpRequest.DONE) {
+	      console.log ("XHR:" + xhr.responseText);
+	      	displaySchedule(xhr.responseText);
+	    } else {
+	      	displaySchedule(xhr.responseText);
+	    }
+	};
+	
+	
+}
+	
+	function displaySchedule(response){
+		let data = JSON.parse(response);
+
+		let week = data["week"];
+		let days = week["days"];
+		let slots = days[0].timeslots;
+		let start = slots[0].startTime;
+		let duration = slots[0].duration;
+		
+		var hr = 0;
+		var min = 0;
+		
+		if(duration%60==0){//calculates what it needs to add every row
+		hr =1;
+		}
+		else{
+		min = duration;
+		}
+		
+		console.log(week);
+		console.log (days);
+		console.log(start);
+		
+		
+		var slot_length = days[0].timeslots.length;
+		console.log (slot_length);
+		
+		
+		var table = '';
+		var label_days = '<tr><td>Time</td><td>Monday</td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
+		var rows = slot_length;
+		var cols = days.length;
+		
+		
+		for(r=0; r<rows;r++){
+			table += '<tr>';
+			
+			for(c=0;c<cols;c++){
+				if(c==0){
+					if(r==0){
+					table += '<td>' + start.hour +':'+ start.minute + '</td>';
+						if(days[c].timeslots[r].open == 1){
+							tsID = days[c].timeslots[r].timeslotID;
+							table += '<td>' + '<input type="button" value="Free" id="meetingBtn" onClick="JavaScript:handleClick(tsID)">' + '</td>';
+						}
+						else{
+							table += '<td>' + 'Taken' + '</td>';
+							}
+					}
+					else{
+					table += '<td>' + (start.hour+hr) +':'+ (start.minute+min) + '</td>';
+						if(days[c].timeslots[r].open == 1){
+						tsID = days[c].timeslots[r].timeslotID;
+							table += '<td>' + '<input type="button" value="Free" id="meetingBtn" onClick="JavaScript:handleClick(tsID)">' + '</td>';
+						}
+						else{
+							table += '<td>' + 'Taken' + '</td>';
+							}
+					}
+				}
+				else if(days[c].timeslots[r].open == 1){
+				tsID = days[c].timeslots[r].timeslotID;
+				table += '<td>' + '<input type="button" value="Free" id="meetingBtn" onClick="JavaScript:handleClick(tsID)">' + '</td>';
+				}
+				else{
+				table += '<td>' + 'Taken' + '</td>';
+				
+				}
+			}
+			
+			table += '</tr>';
+			
+		}
+			
+		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' +label_days+table + '</table>');
+		
+	}
+
+	function handleClick(tsID) {
 		var data = {};
 		data["name"] = prompt("Please enter your name for your meeting to be created:");
-		//data["timeslotId"] = something embedded in the html, probably
-		var form = document.createForm;
+		data["timeslotId"] = tsID;
 		
 	
 		var js = JSON.stringify(data);
@@ -71,109 +187,15 @@
 
 <body>
 
-<section id="banner">
-	<h2><strong>Meeting Scheduler: </strong> Participant Portal</h2>
-	<p> Example Schedule </p>
-</section>
 
-<div class="table-wrapper">
-	<table style="text-align: center;">
-		<thead>
-		<tr>
-			<th></th>
 
-			<th>Monday</th>
+<h3>View Schedule:</h3>
 
-			<th>Tuesday</th>
-
-			<th>Wednesday</th>
-
-			<th>Thursday</th>
-
-			<th>Friday</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-
-			<th> <p>9:00 AM</p> </th>
-
-			<td bgcolor="#A9A9A9"></td>
-
-			<td bgcolor="#A9A9A9"></td>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-		</tr>
-		<tr>
-
-			<th> <p>10:00 AM</p> </th>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-			<td onclick="deleteMeeting()"> <p>John Doe</p> </td>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-		</tr>
-		<tr>
-
-			<th> <p>11:00 AM</p> </th>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-			<td bgcolor="#A9A9A9"></td>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-		</tr>
-		<tr>
-
-			<th> <p>12:00 PM</p> </th>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-
-			<td onclick="JavaScript:handleClick(this)"> <button>free</button> </td>
-		</tr>
-	</tbody>
-	</table>
-
-<br>
-
-<h3>View Schedule in week:</h3>
-
-<p>Day</p>
-
-<input type="text" id="weekly-day">
-
-<p>Month</p>
-<input type="text" id="weekly-month">
-
-<p>Year</p>
-<input type="text" id="weekly-year">
+<form name="codeForm" method = "post">
+ <input type="text" name = "secretCode" value="Secret Code">
+ <input type="date" name="date" min="2018-01-01">
+ <input type="button" value="Go" id="goBtn" onClick="JavaScript:handleRetrieveSchedule()">
 <br><br><br>
-<input type="button" name = "submitBtn" value="Submit">
-<br>
-<br>
-
 <h3>Search:</h3>
 
 
