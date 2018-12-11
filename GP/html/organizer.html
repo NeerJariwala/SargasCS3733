@@ -34,7 +34,7 @@ function handleClick() {
 		let data = {};
 	  let form = document.createForm;
 	  let name = form.name.value;
-	  startDate = form.startDate.value;
+	  let startDate = form.startDate.value;
 	  let endDate = form.endDate.value;
 	  let startHour = form.startHour.value;
 	  let endHour = form.endHour.value;
@@ -71,20 +71,16 @@ function handleClick() {
 
 function processCreateResponse(response) {
 	var data = JSON.parse(response);
-	//let shareCode = data["shareCode"];
 	var body = JSON.parse(data["body"]);
 	console.log(body);
+
 	var schedule = body["schedule"];
-	startDate = body ["startDate"];
+	var startDate = schedule["startDate"];
 	secretCode = body["secretCode"];
 	console.log(schedule);
 	console.log(secretCode);
 
-	//let week = data["week"];
-	//let secretCode = week["secretCode"];
-
 	window.sessionStorage.setItem("secretCode", secretCode);
-	//window.sessionStorage.setItem("shareCode", shareCode);
 	window.sessionStorage.setItem("schedule", schedule);
 
 	alert("Your schedule has been created! \nSecret code: " + secretCode);
@@ -165,7 +161,13 @@ function handleRetrieveSchedule(secretCode, startDate) {
 	let data = {};
 
 	data["secretCode"] = secretCode;
-	data["startDate"] = startDate;
+	var year = startDate["year"];
+	var month = startDate["month"];
+	var day = startDate["day"];
+
+	startDate = year + "-" + month + "-" + day;
+	data["date"] = startDate;
+
 
 	console.log(secretCode);
 	console.log(startDate);
@@ -194,9 +196,8 @@ function handleRetrieveSchedule(secretCode, startDate) {
 function displaySchedule(response){
 	let data = JSON.parse(response);
 
-	var schedule = data["schedule"];
-	var weeks = schedule["weeks"];
-	var week1 = weeks[0];
+	//var schedule = data["schedule"];
+	var week = data["week"];
 	var days = week["days"];
 	var slots = days[0].timeslots;
 	var start = slots[0].startTime;
