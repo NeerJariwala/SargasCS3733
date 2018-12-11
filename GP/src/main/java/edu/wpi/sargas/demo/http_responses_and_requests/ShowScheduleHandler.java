@@ -83,7 +83,7 @@ public class ShowScheduleHandler implements RequestStreamHandler {
     		//get the request in the form of a class
     		Schedule sched = null;
     		LocalDate date = null;
-    		
+    		logger.log(request.date);
     		try {
     			date = LocalDate.parse(request.date);
     		} catch(DateTimeParseException e) {

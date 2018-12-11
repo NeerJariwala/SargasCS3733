@@ -38,14 +38,14 @@ public class Schedule {
 		weeks = new ArrayList<Week>();
 		new ScheduleDAO().createSchedule(this);
 		try {
-			generateWeeks();
+			generateWeeks(startDate, endDate);
 		} catch(Exception e) {
-			throw new Exception("SQL failure");
+			throw new Exception(e.getMessage());
 		}
 	}
 	
 	//retrieved from database
-	//TODO: needs to put its weeks into the schedule
+
 	public Schedule(int td, String ID, String name, LocalDate sd, LocalDate ed, int sh, int eh, String secretCode, LocalDate dateCreated) {
 		timeslotDuration = td;
 		scheduleId = ID;
@@ -58,8 +58,8 @@ public class Schedule {
 		this.dateCreated = dateCreated;
 	}
 	
-	//TODO: Actually make this method
-	public void generateWeeks() throws Exception {
+
+	public void generateWeeks(LocalDate startDate, LocalDate endDate) throws Exception {
 		
 		DayDAO dayDao = new DayDAO();
 		WeekDAO weekDao = new WeekDAO();
@@ -220,7 +220,7 @@ public class Schedule {
 			}
 			
 		}
-		//TODO: Ensure this secret code is unique by checking the database
+
 		return secret;
 	}
 	
