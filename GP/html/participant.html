@@ -76,14 +76,8 @@
 	
 	function displaySchedule(response){
 		var data = JSON.parse(response);
-		let weeks = data["weeks"];
-		var week ="";
-		if(weeks != null){
-			let week = weeks[0];
-		}
-		else{
-			let week = data["week"];//this is coming back undefined even though it shouldnt
-		}
+		
+		let week = data["week"];
 		let days = week["days"];
 		let slots = days[0].timeslots;
 		let start = slots[0].startTime;
