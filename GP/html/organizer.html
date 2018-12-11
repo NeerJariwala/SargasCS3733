@@ -195,13 +195,9 @@ function handleRetrieveSchedule(secretCode, startDate) {
 
 function displaySchedule(response){
 	var data = JSON.parse(response);
-	var body = JSON.parse(data["body"]);
-	console.log(JSON.stringify(body));
 
-	var schedule = body["schedule"];
-	var weeks = schedule["weeks"];
-	//var week = weeks[0];
-	var days = weeks["days"];
+	var week = data["week"];
+	var days = week["days"];
 	var slots = days[0].timeslots;
 	var start = slots[0].startTime;
 	var duration = slots[0].duration;
