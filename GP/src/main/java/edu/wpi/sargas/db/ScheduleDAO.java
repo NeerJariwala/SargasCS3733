@@ -73,7 +73,7 @@ public class ScheduleDAO {
 
         } catch (Exception e) {
         	e.printStackTrace();
-            throw new Exception("Failed in getting constant: " + e.getMessage());
+            throw new Exception("Failed in getting Schedule: " + e.getMessage());
         }
     }
     
