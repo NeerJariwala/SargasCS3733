@@ -16,6 +16,7 @@
 	var meeting_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/meeting";
 	var getSchedule_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/weeklyschedule";
 	var cancel_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/meeting/participantcancel";
+	var searchTimeslots_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/searchtimeslots";
 	var tsID="";
 	
 
@@ -240,7 +241,147 @@ function processCancelMeeting(response) {
 				}
 			};
 	}
+	}
+
+
+function handleSearchTimeslots() {
+		let data = {};
+		let form = document.searchForm;
+		let secretCode = form.secretCode;
+		let month = form.month;
+		let year = form.year;
+		let dow = form.dow;
+		let dom = form.dom;
+		
+		
+		data["secretCode"] = secretCode.value;
+		data["month"] = month.value;
+		data["year"] = year.value;
+		data["dayOfWeek"] = dow.value;
+		data["dayOfMonth"] = dom.value;
+		
+		var js = JSON.stringify(data);
+		console.log("JS:" + js);
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", searchTimeslots_url, true);
+		
+		
+			// send the collected data as JSON
+			xhr.send(js);
+		
+			// This will process results and update HTML as appropriate.
+			xhr.onloadend = function () {
+				console.log(xhr);
+				console.log(xhr.request);
+				if (xhr.readyState == XMLHttpRequest.DONE) {
+					console.log ("XHR:" + xhr.responseText);
+					processDisplayTimeslots(xhr.responseText);
+				} else {
+					processDisplayTimeslots(xhr.responseText);
+				}
+			};
+		
 }
+
+function processDisplayTimeslots(response){
+var data = JSON.parse(response);
+		
+		let slots = data["timeslots"];
+		let start = slots[0].startTime;
+		let duration = slots[0].duration;
+		
+		var slot_length = slots.length;
+		console.log (slot_length);
+		
+		for(var s=0;s<slot_length;s++){
+			var temp = slots[s].startTime;
+			if(start.hour>=temp.hour){
+				if(start.minute>temp.minute){
+					start = temp;
+				}
+			}
+			}
+		
+		
+		var hr = 0;
+		var min = 0;
+		var hour = start.hour;
+		var minute = start.minute;
+		
+		console.log(start);
+		
+		
+		var table = '';
+		var label_days = '<tr><td>Time</td><td>Open</td></tr>'
+		var rows = slot_length;
+		var cols = 1;
+		var zero = "";
+		
+			
+			for(r=0; r<rows;r++){
+			table += '<tr>';
+			
+			for(c=0;c<cols;c++){
+				if(c==0){
+					if(r==0){
+					hour = slots[r].startTime.hour;
+					minute = slots[r].startTime.minute;
+					zero = "0";
+					table += '<td>' + hour +':'+ minute + '</td>';
+						if(slots[r].open == 1){
+							tsID = slots[r].timeslotID;
+							table += '<td>' + '<input type="button" value="Free" id="'+tsID+'" onClick="JavaScript:handleClick(this.id);">' + '</td>';
+						}
+						else{
+							table += '<td>' + 'Taken' + '</td>';
+							}
+					}
+					else{
+						if(duration/60==0){ //calculates what it needs to add every row
+							hr =1;
+							zero = "0";
+						}
+						else{
+							if((min+duration)>=60){
+							min = (min+duration)-60;
+							hr += 1;
+							zero = "0";
+							}
+							else{
+							min+=duration;
+							zero = "";
+							}
+						}
+					hour = slots[r].startTime.hour;
+					minute = slots[r].startTime.minute;
+					table += '<td>' + (hour) +':'+ (minute) + '</td>';
+						if(slots[r].open == 1){
+						tsID = slots[r].timeslotID;
+							table += '<td>' + '<input type="button" value="Free" id="'+tsID+'" onClick="JavaScript:handleClick(this.id);">' + '</td>';
+						}
+						else{
+							table += '<td>' + 'Taken' + '</td>';
+							}
+					}
+				}
+				else if(slots[r].open == 1){
+				tsID = slots[r].timeslotID;
+				table += '<td>' + '<input type="button" value="Free" id="'+tsID+'" onClick="JavaScript:handleClick(this.id);">' + '</td>';
+				}
+				else{
+				table += '<td>' + 'Taken' + '</td>';
+				
+				}
+			}
+			
+			table += '</tr>';
+			
+		}
+			
+			document.write("<h1>Available Timeslots</h1>" + '<table border=2>' +label_days+table + '</table>');
+			
+		}
+			
 
 
 </script>
@@ -256,31 +397,27 @@ function processCancelMeeting(response) {
  <input type="text" name = "secretCode" value="Secret Code">
  <input type="date" name="date" min="2018-01-01">
  <input type="button" value="Go" id="goBtn" onClick="JavaScript:handleRetrieveSchedule()">
+ </form>
  <br><br>
  <input type="button" value="Cancel a Meeting" id="cancelBtn" onClick="Javascript:handleCancelMeeting()">
 <br><br><br>
 <h3>Search:</h3>
 
+<center><form name ="searchForm" method = "post">
 
-<p>Month</p>
+<center><p>Month&nbsp;<input type="text" name="month" id="search-month"></p></center>
 
-<input type="text" id="search-month">
+<center><p>Year&nbsp;&nbsp;<input type="text" name="year" id="search-year"></p></center>
 
-<p>Year</p>
+<center><p>Day-Of-Week<input type="text" name="dow" id="search-dow"></p></center>
 
-<input type="text" id="search-year">
+<center><p>Day-Of-Month<input type="text" name="dom" id="search-dom"></p></center>
 
+<center><p>Secret Code<input type="text" name="secretCode" id="search-code"></p></center>
 
-
-<p>Day-Of-Week</p>
-
-<input type="text" id="search-dow">
-
-<p>Day-Of-Month</p>
-
-<input type="text" id="search-dom">
 <br><br><br>
-<input type="button" name = "searchBtn" value="Search">
+<input type="button" name = "searchBtn" value="Search" onClick="Javascript:handleSearchTimeslots()">
+</form></center>
 
 
 </body>
