@@ -85,8 +85,9 @@
 		
 		var hr = 0;
 		var min = 0;
-		
-		if(duration%60==0){//calculates what it needs to add every row
+		var hour = start.hour;
+		var minute = start.minute;
+		if(duration/60==0){//calculates what it needs to add every row
 		hr =1;
 		}
 		else{
@@ -114,7 +115,7 @@
 			for(c=0;c<cols;c++){
 				if(c==0){
 					if(r==0){
-					table += '<td>' + start.hour +':'+ start.minute + '</td>';
+					table += '<td>' + hour +':'+ minute + '</td>';
 						if(days[c].timeslots[r].open == 1){
 							tsID = days[c].timeslots[r].timeslotID;
 							table += '<td>' + '<input type="button" value="Free" id="meetingBtn" onClick="JavaScript:handleClick(tsID)">' + '</td>';
@@ -124,7 +125,7 @@
 							}
 					}
 					else{
-					table += '<td>' + (start.hour+hr) +':'+ (start.minute+min) + '</td>';
+					table += '<td>' + (hour+hr) +':'+ (minute+min) + '</td>';
 						if(days[c].timeslots[r].open == 1){
 						tsID = days[c].timeslots[r].timeslotID;
 							table += '<td>' + '<input type="button" value="Free" id="meetingBtn" onClick="JavaScript:handleClick(tsID)">' + '</td>';
