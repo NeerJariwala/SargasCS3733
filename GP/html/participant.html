@@ -75,9 +75,15 @@
 }
 	
 	function displaySchedule(response){
-		let data = JSON.parse(response);
-
-		let week = data["week"];
+		var data = JSON.parse(response);
+		let weeks = data["weeks"];
+		var week ="";
+		if(weeks != null){
+			let week = weeks[0];
+		}
+		else{
+			let week = data["week"];
+		}
 		let days = week["days"];
 		let slots = days[0].timeslots;
 		let start = slots[0].startTime;
