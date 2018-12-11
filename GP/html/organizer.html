@@ -83,7 +83,7 @@ function processCreateResponse(response) {
 	window.sessionStorage.setItem("secretCode", secretCode);
 	window.sessionStorage.setItem("schedule", schedule);
 
-	alert("Your schedule has been created! \nSecret code: " + secretCode);
+	alert("Your schedule has been created! Secret code: " + secretCode);
 
 	handleRetrieveSchedule(secretCode, startDate);
 }
