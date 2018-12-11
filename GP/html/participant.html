@@ -15,6 +15,7 @@
 
 	var meeting_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/meeting";
 	var getSchedule_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/weeklyschedule";
+	var cancel_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/meeting/participantcancel";
 	var tsID="";
 	
 
@@ -83,30 +84,33 @@
 		let start = slots[0].startTime;
 		let duration = slots[0].duration;
 		
+		var slot_length = days[0].timeslots.length;
+		console.log (slot_length);
+		
+		for(var s=0;s<slot_length;s++){
+			var temp = slots[s].startTime;
+			if(start.hour>temp.hour){
+				if(start.minute>temp.minute){
+					start = temp;
+				}
+			}
+		}
+		
 		var hr = 0;
 		var min = 0;
 		var hour = start.hour;
 		var minute = start.minute;
-		if(duration/60==0){//calculates what it needs to add every row
-		hr =1;
-		}
-		else{
-		min = duration;
-		}
 		
 		console.log(week);
 		console.log (days);
 		console.log(start);
 		
 		
-		var slot_length = days[0].timeslots.length;
-		console.log (slot_length);
-		
-		
 		var table = '';
 		var label_days = '<tr><td>Time</td><td>Monday</td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
 		var rows = slot_length;
 		var cols = days.length;
+		var zero = "";
 		
 		
 		
@@ -116,7 +120,8 @@
 			for(c=0;c<cols;c++){
 				if(c==0){
 					if(r==0){
-					table += '<td>' + hour +':'+ minute + '</td>';
+					zero = "0";
+					table += '<td>' + hour +':'+ minute + zero + '</td>';
 						if(days[c].timeslots[r].open == 1){
 							tsID = days[c].timeslots[r].timeslotID;
 							table += '<td>' + '<input type="button" value="Free" id="'+tsID+'" onClick="JavaScript:handleClick(this.id);">' + '</td>';
@@ -126,7 +131,23 @@
 							}
 					}
 					else{
-					table += '<td>' + (hour+hr) +':'+ (minute+min) + '</td>';
+						if(duration/60==0){ //calculates what it needs to add every row
+							hr =1;
+							zero = "0";
+						}
+						else{
+							if((min+duration)>=60){
+							min = (min+duration)-60;
+							hr += 1;
+							zero = "0";
+							}
+							else{
+							min+=duration;
+							zero = "";
+							}
+						}
+						
+					table += '<td>' + (hour+hr) +':'+ (minute+min+zero) + '</td>';
 						if(days[c].timeslots[r].open == 1){
 						tsID = days[c].timeslots[r].timeslotID;
 							table += '<td>' + '<input type="button" value="Free" id="'+tsID+'" onClick="JavaScript:handleClick(this.id);">' + '</td>';
@@ -168,7 +189,7 @@
 		let js = JSON.stringify(data);
 		console.log("JS:" + js);
 		let xhr = new XMLHttpRequest();
-    xhr.open("DELETE", meeting_url, true);
+    xhr.open("DELETE", cancel_url, true);
 
     xhr.send(js);
 
