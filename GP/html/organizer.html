@@ -196,12 +196,14 @@ function handleRetrieveSchedule(secretCode, startDate) {
 function displaySchedule(response){
 	var data = JSON.parse(response);
 
-	let week = data["week"];
-	let days = week["days"];
+	var schedule = data["schedule"];
+	let weeks = schedule["weeks"];
+	//var week = weeks[0];
+	let days = weeks["days"];
 	let slots = days[0].timeslots;
 	let start = slots[0].startTime;
 	let duration = slots[0].duration;
-	
+
 	var hr = 0;
 	var min = 0;
 
@@ -235,27 +237,27 @@ function displaySchedule(response){
 				if(r==0){
 				table += '<td>' + start.hour +':'+ start.minute + '</td>';
 					if(days[c].timeslots[r].open == 1){
-						table += '<td>' + '<input type="button" value="Free" id="meetingBtn">' + '</td>';
+						table += '<td>' + '<input type="button" value="Close" id="meetingBtn">' + '</td>';
 					}
 					else{
-						table += '<td>' + 'Taken' + '</td>';
+						table += '<td>' + 'Closed' + '</td>';
 						}
 				}
 				else{
 				table += '<td>' + (start.hour+hr) +':'+ (start.minute+min) + '</td>';
 					if(days[c].timeslots[r].open == 1){
-						table += '<td>' + '<input type="button" value="Free" id="meetingBtn">' + '</td>';
+						table += '<td>' + '<input type="button" value="Close" id="meetingBtn">' + '</td>';
 					}
 					else{
-						table += '<td>' + 'Taken' + '</td>';
+						table += '<td>' + 'Closed' + '</td>';
 						}
 				}
 			}
 			else if(days[c].timeslots[r].open == 1){
-			table += '<td>' + '<input type="button" value="Free" id="meetingBtn">' + '</td>';
+			table += '<td>' + '<input type="button" value="Close" id="meetingBtn">' + '</td>';
 			}
 			else{
-			table += '<td>' + 'Taken' + '</td>';
+			table += '<td>' + 'Closed' + '</td>';
 
 			}
 		}
