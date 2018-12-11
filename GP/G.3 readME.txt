@@ -1,0 +1,4 @@
+If date must be entered manually, use the following format:
+yyyy-mm-dd
+
+Start and end time are to be inputed as an single integer using military time (ex. 11 or 12 or 13)
