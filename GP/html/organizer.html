@@ -22,6 +22,8 @@ const EMPTY = `
 <td><p> Make a schedule or search for one to see it here </p></td>
 </tr>`;
 
+var startDate;
+var secretCode;
 
 function processGoResponse() {
 
@@ -32,7 +34,7 @@ function handleClick() {
 		let data = {};
 	  let form = document.createForm;
 	  let name = form.name.value;
-	  let startDate = form.startDate.value;
+	  startDate = form.startDate.value;
 	  let endDate = form.endDate.value;
 	  let startHour = form.startHour.value;
 	  let endHour = form.endHour.value;
@@ -73,7 +75,8 @@ function processCreateResponse(response) {
 	var body = JSON.parse(data["body"]);
 	console.log(body);
 	var schedule = body["schedule"];
-	var secretCode = body["secretCode"];
+	startDate = body ["startDate"];
+	secretCode = body["secretCode"];
 	console.log(schedule);
 	console.log(secretCode);
 
@@ -86,76 +89,13 @@ function processCreateResponse(response) {
 
 	alert("Your schedule has been created! \nSecret code: " + secretCode);
 
-	/* handleRefreshDisplay(1); */
-}
-
-/*
-function handleRefreshDisplay(week) {
-	let data = {};
-	data.id = window.sessionStorage.getItem("scheduleId");
-	data.week = week;
-
-	let js = JSON.stringify(data);
-	console.log("JS:" + js);
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", show_schedule, true);
-
-	// send the collected data as JSON
-	xhr.send(js);
-
-	// This will process results and update HTML as appropriate.
-	xhr.onloadend = function () {
-		console.log(xhr);
-		console.log(xhr.request);
-		if (xhr.readyState == XMLHttpRequest.DONE) {
-			console.log ("XHR:" + xhr.responseText);
-					processCreateResponse(xhr.responseText);
-		} else {
-				processCreateResponse(xhr.responseText);
-		}
-	};
-
-}
-*/
-
-function processCreateScheduleResponse(response, week){
-		let data = JSON.parse(response);
-
-		let schedule = data.schedule;
-		let scheduleId = schedule["scheduleId"];
-
-		x = schedule;
-
-		let table = document.getElementById("schedule");
-
-		let name = schedule.name;
-		let startTime = schedule.startTime;
-		let endTime = schedule.endTime;
-		let duration = schedule.duration;
-		let days = schedule.days;
-
-		let thead = document.createElement("thead");
-		let tbody = document.createElement("tbody");
-
-		table.innerHTML = "";
-
-		let head = "<th></th>"
-		let monday = "<th>" + days[0].id + "Monday" + days[0].date + "</th>";
-		let tuesday = "<th>" + days[1].id + "Tuesday" + days[1].date + "</th>";
-		let wednesday = "<th>" + days[2].id + "Wednesday" + days[2].date + "</th>";
-		let thursday = "<th>" + days[3].id + "Thursday" + days[3].date + "</th>";
-		let friday = "<th>" + days[4].id + "Friday" + days[4].date + "</th>";
-		thead.innerHMTL = head + monday + tuesday + wednesday + thursday + friday;
-		table.appendChild(thead);
-
-		document.querySelector("#schedule-name").innerHTML = "<h3>" + name + "</h3";
-		document.querySelector("#schedule-code").innerHTML = "Secret Code: <h3>" + window.sessionStorage.getItem("secretCode") + "</h3 <br> Share Code: <h3>" + shareCode + "</h3>";
+	handleRetrieveSchedule(secretCode, startDate);
 }
 
 function handleDeleteSchedule() {
 		let data = {};
 
-    let secretCode = prompt("Delete this schedule? \nEnter secret code to confirm");
+    secretCode = prompt("Delete this schedule? \nEnter secret code to confirm");
     if (secretCode == null){
         alert("Schedule will not be deleted, please try again.");
         return;
@@ -219,6 +159,113 @@ function processCloseResponse(response) {
     alert("Time slot has been closed!");
 
     //Refresh display somehow
+}
+
+function handleRetrieveSchedule(secretCode, startDate) {
+	let data = {};
+
+	data["secretCode"] = secretCode;
+	data["startDate"] = startDate;
+
+	console.log(secretCode);
+	console.log(startDate);
+
+	var js = JSON.stringify(data);
+	console.log("JS:" + js);
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", show_schedule, true);
+
+	// send the collected data as JSON
+	xhr.send(js);
+
+
+	xhr.onloadend = function () {
+			console.log(xhr);
+			console.log(xhr.request);
+			if (xhr.readyState == XMLHttpRequest.DONE) {
+				console.log ("XHR:" + xhr.responseText);
+					displaySchedule(xhr.responseText);
+			} else {
+					displaySchedule(xhr.responseText);
+			}
+	};
+}
+
+function displaySchedule(response){
+	let data = JSON.parse(response);
+
+	var schedule = data["schedule"];
+	var weeks = schedule["weeks"];
+	var week1 = weeks[0];
+	var days = week["days"];
+	var slots = days[0].timeslots;
+	var start = slots[0].startTime;
+	var duration = slots[0].duration;
+
+	var hr = 0;
+	var min = 0;
+
+	if(duration%60==0){//calculates what it needs to add every row
+	hr =1;
+	}
+	else{
+	min = duration;
+	}
+
+	console.log(week);
+	console.log(days);
+	console.log(start);
+
+
+	var slot_length = days[0].timeslots.length;
+	console.log (slot_length);
+
+
+	var table = '';
+	var label_days = '<tr><td>Time</td><td>Monday</td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
+	var rows = slot_length;
+	var cols = days.length;
+
+
+	for(var r=0; r<rows;r++){
+		table += '<tr>';
+
+		for(var c=0;c<cols;c++){
+			if(c==0){
+				if(r==0){
+				table += '<td>' + start.hour +':'+ start.minute + '</td>';
+					if(days[c].timeslots[r].open == 1){
+						table += '<td>' + '<input type="button" value="Free" id="meetingBtn">' + '</td>';
+					}
+					else{
+						table += '<td>' + 'Taken' + '</td>';
+						}
+				}
+				else{
+				table += '<td>' + (start.hour+hr) +':'+ (start.minute+min) + '</td>';
+					if(days[c].timeslots[r].open == 1){
+						table += '<td>' + '<input type="button" value="Free" id="meetingBtn">' + '</td>';
+					}
+					else{
+						table += '<td>' + 'Taken' + '</td>';
+						}
+				}
+			}
+			else if(days[c].timeslots[r].open == 1){
+			table += '<td>' + '<input type="button" value="Free" id="meetingBtn">' + '</td>';
+			}
+			else{
+			table += '<td>' + 'Taken' + '</td>';
+
+			}
+		}
+
+		table += '</tr>';
+
+	}
+
+	document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' +label_days+table + '</table>');
+
 }
 
 
