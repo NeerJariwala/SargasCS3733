@@ -20,11 +20,11 @@ import com.google.gson.Gson;
 import edu.wpi.sargas.db.ScheduleDAO;
 import edu.wpi.sargas.demo.entity.Schedule;
 
-public class ExtendStartDateHandler implements RequestStreamHandler {
+public class ExtendEndDateHandler implements RequestStreamHandler {
 	
-	private boolean updateStartDate(String secretCode, LocalDate newStartDate) {
+	private boolean updateEndDate(String secretCode, LocalDate newEndDate) {
 		//this method would use a DAO to update
-		//the startDate field in the schedule table,
+		//the endDate field in the schedule table,
 		//depending on secretCode
 		return false;
 	}
@@ -43,7 +43,7 @@ public class ExtendStartDateHandler implements RequestStreamHandler {
 	    
     	JSONObject jsonResponse = new JSONObject();
     	jsonResponse.put("headers", headerJson);
-    	ExtendStartDateResponse httpResponse = null;
+    	ExtendEndDateResponse httpResponse = null;
     	String httpBody = null;
     	boolean processed = false;
     	
@@ -59,7 +59,7 @@ public class ExtendStartDateHandler implements RequestStreamHandler {
     		if(requestType != null && requestType.equalsIgnoreCase("OPTIONS")) {
     			//if we got an OPTIONS request, provide a 200 response
     			logger.log("Options request");
-    			httpResponse = new ExtendStartDateResponse(200);
+    			httpResponse = new ExtendEndDateResponse(200);
     			processed = true;
     		} else { //otherwise, check out the response body later
     			httpBody = (String)jsonRequest.get("body");
@@ -67,57 +67,55 @@ public class ExtendStartDateHandler implements RequestStreamHandler {
     				httpBody = jsonRequest.toJSONString();
     			}
     		}
+    		
     	} catch(ParseException e) {
-    		//if unable to parse, prepare an invalid input response
+    		//unable to parse, invalid response
     		logger.log(e.toString());
-    		httpResponse = new ExtendStartDateResponse(400);
+    		httpResponse = new ExtendEndDateResponse(400);
     		jsonResponse.put("body", new Gson().toJson(httpResponse));
     		processed = true;
     	}
         
     	if(!processed) {
-    		//if it's not OPTIONS and not a parse exception, further processing must be done
+    		//if neither OPTIONS nor parse error, further process the input
     		
-    		ExtendStartDateRequest request = new Gson().fromJson(httpBody,ExtendStartDateRequest.class);
+    		ExtendEndDateRequest request = new Gson().fromJson(httpBody, ExtendEndDateRequest.class);
     		String secretCode = request.secretCode;
-    		String newStart = request.newStart;
+    		String newEnd = request.newEnd;
     		LocalDate newDate = null;
     		
     		try {
-    			
-    			newDate = LocalDate.parse(newStart);
-    			
+    			newDate = LocalDate.parse(newEnd);
     			Schedule sched = new ScheduleDAO().getSchedule(secretCode);
     			
     			if(sched == null) { //if we couldn't get a schedule from that secretCode
     				logger.log("Incorrect secret code");
-    				httpResponse = new ExtendStartDateResponse(400);
+    				httpResponse = new ExtendEndDateResponse(400);
             		jsonResponse.put("body", new Gson().toJson(httpResponse));
-    			} else if(newDate.isAfter(sched.startDate)) {
-    				//if the new date is after the start date, it's not being extended
+    			} else if(newDate.isBefore(sched.endDate)) {
+    				//if the new date is before the end date, it's not being extended
     				logger.log("Invalid date");
-    				httpResponse = new ExtendStartDateResponse(400);
+    				httpResponse = new ExtendEndDateResponse(400);
             		jsonResponse.put("body", new Gson().toJson(httpResponse));
-    				
     			} else {
     				
-    				sched.generateWeeks(newDate, sched.startDate.minusDays(1));
-    				//go from the new start date to right before the old start date
+    				sched.generateWeeks(sched.endDate.plusDays(1), newDate);
     				
-    				if(updateStartDate(secretCode, newDate)) {
-    					httpResponse = new ExtendStartDateResponse(200);
+    				if(updateEndDate(secretCode, newDate)) {
+    					httpResponse = new ExtendEndDateResponse(200);
     					jsonResponse.put("body", new Gson().toJson(httpResponse));
     				} else {
     					logger.log("Database issue");
-    					httpResponse = new ExtendStartDateResponse(400);
+    					httpResponse = new ExtendEndDateResponse(400);
     	        		jsonResponse.put("body", new Gson().toJson(httpResponse));
     				}
+    				
     			}
     			
     		} catch(Exception e) {
     			logger.log(e.toString());
-    			httpResponse = new ExtendStartDateResponse(400);
-        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+    			httpResponse = new ExtendEndDateResponse(400);
+    			jsonResponse.put("body", new Gson().toJson(httpResponse));
     		}
     		
     	}
