@@ -22,7 +22,7 @@ import edu.wpi.sargas.demo.entity.Meeting;
 public class CreateMeetingHandler implements RequestStreamHandler {
 	
 	private void errorResponse(JSONObject response) {
-		CreateMeetingResponse httpResponse = new CreateMeetingResponse(400, null);
+		CreateMeetingResponse httpResponse = new CreateMeetingResponse(400, null, null);
 		response.put("body", new Gson().toJson(httpResponse));
 	}
 	
@@ -62,7 +62,7 @@ public class CreateMeetingHandler implements RequestStreamHandler {
     		if(requestType != null && requestType.equalsIgnoreCase("OPTIONS")) {
     			//if OPTIONS request, provide 200 response
     			logger.log("Options request");
-    			httpResponse = new CreateMeetingResponse(200,null);
+    			httpResponse = new CreateMeetingResponse(200,null, null);
     			processed = true;
     		} else {
     			httpBody = (String)jsonRequest.get("body");
@@ -94,7 +94,7 @@ public class CreateMeetingHandler implements RequestStreamHandler {
 	    			Meeting meeting = new Meeting(name, id);
 	    			
 	    			createMeeting(meeting);
-	    			httpResponse = new CreateMeetingResponse(200, meeting.secretCode);
+	    			httpResponse = new CreateMeetingResponse(200, meeting.secretCode, meeting.name);
 	    			//TODO: decide whether to use the meetingID or a separate code for the
 	    			//meeting secret code
 	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
