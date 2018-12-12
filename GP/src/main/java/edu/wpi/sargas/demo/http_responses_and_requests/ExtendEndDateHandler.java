@@ -22,11 +22,8 @@ import edu.wpi.sargas.demo.entity.Schedule;
 
 public class ExtendEndDateHandler implements RequestStreamHandler {
 	
-	private boolean updateEndDate(String secretCode, LocalDate newEndDate) {
-		//this method would use a DAO to update
-		//the endDate field in the schedule table,
-		//depending on secretCode
-		return false;
+	private boolean updateEndDate(String scheduleId, LocalDate newEndDate) throws Exception {
+		return new ScheduleDAO().extendendDate(scheduleId, newEndDate);
 	}
 	
     @Override
@@ -101,7 +98,7 @@ public class ExtendEndDateHandler implements RequestStreamHandler {
     				
     				sched.generateWeeks(sched.endDate.plusDays(1), newDate);
     				
-    				if(updateEndDate(secretCode, newDate)) {
+    				if(updateEndDate(sched.scheduleId, newDate)) {
     					httpResponse = new ExtendEndDateResponse(200);
     					jsonResponse.put("body", new Gson().toJson(httpResponse));
     				} else {

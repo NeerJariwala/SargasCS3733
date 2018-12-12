@@ -22,11 +22,8 @@ import edu.wpi.sargas.demo.entity.Schedule;
 
 public class ExtendStartDateHandler implements RequestStreamHandler {
 	
-	private boolean updateStartDate(String secretCode, LocalDate newStartDate) {
-		//this method would use a DAO to update
-		//the startDate field in the schedule table,
-		//depending on secretCode
-		return false;
+	private boolean updateStartDate(String scheduleId, LocalDate newStartDate) throws Exception {
+		return new ScheduleDAO().extendstartDate(scheduleId, newStartDate);
 	}
 	
     @Override
@@ -104,7 +101,7 @@ public class ExtendStartDateHandler implements RequestStreamHandler {
     				sched.generateWeeks(newDate, sched.startDate.minusDays(1));
     				//go from the new start date to right before the old start date
     				
-    				if(updateStartDate(secretCode, newDate)) {
+    				if(updateStartDate(sched.scheduleId, newDate)) {
     					httpResponse = new ExtendStartDateResponse(200);
     					jsonResponse.put("body", new Gson().toJson(httpResponse));
     				} else {
