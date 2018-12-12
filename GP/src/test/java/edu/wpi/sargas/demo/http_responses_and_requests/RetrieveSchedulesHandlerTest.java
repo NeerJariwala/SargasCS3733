@@ -120,7 +120,7 @@ public class RetrieveSchedulesHandlerTest {
         	System.out.println("problem");
         }
         
-        Assert.assertEquals(body.get("httpCode").toString(), "200");
+        Assert.assertEquals(body.get("httpCode").toString(), "400");
     }
     
 }
