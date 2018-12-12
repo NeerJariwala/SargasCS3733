@@ -118,7 +118,7 @@ public class RetrieveSchedulesHandler implements RequestStreamHandler {
 	    			
 	    		} else if(!noDays && !invalidInput) { //process days input here
 	    			LocalDateTime currentTime = LocalDateTime.now();
-	    			LocalDateTime lowerBound = currentTime.minusDays(hoursAgo);
+	    			LocalDateTime lowerBound = currentTime.minusDays(daysAgo);
 	    			ArrayList<Schedule> schedules = retrieveSchedules(lowerBound);
 	    			httpResponse = new RetrieveSchedulesResponse(200, schedules);
 	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
