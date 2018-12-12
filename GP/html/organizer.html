@@ -16,6 +16,8 @@ const schedule_url = URL + "schedule";
 const show_schedule = URL + "weeklyschedule";
 const close_url = URL + "closetimeslots";
 const cancel_url = URL + "meeting";
+var extendStart_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/extendStartDate";
+var extendEnd_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/extendStartDate";//can change these to format later
 var tsID="";
 
 const EMPTY = `
@@ -465,9 +467,8 @@ function displaySchedule(response){
 		<input type="button" name = "createBtn" value="Create"  onclick="JavaScript:handleClick()">
 </form>
 <br><br>
-
-<br><br>
-<input type="button" value="Cancel a Meeting" id="cancelBtn" onClick="Javascript:handleCancelMeeting()">
+<input type="button" onclick="handleDeleteSchedule()" value="Delete Schedule">
+<br><br><br>
 
 <h2>Go to pre-existing Schedule</h2>
 
@@ -478,9 +479,6 @@ function displaySchedule(response){
 </form>
 <br><br><br>
 
-<input type="button" onclick="handleDeleteSchedule()" value="Delete Schedule">
-
-<br><br>
 <form name="extendStartForm" method = "post">
 	<h3>Extend Start or End Date:</h3>
  <input type="text" name = "secretCode" value="Secret Code">
