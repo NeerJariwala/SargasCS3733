@@ -146,7 +146,7 @@ public class ScheduleDAO {
     public ArrayList<Schedule> retrieveSchedules(LocalDateTime datetime) throws Exception {
     	ArrayList<Schedule> result = new ArrayList<Schedule>();
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule WHERE dateCreated > ?;");
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule WHERE dateCreated >= ?;");
             ps.setTimestamp(1, Timestamp.valueOf(datetime));
             ResultSet resultSet = ps.executeQuery();
             
@@ -166,7 +166,7 @@ public class ScheduleDAO {
 
     public void deleteSchedulebefore(LocalDateTime datetime) throws Exception {
         try {
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM Schedule WHERE dateCreated < ?;");
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM Schedule WHERE dateCreated <= ?;");
             ps.setTimestamp(1, Timestamp.valueOf(datetime));
             ps.executeUpdate();
             ps.close();
