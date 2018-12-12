@@ -16,6 +16,8 @@ const schedule_url = URL + "schedule";
 const show_schedule = URL + "weeklyschedule";
 const close_url = URL + "closetimeslots";
 const cancel_url = URL + "meeting";
+var extendStart_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/extendStartDate";
+var extendEnd_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/extendEndDate";//can change these to format later
 var tsID="";
 
 const EMPTY = `
@@ -377,6 +379,74 @@ function displaySchedule(response){
 
 	}
 
+	function handleExtendStart(){
+		let data = {};
+		let form = document.extendStartForm;
+		let secretCode = form.secretCode;
+		let newStart = form.date;
+
+		data["secretCode"] = secretCode.value;
+		data["newStart"] = newStart.value;
+
+		var js = JSON.stringify(data);
+		console.log("JS:" + js);
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", extendStart_url, true);
+
+
+			// send the collected data as JSON
+			xhr.send(js);
+
+			// This will process results and update HTML as appropriate.
+			xhr.onloadend = function () {
+				console.log(xhr);
+				console.log(xhr.request);
+				if (xhr.readyState == XMLHttpRequest.DONE) {
+					console.log ("XHR:" + xhr.responseText);
+					processDateExtended(xhr.responseText);
+				} else {
+					processDateExtended(xhr.responseText);
+				}
+			};
+
+		}
+
+		function handleExtendEnd(){
+		let data = {};
+		let form = document.extendStartForm;
+		let secretCode = form.secretCode;
+		let newEnd = form.date;
+
+		data["secretCode"] = secretCode.value;
+		data["newEnd"] = newEnd.value;
+
+		var js = JSON.stringify(data);
+		console.log("JS:" + js);
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", extendEnd_url, true);
+
+
+			// send the collected data as JSON
+			xhr.send(js);
+
+			// This will process results and update HTML as appropriate.
+			xhr.onloadend = function () {
+				console.log(xhr);
+				console.log(xhr.request);
+				if (xhr.readyState == XMLHttpRequest.DONE) {
+					console.log ("XHR:" + xhr.responseText);
+					processDateExtended(xhr.responseText);
+				} else {
+					processDateExtended(xhr.responseText);
+				}
+			};
+
+		}
+
+		function processDateExtended(){
+		alert("Date has been extended.");
+		}
+
 
 </script>
 </head>
@@ -414,6 +484,14 @@ function displaySchedule(response){
 <input type="button" onclick="handleDeleteSchedule()" value="Delete Schedule">
 
 
+<form name="extendStartForm" method = "post">
+	<h3>Extend Start or End Date:</h3>
+ <input type="text" name = "secretCode" value="Secret Code">
+ <input type="date" name="date" min="2018-01-01">
+ <input type="button" value="Extend Start" id="goBtn" onClick="JavaScript:handleExtendStart()">
+ <input type="button" value="Extend End" id="goBtn" onClick="JavaScript:handleExtendEnd()">
+ </form>
+ <br><br>
 
 </body>
 </html>

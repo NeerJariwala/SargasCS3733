@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
@@ -19,15 +18,9 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 
 import edu.wpi.sargas.db.ScheduleDAO;
-import edu.wpi.sargas.demo.entity.Schedule;
 
-public class RetrieveSchedulesHandler implements RequestStreamHandler {
-	
-	private ArrayList<Schedule> retrieveSchedules(LocalDateTime since) throws Exception {
-		//Use DAO to get schedules after the localDateTime passed in
-		return new ScheduleDAO().retrieveSchedules(since);
-	}
-	
+public class SysadminDeleteSchedulesHandler implements RequestStreamHandler {
+
     @Override
     public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
     	
@@ -42,12 +35,11 @@ public class RetrieveSchedulesHandler implements RequestStreamHandler {
 	    
     	JSONObject jsonResponse = new JSONObject();
     	jsonResponse.put("headers", headerJson);
-    	RetrieveSchedulesResponse httpResponse = null;
+    	SysadminDeleteSchedulesResponse httpResponse = null;
     	String httpBody = null;
     	boolean processed = false;
     	
     	try {
-    		
     		BufferedReader reader = new BufferedReader(new InputStreamReader(input));
     		JSONParser parser = new JSONParser();
     		JSONObject jsonRequest = (JSONObject)parser.parse(reader);
@@ -59,8 +51,8 @@ public class RetrieveSchedulesHandler implements RequestStreamHandler {
     		if(requestType != null && requestType.equalsIgnoreCase("OPTIONS")) {
     			//if we got an OPTIONS request, provide a 200 response
     			logger.log("Options request");
-    			httpResponse = new RetrieveSchedulesResponse(200, null);
-    			//nothing needed because it was an options request
+    			httpResponse = new SysadminDeleteSchedulesResponse(200);
+    			//no schedule/secret code needed because it was an options request
     			processed = true;
     		} else { //otherwise, check out the response body later
     			httpBody = (String)jsonRequest.get("body");
@@ -68,66 +60,39 @@ public class RetrieveSchedulesHandler implements RequestStreamHandler {
     				httpBody = jsonRequest.toJSONString();
     			}
     		}
-    		
     	} catch(ParseException e) {
     		//if unable to parse, prepare an invalid input response
     		logger.log(e.toString());
-    		httpResponse = new RetrieveSchedulesResponse(400, null);
+    		httpResponse = new SysadminDeleteSchedulesResponse(400);
     		jsonResponse.put("body", new Gson().toJson(httpResponse));
     		processed = true;
     	}
-        
+    	
     	if(!processed) {
+    		//if it's not OPTIONS and not parse exception, should be further processed
     		
-    		RetrieveSchedulesRequest request = new Gson().fromJson(httpBody,RetrieveSchedulesRequest.class);
+    		SysadminDeleteSchedulesRequest request = new Gson().fromJson(httpBody,SysadminDeleteSchedulesRequest.class);
     		//get the request in the form of a class
-    		Integer hoursAgo = null;
-    		Integer daysAgo = null;
-    		boolean noHours = false;
-    		boolean noDays = false;
-    		boolean invalidInput = false;
+    		ArrayList<String> scheduleIds = request.scheduleIds;
     		
-    		if(request.hoursAgo.equals("")) { //if no hour input
-    			noHours = true;
-    		}
-    		
-    		if(request.daysAgo.equals("")) { //if no day input
-    			noDays = true;
-    		}
-    		
-    		if((noHours && noDays) || (!noHours && !noDays)) {
-    			//if we have either none or both, input is invalid
-    			logger.log("Invalid input");
-    			invalidInput = true;
-        		httpResponse = new RetrieveSchedulesResponse(400, null);
+    		if(scheduleIds == null) { //return invalid if null
+    			httpResponse = new SysadminDeleteSchedulesResponse(400);
         		jsonResponse.put("body", new Gson().toJson(httpResponse));
-    		} else if(!noHours) { //if we have hours input, use hours ago
-    			hoursAgo = Integer.parseInt(request.hoursAgo);
-    		} else if(!noDays) { //if we have days input, use days ago
-    			daysAgo = Integer.parseInt(request.daysAgo);
-    		}
-    		
-    		try {
-	    		if(!noHours && !invalidInput) { //process hours input here
-	    			
-	    			LocalDateTime currentTime = LocalDateTime.now();
-	    			LocalDateTime lowerBound = currentTime.minusHours(hoursAgo);
-	    			ArrayList<Schedule> schedules = retrieveSchedules(lowerBound);
-	    			httpResponse = new RetrieveSchedulesResponse(200, schedules);
-	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
-	    			
-	    		} else if(!noDays && !invalidInput) { //process days input here
-	    			LocalDateTime currentTime = LocalDateTime.now();
-	    			LocalDateTime lowerBound = currentTime.minusDays(daysAgo);
-	    			ArrayList<Schedule> schedules = retrieveSchedules(lowerBound);
-	    			httpResponse = new RetrieveSchedulesResponse(200, schedules);
-	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
-	    		}
-    		} catch(Exception e) {
-    			logger.log(e.toString());
-    			e.printStackTrace();
-        		httpResponse = new RetrieveSchedulesResponse(400, null);
+    		} else {
+    			
+    			for(String scheduleId : scheduleIds) { //delete all the id's we received
+    				
+    				try {
+    					new ScheduleDAO().deleteSchedule(scheduleId);
+    				} catch(Exception e) {
+    					logger.log(e.toString());
+    				}
+    				
+    			}
+    			
+    			httpResponse = new SysadminDeleteSchedulesResponse(200);
         		jsonResponse.put("body", new Gson().toJson(httpResponse));
+    			
     		}
     		
     	}
