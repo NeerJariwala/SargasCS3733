@@ -147,10 +147,9 @@ public class ScheduleDAO {
     	ArrayList<Schedule> result = new ArrayList<Schedule>();
         try {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule WHERE dateCreated >= '?';");
-            ps.setTimestamp(1, Timestamp.valueOf(datetime));
+            ps.setTimestamp(1, Timestamp.valueOf(datetime.toString()));
             ResultSet resultSet = ps.executeQuery();
             
-
             while (resultSet.next()) {
             	result.add(generateSchedule(resultSet));
             }
