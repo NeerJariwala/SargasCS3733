@@ -13,6 +13,7 @@ public class Week {
 	public String schedule;   //aka the id
 	
 	public ArrayList<Day> days = new ArrayList<Day>();
+	public ArrayList<Meeting> meetings = new ArrayList<Meeting>();
 	
 	
 	public Week(LocalDate startDate, String schedule) {
@@ -67,6 +68,10 @@ public class Week {
 		
 		return found;
 		
+	}
+	
+	public void addMeeting(Meeting m) {
+		meetings.add(m);
 	}
 	
 }

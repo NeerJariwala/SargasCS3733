@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import edu.wpi.sargas.db.DayDAO;
+import edu.wpi.sargas.db.MeetingDAO;
 import edu.wpi.sargas.db.ScheduleDAO;
 import edu.wpi.sargas.db.TimeslotDAO;
 import edu.wpi.sargas.db.WeekDAO;
@@ -187,6 +188,18 @@ public class Schedule {
 					
 					for(Timeslot timeslot : timeslots) {
 						day.addTimeslot(timeslot);
+						
+						try {
+							Meeting m = new MeetingDAO().getMeeting(timeslot.timeslotID);
+							
+							if(m != null) {
+								weekOf.addMeeting(m);
+							}
+							
+						} catch(Exception e) {
+							System.out.println(e.toString());
+						}
+						
 					}
 					
 				}
