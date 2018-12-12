@@ -278,11 +278,11 @@ function displaySchedule(response){
 
 
 	var week = data["week"];
-	//var meeting = week["meetings"];
+	var meetings = week["meetings"];
 	var days = week["days"];
 	var slots = days[0].timeslots;
 	var start = slots[0].startTime;
-	//var meeting1 = slots[0].meeting;
+	var meeting = meetings[0].name;
 	var duration = slots[0].duration;
 
 	var slot_length = days[0].timeslots.length;
@@ -329,7 +329,7 @@ function displaySchedule(response){
 							table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleCloseSlot(this.id);">' + '</td>';
 						}
 						else{
-							table += '<td>' + 'Taken' + '</td>';
+							table += '<td>' + 'Insert Name<br>' +  '<input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
 							}
 					}
 					else{
@@ -398,18 +398,19 @@ function displaySchedule(response){
 </form>
 <br><br>
 
-<br><br>
-<input type="button" value="Cancel a Meeting" id="cancelBtn" onClick="Javascript:handleCancelMeeting()">
+
 
 <h2>Go to pre-existing Schedule</h2>
 
 <form name="existingForm" method ="post" id="existingSchedule">
- <input type="text" name = "secretCode" value="Secret Code">
- <input type="date" name="date" min="2018-01-01">
+ <input type="text" name = "secretCode" value="Secret Code"><br><br>
+ <input type="date" name="date" min="2018-01-01"><br><br>
  <input type="button" name = "goBtn" value="Go"  onClick="handleRetrieveExisting(this)">
 </form>
-<br><br><br>
+<br><br>
 
+<input type="button" value="Cancel a Meeting" id="cancelBtn" onClick="Javascript:handleCancelMeeting()">
+<br><br>
 <input type="button" onclick="handleDeleteSchedule()" value="Delete Schedule">
 
 
