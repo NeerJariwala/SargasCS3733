@@ -90,6 +90,9 @@ public class SysadminDeleteSchedulesHandler implements RequestStreamHandler {
     				
     			}
     			
+    			httpResponse = new SysadminDeleteSchedulesResponse(200);
+        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+    			
     		}
     		
     	}
