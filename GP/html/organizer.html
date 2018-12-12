@@ -15,6 +15,8 @@ const URL = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/";
 const schedule_url = URL + "schedule";
 const show_schedule = URL + "weeklyschedule";
 const close_url = URL + "closetimeslots";
+const cancel_url = URL + "meeting";
+var tsID="";
 
 const EMPTY = `
 <tr>
@@ -126,19 +128,24 @@ function processDeleteResponse(response) {
     document.getElementById("schedule").innerHTML = EMPTY;
 }
 
-function handleCloseSlot(e) {
+function handleCloseSlot(thisID) {
     let data = {};
-    //data.scheduleId = e.scheduleId;
-    
-    //e is now the timeslot ID of the button that was pressed
-    //get secretCode somehow
-    // send secretcode and timeslot
+		data["timeslotId"] = thisID;
+
+		let secretCode = prompt("Please enter your secret code to close time slot:");
+		if (secretCode == null){
+				alert("Time slot will not be closed, please try again.");
+				return;
+		}
+
+		data["secretCode"] = secretCode;
+
 
     let js = JSON.stringify(data);
 		console.log("JS:" + js);
 		let xhr = new XMLHttpRequest();
 
-    xhr.open("DELETE", close_url, true);
+    xhr.open("POST", close_url, true);
     xhr.send(js);
 
 		xhr.onloadend = function () {
@@ -158,12 +165,49 @@ function processCloseResponse(response) {
 
     alert("Time slot has been closed!");
 
-    //Refresh display somehow
+}
+
+function handleCancelMeeting() {
+	let data = {};
+
+	let secretCode = prompt("Please enter your secret code to cancel meeting:");
+	if (secretCode == null){
+			alert("Meeting will not be cancelled, please try again.");
+			return;
+	}
+
+	data["secretCode"] = secretCode;
+
+	let js = JSON.stringify(data);
+	console.log("JS:" + js);
+	let xhr = new XMLHttpRequest();
+	xhr.open("DELETE", cancel_url, true);
+
+	xhr.send(js);
+
+	xhr.onloadend = function () {
+		console.log(xhr);
+		console.log(xhr.request);
+		if (xhr.readyState == XMLHttpRequest.DONE) {
+			console.log ("XHR:" + xhr.responseText);
+					processCancelMeeting(xhr.responseText);
+		} else {
+				processCancelMeeting(xhr.responseText);
+		}
+	};
+}
+
+function processCancelMeeting(response) {
+    let data = JSON.parse(response);
+
+    alert("The meeting has been cancelled!");
+
+
 }
 
 function handleRetrieveSchedule(secretCode, startDate) {
 	let data = {};
-	
+
 	data["secretCode"] = secretCode;
 	var year = startDate["year"];
 	var month = startDate["month"];
@@ -202,21 +246,21 @@ function handleRetrieveExisting() {
 		let form = document.existingForm;
 		let date = form.date;
 		let secretCode = form.secretCode;
-		
-		
+
+
 		data["secretCode"] = secretCode.value;
 		data["date"] = date.value;
-		
+
 
 	var js = JSON.stringify(data);
 	console.log("JS:" + js);
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", show_schedule, true);
-	
+
 	// send the collected data as JSON
 	xhr.send(js);
-	
-	
+
+
 	xhr.onloadend = function () {
 	    console.log(xhr);
 	    console.log(xhr.request);
@@ -232,15 +276,18 @@ function handleRetrieveExisting() {
 function displaySchedule(response){
 	var data = JSON.parse(response);
 
+
 	var week = data["week"];
+	//var meeting = week["meetings"];
 	var days = week["days"];
 	var slots = days[0].timeslots;
 	var start = slots[0].startTime;
+	//var meeting1 = slots[0].meeting;
 	var duration = slots[0].duration;
-	
+
 	var slot_length = days[0].timeslots.length;
 	console.log (slot_length);
-	
+
 	for(var s=0;s<slot_length;s++){
 			var temp = slots[s].startTime;
 			if(start.hour>temp.hour){
@@ -271,7 +318,7 @@ function displaySchedule(response){
 
 	for(r=0; r<rows;r++){
 			table += '<tr>';
-			
+
 			for(c=0;c<cols;c++){
 				if(c==0){
 					if(r==0){
@@ -301,7 +348,7 @@ function displaySchedule(response){
 							zero = "";
 							}
 						}
-						
+
 					table += '<td>' + (hour+hr) +':'+ (minute+min+zero) + '</td>';
 						if(days[c].timeslots[r].open == 1){
 						tsID = days[c].timeslots[r].timeslotID;
@@ -318,16 +365,16 @@ function displaySchedule(response){
 				}
 				else{
 				table += '<td>' + 'Taken' + '</td>';
-				
+
 				}
 			}
-			
+
 			table += '</tr>';
-			
+
 		}
-			
+
 		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' +label_days+table + '</table>');
-		
+
 	}
 
 
@@ -350,6 +397,9 @@ function displaySchedule(response){
 		<input type="button" name = "createBtn" value="Create"  onclick="JavaScript:handleClick()">
 </form>
 <br><br>
+
+<br><br>
+<input type="button" value="Cancel a Meeting" id="cancelBtn" onClick="Javascript:handleCancelMeeting()">
 
 <h2>Go to pre-existing Schedule</h2>
 
