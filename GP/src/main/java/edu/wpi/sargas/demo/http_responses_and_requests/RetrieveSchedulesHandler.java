@@ -125,6 +125,7 @@ public class RetrieveSchedulesHandler implements RequestStreamHandler {
 	    		}
     		} catch(Exception e) {
     			logger.log(e.toString());
+    			e.printStackTrace();
         		httpResponse = new RetrieveSchedulesResponse(400, null);
         		jsonResponse.put("body", new Gson().toJson(httpResponse));
     		}
