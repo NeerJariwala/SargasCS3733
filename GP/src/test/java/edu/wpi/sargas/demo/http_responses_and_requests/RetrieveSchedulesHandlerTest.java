@@ -59,6 +59,68 @@ public class RetrieveSchedulesHandlerTest {
         Assert.assertEquals(body.get("httpCode").toString(), "200");
     }
     
+    @Test
+    public void testHoursAgo() throws IOException {
+    	
+    	Schedule sched = null;
+    	
+    	try {
+    		sched = new Schedule(60, "Name", LocalDate.of(2001, 1, 1), LocalDate.of(2001, 1, 2), 7, 8, LocalDateTime.now().minusHours(3));
+    	} catch(Exception e) {
+    		System.out.println(e.toString());
+    	}
+    	
+    	RetrieveSchedulesRequest request = new RetrieveSchedulesRequest();
+    	request.hoursAgo = "3";
+    	String httpRequest = new Gson().toJson(request);
+        RetrieveSchedulesHandler handler = new RetrieveSchedulesHandler();
+
+        InputStream input = new ByteArrayInputStream(httpRequest.getBytes());;
+        OutputStream output = new ByteArrayOutputStream();
+
+        handler.handleRequest(input, output, null);
+
+        String sampleOutputString = output.toString();
+        System.out.println(sampleOutputString);
+        JSONObject response = null;
+        JSONObject body = null;
+        try {
+        	response = (JSONObject)new JSONParser().parse(sampleOutputString);
+        	body = (JSONObject)new JSONParser().parse(response.get("body").toString());
+        } catch(ParseException e) {
+        	System.out.println("problem");
+        }
+        
+        Assert.assertEquals(body.get("httpCode").toString(), "200");
+    }
     
+    @Test
+    public void testError() throws IOException {
+    	
+    	
+    	RetrieveSchedulesRequest request = new RetrieveSchedulesRequest();
+    	request.hoursAgo = "3";
+    	request.daysAgo = "3";
+    	String httpRequest = new Gson().toJson(request);
+        RetrieveSchedulesHandler handler = new RetrieveSchedulesHandler();
+
+        InputStream input = new ByteArrayInputStream(httpRequest.getBytes());;
+        OutputStream output = new ByteArrayOutputStream();
+
+        handler.handleRequest(input, output, null);
+
+        String sampleOutputString = output.toString();
+        System.out.println(sampleOutputString);
+        JSONObject response = null;
+        JSONObject body = null;
+        try {
+        	response = (JSONObject)new JSONParser().parse(sampleOutputString);
+        	body = (JSONObject)new JSONParser().parse(response.get("body").toString());
+        } catch(ParseException e) {
+        	System.out.println("problem");
+        }
+        
+        Assert.assertEquals(body.get("httpCode").toString(), "200");
+    }
     
 }
