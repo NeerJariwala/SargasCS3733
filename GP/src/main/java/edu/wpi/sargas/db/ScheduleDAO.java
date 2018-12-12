@@ -3,11 +3,13 @@ package edu.wpi.sargas.db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.sql.Date;
 
 import edu.wpi.sargas.db.DatabaseUtil;
 import edu.wpi.sargas.demo.entity.Schedule;
+import edu.wpi.sargas.demo.entity.Timeslot;
 
 public class ScheduleDAO {
 
@@ -117,6 +119,56 @@ public class ScheduleDAO {
         }
     }
 
+    public boolean extendstartDate(String scheduleID, LocalDate newstart) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("UPDATE Schedule SET startDate = ? WHERE scheduleID = ?;");
+            ps.setDate(1,  Date.valueOf(newstart));
+            ps.setString(2, scheduleID);
+            int numAffected = ps.executeUpdate();
+            ps.close();
+            
+            return (numAffected == 1);
+
+        } catch (Exception e) {
+            throw new Exception("Failed to delete schedule: " + e.getMessage());
+        }
+    }
     
+    public boolean extendendDate(String scheduleID, LocalDate newend) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("UPDATE Schedule SET endDate = ? WHERE scheduleID = ?;");
+            ps.setDate(1,  Date.valueOf(newend));
+            ps.setString(2, scheduleID);
+            int numAffected = ps.executeUpdate();
+            ps.close();
+            
+            return (numAffected == 1);
+
+        } catch (Exception e) {
+            throw new Exception("Failed to delete schedule: " + e.getMessage());
+        }
+    }
+    
+    /*
+    public ArrayList<Schedule> retrieveSchedules() throws Exception {
+    	ArrayList<Timeslot> result = new ArrayList<Timeslot>();
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule WHERE dateCreated > ?;");
+            ps.setString(1, );
+            ResultSet resultSet = ps.executeQuery();
+            
+
+            while (resultSet.next()) {
+            	result.add(generateSchedule(resultSet));
+            }
+            
+            return result;
+
+        } catch (Exception e) {
+            throw new Exception("Failed to get Schedules: " + e.getMessage());
+        }
+    }
+    
+    */
 
 }
