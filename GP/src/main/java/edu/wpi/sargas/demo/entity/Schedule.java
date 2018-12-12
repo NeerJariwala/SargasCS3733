@@ -58,7 +58,12 @@ public class Schedule {
 		this.dateCreated = dateCreated;
 	}
 	
-
+	/**
+	 * Generate weeks for this schedule from the startDate to the endDate
+	 * @param startDate the date to start at
+	 * @param endDate the date to end at
+	 * @throws Exception
+	 */
 	public void generateWeeks(LocalDate startDate, LocalDate endDate) throws Exception {
 		
 		DayDAO dayDao = new DayDAO();
