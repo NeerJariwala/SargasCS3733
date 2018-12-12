@@ -19,7 +19,7 @@
 	var searchTimeslots_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/searchtimeslots";
 	var extendStart_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/extendStartDate";
 	var tsID="";
-	
+
 
 	function processCreateResponse(name) {
 		// String order: name of person creating meeting
@@ -31,7 +31,7 @@
 		var data = JSON.parse(response);
 		var body = JSON.parse(data["body"]);
 		var code = body["httpCode"];
-		
+
 		if(code == 200) {
 			var secretCode = body["secretCode"];
 			alert("Here is the meeting you requested. Its secret code is: " + secretCode);
@@ -39,30 +39,26 @@
 			alert("timeslotId error");
 		}
 	}
-	
+
 	function handleRetrieveSchedule() {
 		let data = {};
 		let form = document.codeForm;
 		let date = form.date;
 		let secretCode = form.secretCode;
-		
-		
+
+
 		data["secretCode"] = secretCode.value;
 		data["date"] = date.value;
-		
-		
-		
-		
 
 	var js = JSON.stringify(data);
 	console.log("JS:" + js);
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", getSchedule_url, true);
-	
+
 	// send the collected data as JSON
 	xhr.send(js);
-	
-	
+
+
 	xhr.onloadend = function () {
 	    console.log(xhr);
 	    console.log(xhr.request);
@@ -73,22 +69,22 @@
 	      	displaySchedule(xhr.responseText);
 	    }
 	};
-	
-	
+
+
 }
-	
+
 	function displaySchedule(response){
 		var data = JSON.parse(response);
-		
+
 		let week = data["week"];
 		let days = week["days"];
 		let slots = days[0].timeslots;
 		let start = slots[0].startTime;
 		let duration = slots[0].duration;
-		
+
 		var slot_length = days[0].timeslots.length;
 		console.log (slot_length);
-		
+
 		for(var s=0;s<slot_length;s++){
 			var temp = slots[s].startTime;
 			if(start.hour>temp.hour){
@@ -97,28 +93,28 @@
 				}
 			}
 		}
-		
+
 		var hr = 0;
 		var min = 0;
 		var hour = start.hour;
 		var minute = start.minute;
-		
+
 		console.log(week);
 		console.log (days);
 		console.log(start);
-		
-		
+
+
 		var table = '';
 		var label_days = '<tr><td>Time</td><td>Monday</td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
 		var rows = slot_length;
 		var cols = days.length;
 		var zero = "";
-		
-		
-		
+
+
+
 		for(r=0; r<rows;r++){
 			table += '<tr>';
-			
+
 			for(c=0;c<cols;c++){
 				if(c==0){
 					if(r==0){
@@ -148,7 +144,7 @@
 							zero = "";
 							}
 						}
-						
+
 					table += '<td>' + (hour+hr) +':'+ (minute+min+zero) + '</td>';
 						if(days[c].timeslots[r].open == 1){
 						tsID = days[c].timeslots[r].timeslotID;
@@ -165,18 +161,18 @@
 				}
 				else{
 				table += '<td>' + 'Taken' + '</td>';
-				
+
 				}
 			}
-			
+
 			table += '</tr>';
-			
+
 		}
-			
+
 		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' +label_days+table + '</table>');
-		
+
 	}
-	
+
 	function handleCancelMeeting() {
 		let data = {};
 
@@ -212,24 +208,24 @@ function processCancelMeeting(response) {
 
     alert("The meeting has been canceled!");
 
-   
+
 }
 
 	function handleClick(thisID) {
 		var data = {};
 		data["name"] = prompt("Please enter your name for your meeting to be created:");
 		data["timeslotId"] = thisID;
-		
-	
+
+
 		var js = JSON.stringify(data);
 		console.log("JS:" + js);
 		var xhr = new XMLHttpRequest();
 		xhr.open("POST", meeting_url, true);
-		
+
 		if(data["name"] != null) {
 			// send the collected data as JSON
 			xhr.send(js);
-		
+
 			// This will process results and update HTML as appropriate.
 			xhr.onloadend = function () {
 				console.log(xhr);
@@ -253,23 +249,23 @@ function handleSearchTimeslots() {
 		let year = form.year;
 		let dow = form.dow;
 		let dom = form.dom;
-		
-		
+
+
 		data["secretCode"] = secretCode.value;
 		data["month"] = month.value;
 		data["year"] = year.value;
 		data["dayOfWeek"] = dow.value;
 		data["dayOfMonth"] = dom.value;
-		
+
 		var js = JSON.stringify(data);
 		console.log("JS:" + js);
 		var xhr = new XMLHttpRequest();
 		xhr.open("POST", searchTimeslots_url, true);
-		
-		
+
+
 			// send the collected data as JSON
 			xhr.send(js);
-		
+
 			// This will process results and update HTML as appropriate.
 			xhr.onloadend = function () {
 				console.log(xhr);
@@ -281,19 +277,19 @@ function handleSearchTimeslots() {
 					processDisplayTimeslots(xhr.responseText);
 				}
 			};
-		
+
 }
 
 function processDisplayTimeslots(response){
 var data = JSON.parse(response);
-		
+
 		let slots = data["timeslots"];
 		let start = slots[0].startTime;
 		let duration = slots[0].duration;
-		
+
 		var slot_length = slots.length;
 		console.log (slot_length);
-		
+
 		for(var s=0;s<slot_length;s++){
 			var temp = slots[s].startTime;
 			if(start.hour>=temp.hour){
@@ -302,26 +298,26 @@ var data = JSON.parse(response);
 				}
 			}
 			}
-		
-		
+
+
 		var hr = 0;
 		var min = 0;
 		var hour = start.hour;
 		var minute = start.minute;
-		
+
 		console.log(start);
-		
-		
+
+
 		var table = '';
 		var label_days = '<tr><td>Time</td><td>Open</td></tr>'
 		var rows = slot_length;
 		var cols = 1;
 		var zero = "";
-		
-			
+
+
 			for(r=0; r<rows;r++){
 			table += '<tr>';
-			
+
 			for(c=0;c<cols;c++){
 				if(c==0){
 					if(r==0){
@@ -371,16 +367,16 @@ var data = JSON.parse(response);
 				}
 				else{
 				table += '<td>' + 'Taken' + '</td>';
-				
+
 				}
 			}
-			
+
 			table += '</tr>';
-			
+
 		}
-			
+
 			document.write("<h1>Available Timeslots</h1>" + '<table border=2>' +label_days+table + '</table>');
-			
+
 		}
 		
 		function handleExtendStart(){
@@ -419,7 +415,7 @@ var data = JSON.parse(response);
 		alert("Date has been extended.");
 		}
 		
-			
+
 
 
 </script>

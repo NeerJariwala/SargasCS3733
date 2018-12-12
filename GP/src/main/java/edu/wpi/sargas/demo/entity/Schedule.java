@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import edu.wpi.sargas.db.DayDAO;
+import edu.wpi.sargas.db.MeetingDAO;
 import edu.wpi.sargas.db.ScheduleDAO;
 import edu.wpi.sargas.db.TimeslotDAO;
 import edu.wpi.sargas.db.WeekDAO;
@@ -36,6 +37,25 @@ public class Schedule {
 		endHour = eh;
 		secretCode = generateSecret();
 		dateCreated = LocalDateTime.now(); //make date created today
+		weeks = new ArrayList<Week>();
+		new ScheduleDAO().createSchedule(this);
+		try {
+			generateWeeks(startDate, endDate);
+		} catch(Exception e) {
+			throw new Exception(e.getMessage());
+		}
+	}
+	
+	public Schedule(int td, String name, LocalDate sd, LocalDate ed, int sh, int eh, LocalDateTime dateCreated) throws Exception {
+		timeslotDuration = td;
+		scheduleId = UUID.randomUUID().toString(); 
+		this.name = name;
+		startDate = sd;
+		endDate = ed;
+		startHour = sh;
+		endHour = eh;
+		secretCode = generateSecret();
+		this.dateCreated = dateCreated; //make date created today
 		weeks = new ArrayList<Week>();
 		new ScheduleDAO().createSchedule(this);
 		try {
@@ -187,6 +207,18 @@ public class Schedule {
 					
 					for(Timeslot timeslot : timeslots) {
 						day.addTimeslot(timeslot);
+						
+						try {
+							Meeting m = new MeetingDAO().getMeeting(timeslot.timeslotID);
+							
+							if(m != null) {
+								weekOf.addMeeting(m);
+							}
+							
+						} catch(Exception e) {
+							System.out.println(e.toString());
+						}
+						
 					}
 					
 				}

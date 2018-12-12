@@ -9,8 +9,20 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 <script>
-  function deleteSchedule() {
+
+  const URL = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/";
+  //const admin_url = URL + "";
+
+  function handleDeleteSchedules() {
     alert("Successfully deleted schedules!");
+  }
+
+  function processDeleteResponse() {
+    let data = JSON.parse(response);
+
+    alert("The schedule has been deleted!");
+
+    document.getElementById("schedules").innerHTML = EMPTY;
   }
 
   function showSchedules() {
