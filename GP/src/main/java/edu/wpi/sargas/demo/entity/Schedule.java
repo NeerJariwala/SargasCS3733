@@ -57,6 +57,7 @@ public class Schedule {
 		endHour = eh;
 		this.secretCode = secretCode;
 		this.dateCreated = dateCreated;
+		weeks = new ArrayList<Week>();
 	}
 	
 	/**

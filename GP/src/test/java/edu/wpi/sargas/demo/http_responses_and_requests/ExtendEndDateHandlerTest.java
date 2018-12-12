@@ -13,15 +13,22 @@ import org.json.simple.parser.ParseException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.amazonaws.services.lambda.runtime.Context;
 import com.google.gson.Gson;
 
+import edu.wpi.sargas.demo.TestContext;
 import edu.wpi.sargas.demo.entity.Schedule;
 
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
 public class ExtendEndDateHandlerTest {
-
+	
+	Context createContext(String apiCall) {
+        TestContext ctx = new TestContext();
+        ctx.setFunctionName(apiCall);
+        return ctx;
+    }
 
     @Test
     public void testExtendEndDateHandler() throws IOException {
@@ -44,7 +51,7 @@ public class ExtendEndDateHandlerTest {
         InputStream input = new ByteArrayInputStream(jsonRequest.getBytes());;
         OutputStream output = new ByteArrayOutputStream();
 
-        handler.handleRequest(input, output, null);
+        handler.handleRequest(input, output, createContext("random"));
         
         String sampleOutputString = output.toString();
         System.out.println(sampleOutputString);
@@ -81,7 +88,7 @@ public class ExtendEndDateHandlerTest {
         InputStream input = new ByteArrayInputStream(jsonRequest.getBytes());;
         OutputStream output = new ByteArrayOutputStream();
 
-        handler.handleRequest(input, output, null);
+        handler.handleRequest(input, output, createContext("random"));
         
         String sampleOutputString = output.toString();
         System.out.println(sampleOutputString);

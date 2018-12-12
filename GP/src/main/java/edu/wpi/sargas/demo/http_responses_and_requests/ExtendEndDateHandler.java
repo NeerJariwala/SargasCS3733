@@ -111,6 +111,7 @@ public class ExtendEndDateHandler implements RequestStreamHandler {
     			
     		} catch(Exception e) {
     			logger.log(e.toString());
+    			e.printStackTrace();
     			httpResponse = new ExtendEndDateResponse(400);
     			jsonResponse.put("body", new Gson().toJson(httpResponse));
     		}
