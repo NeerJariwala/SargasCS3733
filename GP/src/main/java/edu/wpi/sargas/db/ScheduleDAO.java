@@ -3,6 +3,8 @@ package edu.wpi.sargas.db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.sql.Date;
 import java.sql.Timestamp;
 import edu.wpi.sargas.db.DatabaseUtil;
@@ -89,13 +91,7 @@ public class ScheduleDAO {
             throw new Exception("Failed to delete schedule: " + e.getMessage());
         }
     }
-    
-    private Schedule generateSchedule(ResultSet resultSet) throws Exception {
-        return new Schedule (resultSet.getInt("timeslotDuration"), resultSet.getString("scheduleId"), resultSet.getString("name"), resultSet.getDate("startDate").toLocalDate(), resultSet.getDate("endDate").toLocalDate(), resultSet.getInt("startHour"), resultSet.getInt("endHour"), resultSet.getString("secretCode"), resultSet.getTimestamp("dateCreated").toLocalDateTime());
-    }
-    
-    
-    
+       
     public boolean validateSecretCode(String secretCode) throws Exception {
         try {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule;");
@@ -145,13 +141,13 @@ public class ScheduleDAO {
             throw new Exception("Failed to delete schedule: " + e.getMessage());
         }
     }
+   
     
-    /*
-    public ArrayList<Schedule> retrieveSchedules() throws Exception {
-    	ArrayList<Timeslot> result = new ArrayList<Timeslot>();
+    public ArrayList<Schedule> retrieveSchedules(LocalDateTime datetime) throws Exception {
+    	ArrayList<Schedule> result = new ArrayList<Schedule>();
         try {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule WHERE dateCreated > ?;");
-            ps.setString(1, );
+            ps.setTimestamp(1, Timestamp.valueOf(datetime));
             ResultSet resultSet = ps.executeQuery();
             
 
@@ -166,6 +162,21 @@ public class ScheduleDAO {
         }
     }
     
-    */
+    
 
+    public void deleteSchedulebefore(LocalDateTime datetime) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM Schedule WHERE dateCreated < ?;");
+            ps.setTimestamp(1, Timestamp.valueOf(datetime));
+            ps.executeUpdate();
+            ps.close();
+
+        } catch (Exception e) {
+            throw new Exception("Failed to delete schedules: " + e.getMessage());
+        }
+    }
+    
+    private Schedule generateSchedule(ResultSet resultSet) throws Exception {
+        return new Schedule (resultSet.getInt("timeslotDuration"), resultSet.getString("scheduleId"), resultSet.getString("name"), resultSet.getDate("startDate").toLocalDate(), resultSet.getDate("endDate").toLocalDate(), resultSet.getInt("startHour"), resultSet.getInt("endHour"), resultSet.getString("secretCode"), resultSet.getTimestamp("dateCreated").toLocalDateTime());
+    }
 }

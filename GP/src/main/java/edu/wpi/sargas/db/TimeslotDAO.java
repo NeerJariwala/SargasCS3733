@@ -109,7 +109,7 @@ public class TimeslotDAO {
     public ArrayList<Timeslot> getTimeslots(String dayID) throws Exception {
     	ArrayList<Timeslot> result = new ArrayList<Timeslot>();
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Timeslot WHERE Day = ?;");
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Timeslot WHERE Day = ? Order by startTime;");
             ps.setString(1, dayID);
             ResultSet resultSet = ps.executeQuery();
             
