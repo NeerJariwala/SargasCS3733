@@ -18,13 +18,14 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 
+import edu.wpi.sargas.db.ScheduleDAO;
 import edu.wpi.sargas.demo.entity.Schedule;
 
 public class RetrieveSchedulesHandler implements RequestStreamHandler {
 	
-	private ArrayList<Schedule> retrieveSchedules(LocalDateTime since) {
+	private ArrayList<Schedule> retrieveSchedules(LocalDateTime since) throws Exception {
 		//Use DAO to get schedules after the localDateTime passed in
-		return null;
+		return new ScheduleDAO().retrieveSchedules(since);
 	}
 	
     @Override
@@ -106,21 +107,27 @@ public class RetrieveSchedulesHandler implements RequestStreamHandler {
     			daysAgo = Integer.parseInt(request.daysAgo);
     		}
     		
-    		if(!noHours && !invalidInput) { //process hours input here
-    			
-    			LocalDateTime currentTime = LocalDateTime.now();
-    			LocalDateTime lowerBound = currentTime.minusHours(hoursAgo);
-    			ArrayList<Schedule> schedules = retrieveSchedules(lowerBound);
-    			httpResponse = new RetrieveSchedulesResponse(200, schedules);
-    			jsonResponse.put("body", new Gson().toJson(httpResponse));
-    			
-    		} else if(!noDays && !invalidInput) { //process days input here
-    			LocalDateTime currentTime = LocalDateTime.now();
-    			LocalDateTime lowerBound = currentTime.minusDays(hoursAgo);
-    			ArrayList<Schedule> schedules = retrieveSchedules(lowerBound);
-    			httpResponse = new RetrieveSchedulesResponse(200, schedules);
-    			jsonResponse.put("body", new Gson().toJson(httpResponse));
-    		} 
+    		try {
+	    		if(!noHours && !invalidInput) { //process hours input here
+	    			
+	    			LocalDateTime currentTime = LocalDateTime.now();
+	    			LocalDateTime lowerBound = currentTime.minusHours(hoursAgo);
+	    			ArrayList<Schedule> schedules = retrieveSchedules(lowerBound);
+	    			httpResponse = new RetrieveSchedulesResponse(200, schedules);
+	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
+	    			
+	    		} else if(!noDays && !invalidInput) { //process days input here
+	    			LocalDateTime currentTime = LocalDateTime.now();
+	    			LocalDateTime lowerBound = currentTime.minusDays(hoursAgo);
+	    			ArrayList<Schedule> schedules = retrieveSchedules(lowerBound);
+	    			httpResponse = new RetrieveSchedulesResponse(200, schedules);
+	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
+	    		}
+    		} catch(Exception e) {
+    			logger.log(e.toString());
+        		httpResponse = new RetrieveSchedulesResponse(400, null);
+        		jsonResponse.put("body", new Gson().toJson(httpResponse));
+    		}
     		
     	}
     	

@@ -46,6 +46,25 @@ public class Schedule {
 		}
 	}
 	
+	public Schedule(int td, String name, LocalDate sd, LocalDate ed, int sh, int eh, LocalDateTime dateCreated) throws Exception {
+		timeslotDuration = td;
+		scheduleId = UUID.randomUUID().toString(); 
+		this.name = name;
+		startDate = sd;
+		endDate = ed;
+		startHour = sh;
+		endHour = eh;
+		secretCode = generateSecret();
+		this.dateCreated = dateCreated; //make date created today
+		weeks = new ArrayList<Week>();
+		new ScheduleDAO().createSchedule(this);
+		try {
+			generateWeeks(startDate, endDate);
+		} catch(Exception e) {
+			throw new Exception(e.getMessage());
+		}
+	}
+	
 	//retrieved from database
 
 	public Schedule(int td, String ID, String name, LocalDate sd, LocalDate ed, int sh, int eh, String secretCode, LocalDateTime dateCreated) {
