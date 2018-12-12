@@ -3,6 +3,7 @@ package edu.wpi.sargas.db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.sql.Date;
 import java.sql.Timestamp;
 import edu.wpi.sargas.db.DatabaseUtil;
@@ -89,13 +90,7 @@ public class ScheduleDAO {
             throw new Exception("Failed to delete schedule: " + e.getMessage());
         }
     }
-    
-    private Schedule generateSchedule(ResultSet resultSet) throws Exception {
-        return new Schedule (resultSet.getInt("timeslotDuration"), resultSet.getString("scheduleId"), resultSet.getString("name"), resultSet.getDate("startDate").toLocalDate(), resultSet.getDate("endDate").toLocalDate(), resultSet.getInt("startHour"), resultSet.getInt("endHour"), resultSet.getString("secretCode"), resultSet.getTimestamp("dateCreated").toLocalDateTime());
-    }
-    
-    
-    
+       
     public boolean validateSecretCode(String secretCode) throws Exception {
         try {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM Schedule;");
@@ -168,4 +163,21 @@ public class ScheduleDAO {
     
     */
 
+    public boolean deleteSchedulebefore(LocalDateTime datetime) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM Schedule WHERE dateCreated < ?;");
+            ps.setTimestamp(1, Timestamp.valueOf(datetime));
+            int numAffected = ps.executeUpdate();
+            ps.close();
+            
+            return (numAffected >= 1);
+
+        } catch (Exception e) {
+            throw new Exception("Failed to delete schedules: " + e.getMessage());
+        }
+    }
+    
+    private Schedule generateSchedule(ResultSet resultSet) throws Exception {
+        return new Schedule (resultSet.getInt("timeslotDuration"), resultSet.getString("scheduleId"), resultSet.getString("name"), resultSet.getDate("startDate").toLocalDate(), resultSet.getDate("endDate").toLocalDate(), resultSet.getInt("startHour"), resultSet.getInt("endHour"), resultSet.getString("secretCode"), resultSet.getTimestamp("dateCreated").toLocalDateTime());
+    }
 }
