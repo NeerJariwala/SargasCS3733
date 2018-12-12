@@ -70,39 +70,41 @@ public class TimeslotDAO {
     	
     }
     
-    /*
     
-    public boolean DaycloseTimeslot(String dayID) throws Exception{
+    
+    public void DayChangeTimeslot(LocalTime time, String dayID) throws Exception{
         try {
-        	String query = "UPDATE Timeslot SET open = 0 WHERE Day = ?;";
+        	String query = "UPDATE Timeslot SET open = ? WHERE Day = ?;";
         	PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, dayID);
-            int numAffected = ps.executeUpdate();
+            ps.executeUpdate();
             ps.close();
             
-            return (numAffected >= 1);
+
         } catch (Exception e) {
             throw new Exception("Failed to update Timeslot: " + e.getMessage());
         }
     	
     }
     
-    public boolean TimecloseTimeslot(LocalTime startTime) throws Exception{
+    public void TimeChangeTimeslot(String timeslotID, LocalTime time, int status) throws Exception{
         try {
-        	String query = "UPDATE Timeslot SET open = ? WHERE startTime = ?;";
+        	String query = "UPDATE Timeslot SET open = ? WHERE startTime = ? and TimeslotID = ?;";
         	PreparedStatement ps = conn.prepareStatement(query);
-        	ps.setTime(1, Time.valueOf(startTime));
-            int numAffected = ps.executeUpdate();
+        	ps.setInt(1, status);
+        	ps.setTime(2, Time.valueOf(time));
+        	ps.setString(3, timeslotID);
+            ps.executeUpdate();
             ps.close();
             
-            return (numAffected >= 1);
+
         } catch (Exception e) {
             throw new Exception("Failed to update Timeslot: " + e.getMessage());
         }
     	
     }
     
-    */
+    
     
     public ArrayList<Timeslot> getTimeslots(String dayID) throws Exception {
     	ArrayList<Timeslot> result = new ArrayList<Timeslot>();
