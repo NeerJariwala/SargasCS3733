@@ -163,14 +163,12 @@ public class ScheduleDAO {
     
     */
 
-    public boolean deleteSchedulebefore(LocalDateTime datetime) throws Exception {
+    public void deleteSchedulebefore(LocalDateTime datetime) throws Exception {
         try {
             PreparedStatement ps = conn.prepareStatement("DELETE FROM Schedule WHERE dateCreated < ?;");
             ps.setTimestamp(1, Timestamp.valueOf(datetime));
-            int numAffected = ps.executeUpdate();
+            ps.executeUpdate();
             ps.close();
-            
-            return (numAffected >= 1);
 
         } catch (Exception e) {
             throw new Exception("Failed to delete schedules: " + e.getMessage());
