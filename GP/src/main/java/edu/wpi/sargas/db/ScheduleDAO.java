@@ -3,13 +3,10 @@ package edu.wpi.sargas.db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.UUID;
 import java.sql.Date;
-
+import java.sql.Timestamp;
 import edu.wpi.sargas.db.DatabaseUtil;
 import edu.wpi.sargas.demo.entity.Schedule;
-import edu.wpi.sargas.demo.entity.Timeslot;
 
 public class ScheduleDAO {
 
@@ -45,7 +42,7 @@ public class ScheduleDAO {
             ps.setInt(5, schedule.startHour);
             ps.setInt(6, schedule.endHour);
             ps.setInt(7, schedule.timeslotDuration);
-            ps.setDate(8, Date.valueOf(schedule.dateCreated));
+            ps.setTimestamp(8, Timestamp.valueOf(schedule.dateCreated));
             ps.setString(9, schedule.secretCode);
             ps.execute();
             
@@ -94,7 +91,7 @@ public class ScheduleDAO {
     }
     
     private Schedule generateSchedule(ResultSet resultSet) throws Exception {
-        return new Schedule (resultSet.getInt("timeslotDuration"), resultSet.getString("scheduleId"), resultSet.getString("name"), resultSet.getDate("startDate").toLocalDate(), resultSet.getDate("endDate").toLocalDate(), resultSet.getInt("startHour"), resultSet.getInt("endHour"), resultSet.getString("secretCode"), resultSet.getDate("dateCreated").toLocalDate());
+        return new Schedule (resultSet.getInt("timeslotDuration"), resultSet.getString("scheduleId"), resultSet.getString("name"), resultSet.getDate("startDate").toLocalDate(), resultSet.getDate("endDate").toLocalDate(), resultSet.getInt("startHour"), resultSet.getInt("endHour"), resultSet.getString("secretCode"), resultSet.getTimestamp("dateCreated").toLocalDateTime());
     }
     
     
