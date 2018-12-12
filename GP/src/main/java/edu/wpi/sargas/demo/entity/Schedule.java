@@ -1,6 +1,7 @@
 package edu.wpi.sargas.demo.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ public class Schedule {
 	public final int endHour;
 	public ArrayList<Week> weeks; 
 	public final String secretCode;
-	public final LocalDate dateCreated;
+	public final LocalDateTime dateCreated;
 	
 	//to make a new schedule
 	public Schedule(int td, String name, LocalDate sd, LocalDate ed, int sh, int eh) throws Exception {
@@ -34,7 +35,7 @@ public class Schedule {
 		startHour = sh;
 		endHour = eh;
 		secretCode = generateSecret();
-		dateCreated = LocalDate.now(); //make date created today
+		dateCreated = LocalDateTime.now(); //make date created today
 		weeks = new ArrayList<Week>();
 		new ScheduleDAO().createSchedule(this);
 		try {
@@ -46,7 +47,7 @@ public class Schedule {
 	
 	//retrieved from database
 
-	public Schedule(int td, String ID, String name, LocalDate sd, LocalDate ed, int sh, int eh, String secretCode, LocalDate dateCreated) {
+	public Schedule(int td, String ID, String name, LocalDate sd, LocalDate ed, int sh, int eh, String secretCode, LocalDateTime dateCreated) {
 		timeslotDuration = td;
 		scheduleId = ID;
 		this.name = name;
