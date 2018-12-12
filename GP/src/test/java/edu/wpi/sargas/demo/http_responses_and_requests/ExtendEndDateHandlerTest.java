@@ -5,30 +5,97 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDate;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.google.gson.Gson;
+
+import edu.wpi.sargas.demo.entity.Schedule;
 
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
 public class ExtendEndDateHandlerTest {
 
-    private static final String SAMPLE_INPUT_STRING = "{\"foo\": \"bar\"}";
-    private static final String EXPECTED_OUTPUT_STRING = "{\"FOO\": \"BAR\"}";
 
     @Test
     public void testExtendEndDateHandler() throws IOException {
-        ExtendEndDateHandler handler = new ExtendEndDateHandler();
-
-        InputStream input = new ByteArrayInputStream(SAMPLE_INPUT_STRING.getBytes());;
+    	ExtendEndDateHandler handler = new ExtendEndDateHandler();
+        
+        ExtendEndDateRequest request = new ExtendEndDateRequest();
+        
+        Schedule sched = null;
+        
+        try {
+        	sched = new Schedule(60, "Test",LocalDate.of(2001, 1, 1), LocalDate.of(2001, 1, 2),5,6);
+        } catch(Exception e) {
+        	System.out.println(e.toString());
+        }
+        
+        request.secretCode = sched.getSecretCode();
+        request.newEnd = "2001-01-04";
+        String jsonRequest = new Gson().toJson(request);
+        
+        InputStream input = new ByteArrayInputStream(jsonRequest.getBytes());;
         OutputStream output = new ByteArrayOutputStream();
 
         handler.handleRequest(input, output, null);
-
-        // TODO: validate output here if needed.
+        
         String sampleOutputString = output.toString();
         System.out.println(sampleOutputString);
-        Assert.assertEquals(EXPECTED_OUTPUT_STRING, sampleOutputString);
+        JSONObject response = null;
+        JSONObject body = null;
+        try {
+        	response = (JSONObject)new JSONParser().parse(sampleOutputString);
+        	body = (JSONObject)new JSONParser().parse(response.get("body").toString());
+        } catch(ParseException e) {
+        	System.out.println("problem");
+        }
+        
+        Assert.assertEquals(body.get("httpCode").toString(), "200");
     }
+    
+    @Test
+    public void test2() throws IOException {
+        ExtendEndDateHandler handler = new ExtendEndDateHandler();
+        
+        ExtendEndDateRequest request = new ExtendEndDateRequest();
+        
+        Schedule sched = null;
+        
+        try {
+        	sched = new Schedule(60, "Test",LocalDate.of(2001, 1, 1), LocalDate.of(2001, 1, 5),5,6);
+        } catch(Exception e) {
+        	System.out.println(e.toString());
+        }
+        
+        request.secretCode = sched.getSecretCode();
+        request.newEnd = "2001-01-02";
+        String jsonRequest = new Gson().toJson(request);
+        
+        InputStream input = new ByteArrayInputStream(jsonRequest.getBytes());;
+        OutputStream output = new ByteArrayOutputStream();
+
+        handler.handleRequest(input, output, null);
+        
+        String sampleOutputString = output.toString();
+        System.out.println(sampleOutputString);
+        JSONObject response = null;
+        JSONObject body = null;
+        try {
+        	response = (JSONObject)new JSONParser().parse(sampleOutputString);
+        	body = (JSONObject)new JSONParser().parse(response.get("body").toString());
+        } catch(ParseException e) {
+        	System.out.println("problem");
+        }
+        
+        Assert.assertEquals(body.get("httpCode").toString(), "400");
+        
+    }
+    
 }
