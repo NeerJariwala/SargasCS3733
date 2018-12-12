@@ -17,6 +17,8 @@
 	var getSchedule_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/weeklyschedule";
 	var cancel_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/meeting/participantcancel";
 	var searchTimeslots_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/searchtimeslots";
+	var extendStart_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/extendStartDate";
+	var extendEnd_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/extendStartDate";
 	var tsID="";
 
 
@@ -377,6 +379,75 @@ var data = JSON.parse(response);
 			document.write("<h1>Available Timeslots</h1>" + '<table border=2>' +label_days+table + '</table>');
 
 		}
+		
+		function handleExtendStart(){
+		let data = {};
+		let form = document.extendStartForm;
+		let secretCode = form.secretCode;
+		let newStart = form.date;
+		
+		data["secretCode"] = secretCode.value;
+		data["newStart"] = newStart.value;
+		
+		var js = JSON.stringify(data);
+		console.log("JS:" + js);
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", extendStart_url, true);
+		
+		
+			// send the collected data as JSON
+			xhr.send(js);
+		
+			// This will process results and update HTML as appropriate.
+			xhr.onloadend = function () {
+				console.log(xhr);
+				console.log(xhr.request);
+				if (xhr.readyState == XMLHttpRequest.DONE) {
+					console.log ("XHR:" + xhr.responseText);
+					processDateExtended(xhr.responseText);
+				} else {
+					processDateExtended(xhr.responseText);
+				}
+			};
+		
+		}
+		
+		function handleExtendEnd(){
+		let data = {};
+		let form = document.extendStartForm;
+		let secretCode = form.secretCode;
+		let newEnd = form.date;
+		
+		data["secretCode"] = secretCode.value;
+		data["newEnd"] = newEnd.value;
+		
+		var js = JSON.stringify(data);
+		console.log("JS:" + js);
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", extendEnd_url, true);
+		
+		
+			// send the collected data as JSON
+			xhr.send(js);
+		
+			// This will process results and update HTML as appropriate.
+			xhr.onloadend = function () {
+				console.log(xhr);
+				console.log(xhr.request);
+				if (xhr.readyState == XMLHttpRequest.DONE) {
+					console.log ("XHR:" + xhr.responseText);
+					processDateExtended(xhr.responseText);
+				} else {
+					processDateExtended(xhr.responseText);
+				}
+			};
+		
+		}
+		
+		function processDateExtended(){
+		alert("Date has been extended.");
+		}
+		
 
 
 
@@ -414,6 +485,7 @@ var data = JSON.parse(response);
 <br><br><br>
 <input type="button" name = "searchBtn" value="Search" onClick="Javascript:handleSearchTimeslots()">
 </form></center>
+
 
 
 </body>
