@@ -105,7 +105,13 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
     		//get the request in the form of a class
     		String secretCode = request.secretCode;
     		String timeslotID = request.timeslotID;
-    		int status = 0;//1 is open, 0 is closed
+    		int status = request.status;
+    		if(status ==0) {
+    			status =1;
+    		}
+    		else {
+    			status =0;
+    		}
     		
     		
     		try {
