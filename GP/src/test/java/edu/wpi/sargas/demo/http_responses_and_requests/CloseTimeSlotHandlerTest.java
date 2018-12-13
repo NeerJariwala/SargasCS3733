@@ -15,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.google.gson.Gson;
 
 import edu.wpi.sargas.db.*;
 import edu.wpi.sargas.demo.TestContext;
@@ -47,6 +48,7 @@ public class CloseTimeSlotHandlerTest {
     	String dayID = null;
     	String secretCode = "asdf";
     	String tsID = "asdf";
+    	int status = 0;
     	
     	
     	
@@ -61,17 +63,23 @@ public class CloseTimeSlotHandlerTest {
     		dayID = days.get(0).DayID;
     		slots = slot_dao.getTimeslots(dayID);
     		tsID = slots.get(0).timeslotID;
+    		status = slots.get(0).open;
     	} catch(Exception e) {
     		//e.printStackTrace();
     		System.out.println("problem");
     	}
     	
         CloseTimeSlotHandler handler = new CloseTimeSlotHandler();
+        CloseTimeSlotRequest request = new CloseTimeSlotRequest();
         
-        String testInput = SAMPLE_INPUT_STRING + secretCode +"\" \"timeslotID\": \"" + tsID + "\"}";
-        System.out.println(testInput);
         
-        InputStream input = new ByteArrayInputStream(testInput.getBytes());;
+        
+        request.secretCode = sched.getSecretCode();
+        request.timeslotID = tsID;
+        request.status = status;
+        String jsonRequest = new Gson().toJson(request);
+        
+        InputStream input = new ByteArrayInputStream(jsonRequest.getBytes());;
         OutputStream output = new ByteArrayOutputStream();
 
         handler.handleRequest(input, output, createContext("random"));
@@ -107,7 +115,7 @@ public class CloseTimeSlotHandlerTest {
     	}
         CloseTimeSlotHandler handler = new CloseTimeSlotHandler();
         
-        String testInput = SAMPLE_INPUT_STRING + secretCode +"\" \"timeslotID\": \"" + tsID + "\"}";
+        String testInput = SAMPLE_INPUT_STRING + secretCode +"\" \"timeslotID\": \"" + tsID +"\" \"status\": \""+1+"\"}";
         System.out.println(testInput);
         
         InputStream input = new ByteArrayInputStream(testInput.getBytes());;

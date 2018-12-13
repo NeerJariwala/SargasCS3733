@@ -38,8 +38,13 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
 			return false;
 		}
 		else {
-				ts_dao.changeTimeslot(timeslotID, status);
-				return true;
+				if(ts_dao.changeTimeslot(timeslotID, status)==true) {
+					return true;
+				}
+				else {
+					return false;
+				}
+				
 			
 		}
 		
