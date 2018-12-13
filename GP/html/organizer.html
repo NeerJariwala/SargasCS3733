@@ -21,6 +21,9 @@ var extendEnd_url =  URL + "extendEndDate";
 var closeDay_url = URL + "closetimeslots/closeDay";
 var mon_slots = "";
 var tues_slots = "";
+var wed_slots = "";
+var thurs_slots = "";
+var fri_slots = "";
 var tsID="";
 var status = "0";
 
@@ -355,8 +358,14 @@ function displaySchedule(response){
 	var minute = start.minute;
 	var mon = days[0];
 	var tues = days[1];
+	var wed = days[2];
+	var thurs = days[3];
+	var fri = days[4];
 	mon_slots = days[0].timeslots;
 	tues_slots = days[1].timeslots;
+	wed_slots = days[2].timeslots;
+	thurs_slots = days[3].timeslots;
+	fri_slots = days[4].timeslots;
 	
 
 
@@ -368,11 +377,11 @@ function displaySchedule(response){
 
 	var table = '';
 	var label_days = '<tr><td>Time</td><td>Monday</td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>';
-	var mon_btn = '<td>Close Days:</td><td><input type="button" value="Close/Open" id="'+mon.DayID+'" onClick="JavaScript:handleChangeDay(this.id,mon_slots)"></td>';
+	var mon_btn = '<td>Change Day Timeslots:</td><td><input type="button" value="Close/Open" id="'+mon.DayID+'" onClick="JavaScript:handleChangeDay(this.id,mon_slots)"></td>';
 	var tues_btn = '<td><input type="button" value="Close/Open" id="'+tues+'" onClick="JavaScript:handleChangeDay(this.id,tues_slots)"></td>';
-	var wed_btn = '<td>Wednesday</td>';
-	var thurs_btn = '<td>Thursday</td>';
-	var fri_btn = '<td>Friday</td>';
+	var wed_btn = '<td><input type="button" value="Close/Open" id="'+wed+'" onClick="JavaScript:handleChangeDay(this.id,wed_slots)"></td>';
+	var thurs_btn = '<td><input type="button" value="Close/Open" id="'+thurs+'" onClick="JavaScript:handleChangeDay(this.id,thurs_slots)"></td>';
+	var fri_btn = '<td><input type="button" value="Close/Open" id="'+fri+'" onClick="JavaScript:handleChangeDay(this.id,fri_slots)"></td>';
 	var day_btns = '<tr>'+ mon_btn+tues_btn+wed_btn+thurs_btn+fri_btn+'</tr>';
 	var rows = slot_length;
 	var cols = days.length;
@@ -388,7 +397,7 @@ function displaySchedule(response){
 				if(c==0){
 					if(r==0){
 					zero = "0";
-					table += '<td>' + hour +':'+ minute + zero + '</td>';
+					table += '<td>'+'<center>'+ hour +':'+ minute + zero +'</center>'+ '</td>';
 						if(days[c].timeslots[r].open == 1){
 							tsID = days[c].timeslots[r].timeslotID;
 							status = days[c].timeslots[r].open;
@@ -429,7 +438,7 @@ function displaySchedule(response){
 							}
 						}
 
-					table += '<td>' + (hour+hr) +':'+ (minute+min+zero) + '</td>';
+					table += '<td>' +'<center>'+ (hour+hr) +':'+ (minute+min+zero) + '</center>'+ '</td>';
 						if(days[c].timeslots[r].open == 1){
 						tsID = days[c].timeslots[r].timeslotID;
 							status = days[c].timeslots[r].open;
