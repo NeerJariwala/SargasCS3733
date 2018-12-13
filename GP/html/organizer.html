@@ -173,6 +173,40 @@ function processChangeResponse(response) {
 
 }
 
+	function handleChangeDay(){
+	let data = {};
+		
+
+		let secretCode = prompt("Please enter your secret code to close time slot:");
+		if (secretCode == null){
+				alert("Time slot will not be closed, please try again.");
+				return;
+		}
+
+		data["secretCode"] = secretCode;
+		data["timeslotID"] = thisID;
+		data["status"]= open;
+
+
+    let js = JSON.stringify(data);
+		console.log("JS:" + js);
+		let xhr = new XMLHttpRequest();
+
+    xhr.open("POST", close_url, true);
+    xhr.send(js);
+
+		xhr.onloadend = function () {
+			console.log(xhr);
+			console.log(xhr.request);
+			if (xhr.readyState == XMLHttpRequest.DONE) {
+				console.log ("XHR:" + xhr.responseText);
+						processChangeResponse(xhr.responseText);
+			} else {
+					processChangeResponse(xhr.responseText);
+			}
+		};
+	}
+
 function handleCancelMeeting() {
 	let data = {};
 
@@ -318,6 +352,7 @@ function displaySchedule(response){
 
 	var table = '';
 	var label_days = '<tr><td>Time</td><td>Monday</td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
+	var btn_days = '<tr><td>Close Days:</td><td><input type="button" value="Close" id="goBtn" onClick="JavaScript:handleCloseDay()"></td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
 	var rows = slot_length;
 	var cols = days.length;
 	var zero = "";
@@ -407,7 +442,7 @@ function displaySchedule(response){
 
 		}
 
-		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' +label_days+table + '</table>');
+		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' +label_days+btn_days+table + '</table>');
 
 	}
 
