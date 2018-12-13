@@ -162,7 +162,7 @@ function handleCloseSlot(thisID,open) {
 
 function processCloseResponse(response) {
     let data = JSON.parse(response);
-	var body = data["body"];
+	var body = JSON.parse(data["body"]);
 	var code = body["httpCode"];
 	if(code==200){
     alert("Time slot has been closed!");
