@@ -209,7 +209,7 @@ public class Schedule {
 						day.addTimeslot(timeslot);
 						
 						try {
-							Meeting m = new MeetingDAO().getMeeting(timeslot.timeslotID);
+							Meeting m = new MeetingDAO().getMeetingTimeID(timeslot.timeslotID);
 							
 							if(m != null) {
 								weekOf.addMeeting(m);

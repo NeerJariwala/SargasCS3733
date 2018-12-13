@@ -16,16 +16,20 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.google.gson.Gson;
 
 import edu.wpi.sargas.db.ScheduleDAO;
 import edu.wpi.sargas.demo.entity.Schedule;
 import edu.wpi.sargas.demo.http_responses_and_requests.ShowScheduleHandler;
+import edu.wpi.sargas.demo.http_responses_and_requests.ShowScheduleRequest;
+
 import org.junit.Test;
 
 public class ShowScheduleHandlerTest {
 	
 	String testInput1 = "{\"date\": \"2002-01-03\",";
 	String testInput2 = "{\"date\": \"2002-02-03\",";
+	String testMeeting = "{\"date\": \"2018-12-12\",";
 	
 	@Before
 	public void setUp() {
@@ -128,6 +132,35 @@ public class ShowScheduleHandlerTest {
 		ShowScheduleHandler handler = new ShowScheduleHandler();
 		
 		InputStream input = new ByteArrayInputStream(testInput2.getBytes());
+		OutputStream output = new ByteArrayOutputStream();
+		
+		handler.handleRequest(input,output,createContext("random"));
+		
+		String outputString = output.toString();
+		System.out.println(outputString);
+		JSONObject response = null;
+        JSONObject body = null;
+        
+        
+        try {
+        	response = (JSONObject)new JSONParser().parse(outputString);
+        	body = (JSONObject)new JSONParser().parse(response.get("body").toString());
+        } catch(ParseException e) {
+        	System.out.println("problem");
+        }
+        
+        Assert.assertEquals(body.get("httpCode").toString(), "400");
+		
+	}
+	
+	@Test
+	public void meeting() throws IOException {
+		ShowScheduleHandler handler = new ShowScheduleHandler();
+		ShowScheduleRequest request = new ShowScheduleRequest();
+		request.date = "2018-12-12";
+		request.secretCode = "'lhWGB";
+		String requestStr = new Gson().toJson(request);
+		InputStream input = new ByteArrayInputStream(requestStr.getBytes());
 		OutputStream output = new ByteArrayOutputStream();
 		
 		handler.handleRequest(input,output,createContext("random"));
