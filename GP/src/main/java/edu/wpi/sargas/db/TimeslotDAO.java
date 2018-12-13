@@ -8,6 +8,7 @@ import java.sql.Time;
 
 import edu.wpi.sargas.db.DatabaseUtil;
 import edu.wpi.sargas.demo.entity.Day;
+import edu.wpi.sargas.demo.entity.Schedule;
 import edu.wpi.sargas.demo.entity.Timeslot;
 
 public class TimeslotDAO {
@@ -70,7 +71,26 @@ public class TimeslotDAO {
     	
     }
     
-    
+    public Timeslot getTimeslot(String timeslotID) throws Exception {
+        try {
+            Timeslot result = null;
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Timeslot WHERE TimeslotID = ?;");
+            ps.setString(1, timeslotID);
+            ResultSet resultSet = ps.executeQuery();
+            
+            while (resultSet.next()) {
+                result = generateTimeslot(resultSet);
+            }
+            resultSet.close();
+            ps.close();
+            
+            return result;
+
+        } catch (Exception e) {
+        	e.printStackTrace();
+            throw new Exception("Failed in getting Schedule: " + e.getMessage());
+        }
+    }
     
     public void DayChangeTimeslot(String dayID, int status) throws Exception{
         try {
