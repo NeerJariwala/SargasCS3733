@@ -355,6 +355,7 @@ function displaySchedule(response){
 	var btn_days = '<tr><td>Close Days:</td><td><input type="button" value="Close" id="goBtn" onClick="JavaScript:handleCloseDay()"></td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
 	var rows = slot_length;
 	var cols = days.length;
+	var meets = meetings.length;
 	var zero = "";
 
 
@@ -373,7 +374,13 @@ function displaySchedule(response){
 						}
 						else{
 							if(meetings[0]!=null){
-							table += '<td>' + 'Insert Name<br>' +  '<input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
+							tsID = days[c].timeslots[r].timeslotID;
+							for(m=0;m<meets;m++){
+								if(meetings[m].timeslot == tsID){
+								name = meetings[m].name;
+								}
+							}
+							table += '<td>' + name +  '<br><input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
 							}
 							else{
 							tsID = days[c].timeslots[r].timeslotID;
@@ -408,7 +415,13 @@ function displaySchedule(response){
 						else{
 						
 							if(meetings[0]!=null){
-							table += '<td>' + 'Insert Name<br>' +  '<input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
+							tsID = days[c].timeslots[r].timeslotID;
+							for(m=0;m<meets;m++){
+								if(meetings[m].timeslot == tsID){
+								name = meetings[m].name;
+								}
+							}
+							table += '<td>' + name +  '<br><input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
 							}
 							else{
 							tsID = days[c].timeslots[r].timeslotID;
@@ -427,7 +440,13 @@ function displaySchedule(response){
 				}
 				else{
 				if(meetings[0]!=null){
-							table += '<td>' + 'Insert Name<br>' +  '<input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
+							tsID = days[c].timeslots[r].timeslotID;
+							for(m=0;m<meets;m++){
+								if(meetings[m].timeslot == tsID){
+								name = meetings[m].name;
+								}
+							}
+							table += '<td>' + name +  '<br><input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
 							}
 							else{
 							tsID = days[c].timeslots[r].timeslotID;
