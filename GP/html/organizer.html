@@ -126,7 +126,7 @@ function processDeleteResponse(response) {
     document.getElementById("schedule").innerHTML = EMPTY;
 }
 
-function handleCloseSlot(thisID,open) {
+function handleChangeSlot(thisID,open) {
     let data = {};
 		
 
@@ -137,7 +137,7 @@ function handleCloseSlot(thisID,open) {
 		}
 
 		data["secretCode"] = secretCode;
-		data["timeslotId"] = thisID;
+		data["timeslotID"] = thisID;
 		data["status"]= open;
 
 
@@ -153,19 +153,19 @@ function handleCloseSlot(thisID,open) {
 			console.log(xhr.request);
 			if (xhr.readyState == XMLHttpRequest.DONE) {
 				console.log ("XHR:" + xhr.responseText);
-						processCloseResponse(xhr.responseText);
+						processChangeResponse(xhr.responseText);
 			} else {
-					processCloseResponse(xhr.responseText);
+					processChangeResponse(xhr.responseText);
 			}
 		};
 }
 
-function processCloseResponse(response) {
+function processChangeResponse(response) {
     let data = JSON.parse(response);
 	var body = JSON.parse(data["body"]);
 	var code = body["httpCode"];
 	if(code==200){
-    alert("Time slot has been closed!");
+    alert("Time slot has been changed!");
     }
     else{
     alert("Failed to close");
@@ -288,12 +288,9 @@ function displaySchedule(response){
 	var days = week["days"];
 	var slots = days[0].timeslots;
 	var start = slots[0].startTime;
+	var meeting = "";
 	
 	var duration = slots[0].duration;
-	
-	if(meetings[0]!=null){
-	var meeting = meetings[0].name;
-	}
 
 	var slot_length = days[0].timeslots.length;
 	console.log (slot_length);
@@ -337,10 +334,17 @@ function displaySchedule(response){
 						if(days[c].timeslots[r].open == 1){
 							tsID = days[c].timeslots[r].timeslotID;
 							status = days[c].timeslots[r].open;
-							table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleCloseSlot(this.id,status);">' + '</td>';
+							table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,status);">' + '</td>';
 						}
 						else{
+							if(meetings[0]!=null){
 							table += '<td>' + 'Insert Name<br>' +  '<input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
+							}
+							else{
+							tsID = days[c].timeslots[r].timeslotID;
+							status = days[c].timeslots[r].open;
+							table += '<td>' +  '<input type="button" value="Open" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,status);">' + '</td>';
+							}
 							}
 					}
 					else{
@@ -364,20 +368,37 @@ function displaySchedule(response){
 						if(days[c].timeslots[r].open == 1){
 						tsID = days[c].timeslots[r].timeslotID;
 							status = days[c].timeslots[r].open;
-							table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleCloseSlot(this.id,status);">' + '</td>';
+							table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,status);">' + '</td>';
 						}
 						else{
-							table += '<td>' + 'Taken' + '</td>';
+						
+							if(meetings[0]!=null){
+							table += '<td>' + 'Insert Name<br>' +  '<input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
+							}
+							else{
+							tsID = days[c].timeslots[r].timeslotID;
+							status = days[c].timeslots[r].open;
+							table += '<td>' +  '<input type="button" value="Open" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,status);">' + '</td>';
+							}
+							
+							
 							}
 					}
 				}
 				else if(days[c].timeslots[r].open == 1){
 				tsID = days[c].timeslots[r].timeslotID;
 				status = days[c].timeslots[r].open;
-				table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleCloseSlot(this.id,status);">' + '</td>';
+				table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,status);">' + '</td>';
 				}
 				else{
-				table += '<td>' + 'Taken' + '</td>';
+				if(meetings[0]!=null){
+							table += '<td>' + 'Insert Name<br>' +  '<input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
+							}
+							else{
+							tsID = days[c].timeslots[r].timeslotID;
+							status = days[c].timeslots[r].open;
+							table += '<td>' +  '<input type="button" value="Open" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,status);">' + '</td>';
+							}
 
 				}
 			}
