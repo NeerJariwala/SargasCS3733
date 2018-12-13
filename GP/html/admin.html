@@ -3,34 +3,87 @@
 <head>
 
   <meta charset="UTF-8">
-  <title>Sys Admin Dashboard</title>
+  <title>Sys Admin GUI</title>
   <link rel="stylesheet" href="css/main.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 <script>
 
-  const URL = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/adminschedules";
+  var admin_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/adminschedules";
+  var print = document.getElementById("schedules");
 
-  function handleDeleteSchedules() {
-    alert("Successfully deleted schedules!");
+  function handleDeleteSchedules(e) {
+    var data = {};
+    var form = document.adminForm;
+    var days = form.daysOld.value;
+    console.log(days);
+
+    data["days"] = days;
+
+    var js = JSON.stringify(data);
+    console.log("JS:" + js);
+    var xhr = new XMLHttpRequest();
+    xhr.open("DELETE", admin_url, true);
+
+    xhr.send(js);
+
+    xhr.onloadend = function () {
+      console.log(xhr);
+      console.log(xhr.request);
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        console.log ("XHR:" + xhr.responseText);
+        processDeleteResponse(xhr.responseText);
+      } else {
+        processDeleteResponse(xhr.responseText);
+      }
+    };
   }
 
   function processDeleteResponse() {
     let data = JSON.parse(response);
-
-    alert("The schedule has been deleted!");
-
-    document.getElementById("schedules").innerHTML = EMPTY;
+    alert("Successfully deleted schedules!");
   }
 
-  function showSchedules() {
-    var x = document.getElementById("schedules");
-        if (x.style.display === "none") {
-            x.style.display = "block";
-        } else {
-            x.style.display = "none";
-        }
+  function handleShowSchedules() {
+    var data = {};
+    var form = document.adminForm;
+    var hours = form.hoursAgo.value;
+    console.log(hours);
+
+    data["hours"] = hours;
+
+    var js = JSON.stringify(data);
+    console.log("JS:" + js);
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", admin_url, true);
+
+    xhr.send(js);
+
+    xhr.onloadend = function () {
+      console.log(xhr);
+      console.log(xhr.request);
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        console.log ("XHR:" + xhr.responseText);
+        processDeleteResponse(xhr.responseText);
+        var data = JSON.parse(xhr.responseText);
+        var schedules = data["schedules"];
+        schedules.forEach(printSchedules);
+      } else {
+        processDeleteResponse(xhr.responseText);
+      }
+    };
+  }
+
+  function processShowResponse() {
+    let data = JSON.parse(response);
+
+    alert("The schedule have been retrieved!");
+  }
+
+  function printSchedules(item, index) {
+    print.innerHTML = print.innerHTML + "Schedule ID:" + item["scheduleId"];
+
   }
 
 </script>
@@ -44,44 +97,18 @@
 
 
 <div id="main">
-    <h3> Delete schedules: </h3>
-    <br><text> more than </text>
-    <input type="text" name="daysOld">
-    <text> days old &nbsp&nbsp </text>
-    <input type="submit" value="Go" onclick="deleteSchedule()">
-
+  <form name="adminForm">
+    Delete schedules: <br> more than <input type="text" name="daysOld" value=""> days old<br><br>
+    <button type="button" onclick="JavaScript:handleDeleteSchedules(this)">Go</button>
     <br><br><br><br>
-    <h3> Retrieve schedules: </h3>
-    <br><text> from </text>
-    <input type="text" name="hoursAgo">
-    <text> hours ago &nbsp&nbsp</text>
-    <input type="submit" value="Go" onclick="showSchedules()">
+    Retrieve schedules: <br>from <input type="text" name="hoursAgo" value=""> hours ago<br><br>
+    <button type="button" onclick="JavaScript:handleShowSchedules(this)">Go</button>
+  </form>
 </div>
 
 <br><br><br>
-<div id="schedules" style="display: none;">
-  <table align="center" style="text-align: center; width:70%">
-  <tr>
-    <th>Name</th>
-    <th>Start Date</th>
-    <th>End Date</th>
-  </tr>
-  <tr>
-    <td>Writing Center Week of 9/10/2018</td>
-    <td>2018-09-10</td>
-    <td>2018-09-14</td></td>
-  </tr>
-  <tr>
-    <td>Academic Advising Week of 10/8/2018</td>
-    <td>2018-10-08</td>
-    <td>2018-10-12</td>
-  </tr>
-  <tr>
-    <td>CS3733 Office Hours</td>
-    <td>2018-11-26</td>
-    <td>2018-11-30</td>
-  </tr>
-  </table>
-</div>
+<h3> List of Schedules: </h3>
+<br>
+<div id="schedules"></div>
 
 </body>
