@@ -19,6 +19,7 @@ const cancel_url = URL + "meeting";
 var extendStart_url = URL + "extendStartDate";
 var extendEnd_url =  URL + "extendEndDate";
 var tsID="";
+var status = "0";
 
 
 var startDate;
@@ -125,7 +126,7 @@ function processDeleteResponse(response) {
     document.getElementById("schedule").innerHTML = EMPTY;
 }
 
-function handleCloseSlot(thisID,status) {
+function handleCloseSlot(thisID,open) {
     let data = {};
 		
 
@@ -137,7 +138,7 @@ function handleCloseSlot(thisID,status) {
 
 		data["secretCode"] = secretCode;
 		data["timeslotId"] = thisID;
-		data["status"]=status;
+		data["status"]= open;
 
 
     let js = JSON.stringify(data);
@@ -161,8 +162,14 @@ function handleCloseSlot(thisID,status) {
 
 function processCloseResponse(response) {
     let data = JSON.parse(response);
-
+	var body = data["body"];
+	var code = body["httpCode"];
+	if(code==200){
     alert("Time slot has been closed!");
+    }
+    else{
+    alert("Failed to close");
+    }
 
 }
 
@@ -329,7 +336,7 @@ function displaySchedule(response){
 					table += '<td>' + hour +':'+ minute + zero + '</td>';
 						if(days[c].timeslots[r].open == 1){
 							tsID = days[c].timeslots[r].timeslotID;
-							var status = days[c].timeslots[r].open;
+							status = days[c].timeslots[r].open;
 							table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleCloseSlot(this.id,status);">' + '</td>';
 						}
 						else{
@@ -356,7 +363,7 @@ function displaySchedule(response){
 					table += '<td>' + (hour+hr) +':'+ (minute+min+zero) + '</td>';
 						if(days[c].timeslots[r].open == 1){
 						tsID = days[c].timeslots[r].timeslotID;
-							var status = days[c].timeslots[r].open;
+							status = days[c].timeslots[r].open;
 							table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleCloseSlot(this.id,status);">' + '</td>';
 						}
 						else{
@@ -366,7 +373,7 @@ function displaySchedule(response){
 				}
 				else if(days[c].timeslots[r].open == 1){
 				tsID = days[c].timeslots[r].timeslotID;
-				var status = days[c].timeslots[r].open;
+				status = days[c].timeslots[r].open;
 				table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleCloseSlot(this.id,status);">' + '</td>';
 				}
 				else{

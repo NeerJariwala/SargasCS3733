@@ -38,13 +38,8 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
 			return false;
 		}
 		else {
-			if(ts_dao.getTimeslot(timeslotID).open!=status) {
 				ts_dao.changeTimeslot(timeslotID, status);
 				return true;
-			}
-			else {
-				return false;
-			}
 			
 		}
 		
@@ -106,11 +101,12 @@ public class CloseTimeSlotHandler implements RequestStreamHandler {
     		String secretCode = request.secretCode;
     		String timeslotID = request.timeslotID;
     		int status = request.status;
-    		if(status ==0) {
-    			status =1;
+    		
+    		if(status==1) {
+    			status=0;
     		}
     		else {
-    			status =0;
+    			status = 1;
     		}
     		
     		
