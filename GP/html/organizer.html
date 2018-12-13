@@ -207,7 +207,7 @@ function processChangeResponse(response) {
 		};
 	}
 
-function handleCancelMeeting() {
+function handleCancelMeeting(meetingId) {
 	let data = {};
 
 	let secretCode = prompt("Please enter your secret code to cancel meeting:");
@@ -217,6 +217,7 @@ function handleCancelMeeting() {
 	}
 
 	data["secretCode"] = secretCode;
+	data["meetingId"] = meetingId;
 
 	let js = JSON.stringify(data);
 	console.log("JS:" + js);
@@ -357,6 +358,7 @@ function displaySchedule(response){
 	var cols = days.length;
 	var meets = meetings.length;
 	var zero = "";
+	var meetingID ="";
 
 
 	for(r=0; r<rows;r++){
@@ -378,9 +380,10 @@ function displaySchedule(response){
 							for(m=0;m<meets;m++){
 								if(meetings[m].timeslot == tsID){
 								name = meetings[m].name;
+								meetingID = meetings[m].meetingID;
 								}
 							}
-							table += '<td>' + name +  '<br><input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
+							table += '<td>' + name +  '<br><input type="button" value="Cancel Meeting" id="'+meetingID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
 							}
 							else{
 							tsID = days[c].timeslots[r].timeslotID;
@@ -419,9 +422,10 @@ function displaySchedule(response){
 							for(m=0;m<meets;m++){
 								if(meetings[m].timeslot == tsID){
 								name = meetings[m].name;
+								meetingID = meetings[m].meetingID;
 								}
 							}
-							table += '<td>' + name +  '<br><input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
+							table += '<td>' + name +  '<br><input type="button" value="Cancel Meeting" id="'+meetingID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
 							}
 							else{
 							tsID = days[c].timeslots[r].timeslotID;
@@ -444,9 +448,10 @@ function displaySchedule(response){
 							for(m=0;m<meets;m++){
 								if(meetings[m].timeslot == tsID){
 								name = meetings[m].name;
+								meetingID = meetings[m].meetingID;
 								}
 							}
-							table += '<td>' + name +  '<br><input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
+							table += '<td>' + name +  '<br><input type="button" value="Cancel Meeting" id="'+meetingID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
 							}
 							else{
 							tsID = days[c].timeslots[r].timeslotID;
