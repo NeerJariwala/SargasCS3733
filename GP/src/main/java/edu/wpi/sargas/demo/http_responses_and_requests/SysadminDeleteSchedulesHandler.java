@@ -24,9 +24,9 @@ import edu.wpi.sargas.demo.entity.Schedule;
 
 public class SysadminDeleteSchedulesHandler implements RequestStreamHandler {
 	
-	private ArrayList<Schedule> retrieveSchedules(LocalDateTime since) throws Exception {
+	private void deleteSchedules(LocalDateTime before) throws Exception {
 		//Use DAO to get schedules after the localDateTime passed in
-		return new ScheduleDAO().retrieveSchedules(since);
+		new ScheduleDAO().deleteSchedulebefore(before);
 	}
 	
     @Override
@@ -92,11 +92,7 @@ public class SysadminDeleteSchedulesHandler implements RequestStreamHandler {
     				
     				int numDays = Integer.parseInt(days);
     				LocalDateTime lowerBound = LocalDateTime.now().minusDays(numDays);
-    				ArrayList<Schedule> schedules = retrieveSchedules(lowerBound);
-    				
-    				for(Schedule s : schedules) {
-    					new ScheduleDAO().deleteSchedule(s.scheduleId);
-    				}
+    				deleteSchedules(lowerBound);
     				
     				httpResponse = new SysadminDeleteSchedulesResponse(200);
             		jsonResponse.put("body", new Gson().toJson(httpResponse));
