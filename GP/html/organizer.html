@@ -173,7 +173,41 @@ function processChangeResponse(response) {
 
 }
 
-function handleCancelMeeting() {
+	function handleChangeDay(){
+	let data = {};
+		
+
+		let secretCode = prompt("Please enter your secret code to close time slot:");
+		if (secretCode == null){
+				alert("Time slot will not be closed, please try again.");
+				return;
+		}
+
+		data["secretCode"] = secretCode;
+		data["timeslotID"] = thisID;
+		data["status"]= open;
+
+
+    let js = JSON.stringify(data);
+		console.log("JS:" + js);
+		let xhr = new XMLHttpRequest();
+
+    xhr.open("POST", close_url, true);
+    xhr.send(js);
+
+		xhr.onloadend = function () {
+			console.log(xhr);
+			console.log(xhr.request);
+			if (xhr.readyState == XMLHttpRequest.DONE) {
+				console.log ("XHR:" + xhr.responseText);
+						processChangeResponse(xhr.responseText);
+			} else {
+					processChangeResponse(xhr.responseText);
+			}
+		};
+	}
+
+function handleCancelMeeting(meetingId) {
 	let data = {};
 
 	let secretCode = prompt("Please enter your secret code to cancel meeting:");
@@ -183,6 +217,7 @@ function handleCancelMeeting() {
 	}
 
 	data["secretCode"] = secretCode;
+	data["meetingId"] = meetingId;
 
 	let js = JSON.stringify(data);
 	console.log("JS:" + js);
@@ -318,9 +353,12 @@ function displaySchedule(response){
 
 	var table = '';
 	var label_days = '<tr><td>Time</td><td>Monday</td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
+	var btn_days = '<tr><td>Close Days:</td><td><input type="button" value="Close" id="goBtn" onClick="JavaScript:handleCloseDay()"></td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
 	var rows = slot_length;
 	var cols = days.length;
+	var meets = meetings.length;
 	var zero = "";
+	var meetingID ="";
 
 
 	for(r=0; r<rows;r++){
@@ -338,7 +376,14 @@ function displaySchedule(response){
 						}
 						else{
 							if(meetings[0]!=null){
-							table += '<td>' + 'Insert Name<br>' +  '<input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
+							tsID = days[c].timeslots[r].timeslotID;
+							for(m=0;m<meets;m++){
+								if(meetings[m].timeslot == tsID){
+								name = meetings[m].name;
+								meetingID = meetings[m].meetingID;
+								}
+							}
+							table += '<td>' + name +  '<br><input type="button" value="Cancel Meeting" id="'+meetingID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
 							}
 							else{
 							tsID = days[c].timeslots[r].timeslotID;
@@ -373,7 +418,14 @@ function displaySchedule(response){
 						else{
 						
 							if(meetings[0]!=null){
-							table += '<td>' + 'Insert Name<br>' +  '<input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
+							tsID = days[c].timeslots[r].timeslotID;
+							for(m=0;m<meets;m++){
+								if(meetings[m].timeslot == tsID){
+								name = meetings[m].name;
+								meetingID = meetings[m].meetingID;
+								}
+							}
+							table += '<td>' + name +  '<br><input type="button" value="Cancel Meeting" id="'+meetingID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
 							}
 							else{
 							tsID = days[c].timeslots[r].timeslotID;
@@ -392,7 +444,14 @@ function displaySchedule(response){
 				}
 				else{
 				if(meetings[0]!=null){
-							table += '<td>' + 'Insert Name<br>' +  '<input type="button" value="Cancel Meeting" id="'+tsID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
+							tsID = days[c].timeslots[r].timeslotID;
+							for(m=0;m<meets;m++){
+								if(meetings[m].timeslot == tsID){
+								name = meetings[m].name;
+								meetingID = meetings[m].meetingID;
+								}
+							}
+							table += '<td>' + name +  '<br><input type="button" value="Cancel Meeting" id="'+meetingID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
 							}
 							else{
 							tsID = days[c].timeslots[r].timeslotID;
@@ -407,7 +466,7 @@ function displaySchedule(response){
 
 		}
 
-		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' +label_days+table + '</table>');
+		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' +label_days+btn_days+table + '</table>');
 
 	}
 
