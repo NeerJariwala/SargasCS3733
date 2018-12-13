@@ -153,33 +153,4 @@ public class ShowScheduleHandlerTest {
 		
 	}
 	
-	@Test
-	public void meeting() throws IOException {
-		ShowScheduleHandler handler = new ShowScheduleHandler();
-		ShowScheduleRequest request = new ShowScheduleRequest();
-		request.date = "2018-12-12";
-		request.secretCode = "'lhWGB";
-		String requestStr = new Gson().toJson(request);
-		InputStream input = new ByteArrayInputStream(requestStr.getBytes());
-		OutputStream output = new ByteArrayOutputStream();
-		
-		handler.handleRequest(input,output,createContext("random"));
-		
-		String outputString = output.toString();
-		System.out.println(outputString);
-		JSONObject response = null;
-        JSONObject body = null;
-        
-        
-        try {
-        	response = (JSONObject)new JSONParser().parse(outputString);
-        	body = (JSONObject)new JSONParser().parse(response.get("body").toString());
-        } catch(ParseException e) {
-        	System.out.println("problem");
-        }
-        
-        Assert.assertEquals(body.get("httpCode").toString(), "400");
-		
-	}
-
 }
