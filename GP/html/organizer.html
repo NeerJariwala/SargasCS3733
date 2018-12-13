@@ -20,6 +20,7 @@ var extendStart_url = URL + "extendStartDate";
 var extendEnd_url =  URL + "extendEndDate";
 var closeDay_url = URL + "closetimeslots/closeDay";
 var mon_slots = "";
+var tues_slots = "";
 var tsID="";
 var status = "0";
 
@@ -190,17 +191,18 @@ function processChangeResponse(response) {
 		for(s=0;s<slots.length;s++){
 		
 		data["secretCode"] = secretCode;
-		data["dayID"] = dayId;
 		data["timeslotID"]= slots[s].timeslotID;
+		data["status"] = slots[s].open;
 
 
     let js = JSON.stringify(data);
 		console.log("JS:" + js);
 		let xhr = new XMLHttpRequest();
 
-    xhr.open("POST", closeDay_url, true);
+    xhr.open("POST", close_url, true);
     xhr.send(js);
 
+if(s==(slots.length-1)){
 		xhr.onloadend = function () {
 			console.log(xhr);
 			console.log(xhr.request);
@@ -211,6 +213,7 @@ function processChangeResponse(response) {
 					processChangeResponse(xhr.responseText);
 			}
 		};
+		}
 		}
 	}
 
@@ -350,8 +353,10 @@ function displaySchedule(response){
 	var min = 0;
 	var hour = start.hour;
 	var minute = start.minute;
-	var mon = days[0].DayID;
+	var mon = days[0];
+	var tues = days[1];
 	mon_slots = days[0].timeslots;
+	tues_slots = days[1].timeslots;
 	
 
 
@@ -363,8 +368,8 @@ function displaySchedule(response){
 
 	var table = '';
 	var label_days = '<tr><td>Time</td><td>Monday</td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>';
-	var mon_btn = '<td>Close Days:</td><td><input type="button" value="Close" id="'+mon+'" onClick="JavaScript:handleChangeDay(this.id,mon_slots)"></td>';
-	var tues_btn = '<td>Tuesday</td>';
+	var mon_btn = '<td>Close Days:</td><td><input type="button" value="Close/Open" id="'+mon.DayID+'" onClick="JavaScript:handleChangeDay(this.id,mon_slots)"></td>';
+	var tues_btn = '<td><input type="button" value="Close/Open" id="'+tues+'" onClick="JavaScript:handleChangeDay(this.id,tues_slots)"></td>';
 	var wed_btn = '<td>Wednesday</td>';
 	var thurs_btn = '<td>Thursday</td>';
 	var fri_btn = '<td>Friday</td>';
