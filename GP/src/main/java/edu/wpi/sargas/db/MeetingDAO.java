@@ -62,6 +62,11 @@ public class MeetingDAO {
             PreparedStatement ps = conn.prepareStatement("DELETE FROM Meeting WHERE meetingID = ?;");
             ps.setString(1, meetingID);
             int numAffected = ps.executeUpdate();
+            
+        	ps = conn.prepareStatement("UPDATE Timeslot SET open = 1\r\n" + 
+        			"WHERE TimeslotID = (SELECT Timeslot FROM Meeting WHERE meetingID = ?);");
+            ps.setString(1, meetingID);
+            ps.executeUpdate();
             ps.close();
             
             return (numAffected == 1);
