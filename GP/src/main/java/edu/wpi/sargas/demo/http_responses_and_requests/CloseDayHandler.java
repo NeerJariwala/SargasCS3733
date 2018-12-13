@@ -31,7 +31,7 @@ public class CloseDayHandler implements RequestStreamHandler {
 		jsonResponse.put("body", new Gson().toJson(response));
 	}
 
-	public boolean ChangeDay(String secretCode, String dayID, int status) throws Exception {
+	public boolean ChangeDay(String secretCode,String timeslotID, String dayID, int status) throws Exception {
 		TimeslotDAO ts_dao = new TimeslotDAO();
 		ScheduleDAO sched_dao = new ScheduleDAO();
 		
@@ -39,7 +39,7 @@ public class CloseDayHandler implements RequestStreamHandler {
 			return false;
 		}
 		else {
-			ts_dao.DayChangeTimeslot(dayID, status);
+			ts_dao.DayChangeTimeslot(timeslotID, dayID, status);
 			return true;
 		}
 		
@@ -99,12 +99,13 @@ public class CloseDayHandler implements RequestStreamHandler {
     		CloseDayRequest request = new Gson().fromJson(httpBody,CloseDayRequest.class);
     		//get the request in the form of a class
     		String secretCode = request.secretCode;
+    		String timeslotID = request.timeslotID;
     		String day = "";
     		int status=0;//1 is open, 0 is closed
     		
     		
     		try {
-    		if(ChangeDay(secretCode, day, status)) {
+    		if(ChangeDay(secretCode,timeslotID,day, status)) {
     			 httpResponse = new CloseDayResponse(200);
     			 jsonResponse.put("body", new Gson().toJson(httpResponse));
      		 } else {

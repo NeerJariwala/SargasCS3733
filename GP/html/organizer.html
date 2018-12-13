@@ -127,7 +127,7 @@ function processDeleteResponse(response) {
 
 function handleCloseSlot(thisID) {
     let data = {};
-		data["timeslotId"] = thisID;
+		
 
 		let secretCode = prompt("Please enter your secret code to close time slot:");
 		if (secretCode == null){
@@ -136,6 +136,7 @@ function handleCloseSlot(thisID) {
 		}
 
 		data["secretCode"] = secretCode;
+		data["timeslotId"] = thisID;
 
 
     let js = JSON.stringify(data);
