@@ -8,6 +8,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
+</head>
+  <body>
+
+  <section id="banner">
+  	<h2><strong>Meeting Scheduler: </strong> Admin Portal</h2>
+  	<p></p>
+  </section>
+
+
+  <div id="main">
+    <form name="adminForm">
+      Delete schedules: <br> more than <input type="text" name="daysOld" value=""> days old<br><br>
+      <button type="button" onclick="JavaScript:handleDeleteSchedules(this)">Go</button>
+      <br><br><br><br>
+      Retrieve schedules: <br>from <input type="text" name="hoursAgo" value=""> hours ago<br><br>
+      <button type="button" onclick="JavaScript:handleShowSchedules(this)">Go</button>
+    </form>
+  </div>
+
+  <br><br><br>
+  <h3> List of Schedules: </h3>
+  <br>
+  <div id="schedules"></div>
+
+
 <script>
 
   var admin_url = "https://0h0x7juqld.execute-api.us-east-2.amazonaws.com/Alpha/adminschedules";
@@ -40,7 +65,7 @@
     };
   }
 
-  function processDeleteResponse() {
+  function processDeleteResponse(response) {
     let data = JSON.parse(response);
     alert("Successfully deleted schedules!");
   }
@@ -48,10 +73,10 @@
   function handleShowSchedules() {
     var data = {};
     var form = document.adminForm;
-    var hours = form.hoursAgo.value;
-    console.log(hours);
+    var hoursAgo = form.hoursAgo.value;
+    console.log(hoursAgo);
 
-    data["hours"] = hours;
+    data["hoursAgo"] = hoursAgo;
 
     var js = JSON.stringify(data);
     console.log("JS:" + js);
@@ -65,50 +90,26 @@
       console.log(xhr.request);
       if (xhr.readyState == XMLHttpRequest.DONE) {
         console.log ("XHR:" + xhr.responseText);
-        processDeleteResponse(xhr.responseText);
+        processShowResponse(xhr.responseText);
         var data = JSON.parse(xhr.responseText);
         var schedules = data["schedules"];
         schedules.forEach(printSchedules);
       } else {
-        processDeleteResponse(xhr.responseText);
+        processShowResponse(xhr.responseText);
       }
     };
   }
 
-  function processShowResponse() {
+  function processShowResponse(response) {
     let data = JSON.parse(response);
 
     alert("The schedule have been retrieved!");
   }
 
   function printSchedules(item, index) {
-    print.innerHTML = print.innerHTML + "Schedule ID:" + item["scheduleId"];
+    print.innerHTML = print.innerHTML + "<br> Schedule ID: " + item["scheduleId"];
 
   }
 
 </script>
-</head>
-<body>
-
-<section id="banner">
-	<h2><strong>Meeting Scheduler: </strong> Admin Portal</h2>
-	<p></p>
-</section>
-
-
-<div id="main">
-  <form name="adminForm">
-    Delete schedules: <br> more than <input type="text" name="daysOld" value=""> days old<br><br>
-    <button type="button" onclick="JavaScript:handleDeleteSchedules(this)">Go</button>
-    <br><br><br><br>
-    Retrieve schedules: <br>from <input type="text" name="hoursAgo" value=""> hours ago<br><br>
-    <button type="button" onclick="JavaScript:handleShowSchedules(this)">Go</button>
-  </form>
-</div>
-
-<br><br><br>
-<h3> List of Schedules: </h3>
-<br>
-<div id="schedules"></div>
-
 </body>
