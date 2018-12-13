@@ -82,33 +82,26 @@ public class RetrieveSchedulesHandler implements RequestStreamHandler {
     		RetrieveSchedulesRequest request = new Gson().fromJson(httpBody,RetrieveSchedulesRequest.class);
     		//get the request in the form of a class
     		Integer hoursAgo = null;
-    		Integer daysAgo = null;
     		boolean noHours = false;
-    		boolean noDays = false;
     		boolean invalidInput = false;
     		
     		if(request.hoursAgo.equals("")) { //if no hour input
     			noHours = true;
     		}
     		
-    		if(request.daysAgo.equals("")) { //if no day input
-    			noDays = true;
-    		}
     		
-    		if((noHours && noDays) || (!noHours && !noDays)) {
+    		if(noHours) {
     			//if we have either none or both, input is invalid
     			logger.log("Invalid input");
     			invalidInput = true;
         		httpResponse = new RetrieveSchedulesResponse(400, null);
         		jsonResponse.put("body", new Gson().toJson(httpResponse));
-    		} else if(!noHours) { //if we have hours input, use hours ago
+    		} else { //if we have hours input, use hours ago
     			hoursAgo = Integer.parseInt(request.hoursAgo);
-    		} else if(!noDays) { //if we have days input, use days ago
-    			daysAgo = Integer.parseInt(request.daysAgo);
     		}
     		
     		try {
-	    		if(!noHours && !invalidInput) { //process hours input here
+	    		if(!invalidInput) { //process hours input here
 	    			
 	    			LocalDateTime currentTime = LocalDateTime.now();
 	    			LocalDateTime lowerBound = currentTime.minusHours(hoursAgo);
@@ -116,13 +109,7 @@ public class RetrieveSchedulesHandler implements RequestStreamHandler {
 	    			httpResponse = new RetrieveSchedulesResponse(200, schedules);
 	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
 	    			
-	    		} else if(!noDays && !invalidInput) { //process days input here
-	    			LocalDateTime currentTime = LocalDateTime.now();
-	    			LocalDateTime lowerBound = currentTime.minusDays(daysAgo);
-	    			ArrayList<Schedule> schedules = retrieveSchedules(lowerBound);
-	    			httpResponse = new RetrieveSchedulesResponse(200, schedules);
-	    			jsonResponse.put("body", new Gson().toJson(httpResponse));
-	    		}
+	    		} 
     		} catch(Exception e) {
     			logger.log(e.toString());
     			e.printStackTrace();
