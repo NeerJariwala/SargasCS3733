@@ -279,8 +279,12 @@ function displaySchedule(response){
 	var days = week["days"];
 	var slots = days[0].timeslots;
 	var start = slots[0].startTime;
-	var meeting = meetings[0].name;
+	
 	var duration = slots[0].duration;
+	
+	if(meetings[0]!=null){
+	var meeting = meetings[0].name;
+	}
 
 	var slot_length = days[0].timeslots.length;
 	console.log (slot_length);
