@@ -3,6 +3,7 @@ package edu.wpi.sargas.demo;
 import static org.junit.Assert.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.junit.Test;
 
@@ -33,7 +34,7 @@ public class TestShedule {
 		assertEquals(s.endDate,endDate);
 		assertEquals(s.startHour, startHour);
 		assertEquals(s.endHour, endHour);
-		assertEquals(s.dateCreated, LocalDate.now());
+		assertEquals(s.dateCreated.toLocalDate(), LocalDateTime.now().toLocalDate());
 	}
 	
 	@Test

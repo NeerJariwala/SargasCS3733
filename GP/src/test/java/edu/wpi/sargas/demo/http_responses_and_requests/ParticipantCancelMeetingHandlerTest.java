@@ -35,7 +35,7 @@ public class ParticipantCancelMeetingHandlerTest {
     static String SAMPLE_INPUT_STRING = "{\"secretCode\": ";
 
     @Test
-    public void testOrganizerCancelMeetingHandler() throws IOException {
+    public void testParticipantCancelMeetingHandler() throws IOException {
     	ScheduleDAO dao = new ScheduleDAO();
     	Schedule sched = null;
     	
