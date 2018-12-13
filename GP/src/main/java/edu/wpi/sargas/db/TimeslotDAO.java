@@ -92,12 +92,13 @@ public class TimeslotDAO {
         }
     }
     
-    public void DayChangeTimeslot(String dayID, int status) throws Exception{
+    public void DayChangeTimeslot(String timeslotID, String dayID, int status) throws Exception{
         try {
-        	String query = "UPDATE Timeslot SET open = ? WHERE Day = ?;";
+        	String query = "UPDATE Timeslot SET open = ? WHERE Day = ? and TimeslotID = ?;";
         	PreparedStatement ps = conn.prepareStatement(query);
         	ps.setInt(1, status);
             ps.setString(2, dayID);
+            ps.setString(3, timeslotID);
             ps.executeUpdate();
             ps.close();
             
