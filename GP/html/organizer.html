@@ -18,8 +18,10 @@ const close_url = URL + "closetimeslots";
 const cancel_url = URL + "meeting";
 var extendStart_url = URL + "extendStartDate";
 var extendEnd_url =  URL + "extendEndDate";
+var mon_slots = "";
 var tsID="";
 var status = "0";
+
 
 
 var startDate;
@@ -173,7 +175,7 @@ function processChangeResponse(response) {
 
 }
 
-	function handleChangeDay(){
+	function handleChangeDay(dayId, slots){
 	let data = {};
 		
 
@@ -182,10 +184,13 @@ function processChangeResponse(response) {
 				alert("Time slot will not be closed, please try again.");
 				return;
 		}
-
+		
+		
+		for(s=0;s<slots.length;s++){
+		
 		data["secretCode"] = secretCode;
-		data["timeslotID"] = thisID;
-		data["status"]= open;
+		data["dayID"] = dayId;
+		data["timeslotID"]= slots[s].timeslotID;
 
 
     let js = JSON.stringify(data);
@@ -205,6 +210,7 @@ function processChangeResponse(response) {
 					processChangeResponse(xhr.responseText);
 			}
 		};
+		}
 	}
 
 function handleCancelMeeting(meetingId) {
@@ -343,6 +349,9 @@ function displaySchedule(response){
 	var min = 0;
 	var hour = start.hour;
 	var minute = start.minute;
+	var mon = days[0].DayID;
+	mon_slots = days[0].timeslots;
+	
 
 
 	console.log(week);
@@ -352,8 +361,13 @@ function displaySchedule(response){
 
 
 	var table = '';
-	var label_days = '<tr><td>Time</td><td>Monday</td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
-	var btn_days = '<tr><td>Close Days:</td><td><input type="button" value="Close" id="goBtn" onClick="JavaScript:handleCloseDay()"></td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>'
+	var label_days = '<tr><td>Time</td><td>Monday</td><td>Tuesday</td><td>Wednesday</td><td>Thursday</td><td>Friday</td></tr>';
+	var mon_btn = '<td>Close Days:</td><td><input type="button" value="Close" id="'+mon+'" onClick="JavaScript:handleChangeDay(this.id,mon_slots)"></td>';
+	var tues_btn = '<td>Tuesday</td>';
+	var wed_btn = '<td>Wednesday</td>';
+	var thurs_btn = '<td>Thursday</td>';
+	var fri_btn = '<td>Friday</td>';
+	var day_btns = '<tr>'+ mon_btn+tues_btn+wed_btn+thurs_btn+fri_btn+'</tr>';
 	var rows = slot_length;
 	var cols = days.length;
 	var meets = meetings.length;
@@ -466,7 +480,7 @@ function displaySchedule(response){
 
 		}
 
-		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' +label_days+btn_days+table + '</table>');
+		document.write("<h1>Weekly Schedule</h1>" + '<table border=2>' +label_days+day_btns+table + '</table>');
 
 	}
 
