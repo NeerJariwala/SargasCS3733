@@ -18,6 +18,7 @@ const close_url = URL + "closetimeslots";
 const cancel_url = URL + "meeting";
 var extendStart_url = URL + "extendStartDate";
 var extendEnd_url =  URL + "extendEndDate";
+var closeDay_url = URL + "closetimeslots/closeDay";
 var mon_slots = "";
 var tsID="";
 var status = "0";
@@ -197,7 +198,7 @@ function processChangeResponse(response) {
 		console.log("JS:" + js);
 		let xhr = new XMLHttpRequest();
 
-    xhr.open("POST", close_url, true);
+    xhr.open("POST", closeDay_url, true);
     xhr.send(js);
 
 		xhr.onloadend = function () {
