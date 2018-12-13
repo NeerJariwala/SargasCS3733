@@ -43,8 +43,7 @@ public class SysadminDeleteSchedulesHandlerTest {
         }
         
         SysadminDeleteSchedulesRequest request = new SysadminDeleteSchedulesRequest();
-        request.scheduleIds = new ArrayList<String>();
-        request.scheduleIds.add(sched.scheduleId);
+        request.days = "1";
         String httpRequest = new Gson().toJson(request);
         InputStream input = new ByteArrayInputStream(httpRequest.getBytes());;
         OutputStream output = new ByteArrayOutputStream();

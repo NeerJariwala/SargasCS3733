@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
@@ -18,9 +20,15 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.google.gson.Gson;
 
 import edu.wpi.sargas.db.ScheduleDAO;
+import edu.wpi.sargas.demo.entity.Schedule;
 
 public class SysadminDeleteSchedulesHandler implements RequestStreamHandler {
-
+	
+	private ArrayList<Schedule> retrieveSchedules(LocalDateTime since) throws Exception {
+		//Use DAO to get schedules after the localDateTime passed in
+		return new ScheduleDAO().retrieveSchedules(since);
+	}
+	
     @Override
     public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
     	
@@ -73,25 +81,33 @@ public class SysadminDeleteSchedulesHandler implements RequestStreamHandler {
     		
     		SysadminDeleteSchedulesRequest request = new Gson().fromJson(httpBody,SysadminDeleteSchedulesRequest.class);
     		//get the request in the form of a class
-    		ArrayList<String> scheduleIds = request.scheduleIds;
+    		String days = request.days;
     		
-    		if(scheduleIds == null) { //return invalid if null
+    		if(days == null) { //return invalid if null
     			httpResponse = new SysadminDeleteSchedulesResponse(400);
         		jsonResponse.put("body", new Gson().toJson(httpResponse));
     		} else {
     			
-    			for(String scheduleId : scheduleIds) { //delete all the id's we received
+    			try {
     				
-    				try {
-    					new ScheduleDAO().deleteSchedule(scheduleId);
-    				} catch(Exception e) {
-    					logger.log(e.toString());
+    				int numDays = Integer.parseInt(days);
+    				LocalDateTime lowerBound = LocalDateTime.now().minusDays(numDays);
+    				ArrayList<Schedule> schedules = retrieveSchedules(lowerBound);
+    				
+    				for(Schedule s : schedules) {
+    					new ScheduleDAO().deleteSchedule(s.scheduleId);
     				}
     				
+    				httpResponse = new SysadminDeleteSchedulesResponse(200);
+            		jsonResponse.put("body", new Gson().toJson(httpResponse));
+    				
+    			} catch(Exception e) {
+    				logger.log(e.toString());
+    				e.printStackTrace();
+    				httpResponse = new SysadminDeleteSchedulesResponse(400);
+            		jsonResponse.put("body", new Gson().toJson(httpResponse));
     			}
     			
-    			httpResponse = new SysadminDeleteSchedulesResponse(200);
-        		jsonResponse.put("body", new Gson().toJson(httpResponse));
     			
     		}
     		
