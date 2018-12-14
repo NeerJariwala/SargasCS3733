@@ -54,7 +54,7 @@ public class DayDAO {
     public ArrayList<Day> getDays(String weekID) throws Exception {
     	ArrayList<Day> result = new ArrayList<Day>();
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Day WHERE Week = ?;");
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Day WHERE Week = ? ORDER BY date;");
             ps.setString(1, weekID);
             ResultSet resultSet = ps.executeQuery();
             
