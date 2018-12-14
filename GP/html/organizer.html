@@ -401,10 +401,10 @@ function displaySchedule(response){
 						if(days[c].timeslots[r].open == 1){
 							tsID = days[c].timeslots[r].timeslotID;
 							status = days[c].timeslots[r].open;
- 							table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,status);">' + '</td>';
+ 							table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,1);">' + '</td>';
  						}
  						else{
- 							if(meetings[c]!=null){
+ 							if(meetings[c]!=null && meetings[r]!=null){
  							for(m=0;m<meets;m++){
  								if(meetings[m].timeslot == days[c].timeslots[r].timeslotID){
  								name = meetings[m].name;
@@ -417,7 +417,7 @@ function displaySchedule(response){
  							else{
  							tsID = days[c].timeslots[r].timeslotID;
  							status = days[c].timeslots[r].open;
- 							table += '<td>' +  '<input type="button" value="Open" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,status);">' + '</td>';
+ 							table += '<td>' +  '<input type="button" value="Open" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,0);">' + '</td>';
  							}
  							}
  					}
@@ -441,12 +441,12 @@ function displaySchedule(response){
 						if(days[c].timeslots[r].open == 1){
 						tsID = days[c].timeslots[r].timeslotID;
 							status = days[c].timeslots[r].open;
- 							table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,status);">' + '</td>';
+ 							table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,1);">' + '</td>';
  						}
  						else{
  						
  							
- 							if(meetings[c]!=null){
+ 							if(meetings[c]!=null && meetings[r] != null){
  							for(m=0;m<meets;m++){
  								if(meetings[m].timeslot == days[c].timeslots[r].timeslotID){
  								name = meetings[m].name;
@@ -459,7 +459,7 @@ function displaySchedule(response){
  							else{
  							tsID = days[c].timeslots[r].timeslotID;
  							status = days[c].timeslots[r].open;
- 							table += '<td>' +  '<input type="button" value="Open" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,status);">' + '</td>';
+ 							table += '<td>' +  '<input type="button" value="Open" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,0);">' + '</td>';
  							}
  							
  							
@@ -469,11 +469,11 @@ function displaySchedule(response){
  				else if(days[c].timeslots[r].open == 1){
  				tsID = days[c].timeslots[r].timeslotID;
  				status = days[c].timeslots[r].open;
- 				table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,status);">' + '</td>';
+ 				table += '<td>' + '<input type="button" value="Close" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,1);">' + '</td>';
  				}
  				else{
  				tsID = days[c].timeslots[r].timeslotID;
- 							if(meetings[0]!=null){
+ 							if(meetings[c]!=null && meetings[r] != null){
  							for(m=0;m<meets;m++){
  								if(meetings[m].timeslot == tsID){
  								name = meetings[m].name;
@@ -486,7 +486,7 @@ function displaySchedule(response){
  							else{
  							tsID = days[c].timeslots[r].timeslotID;
  							status = days[c].timeslots[r].open;
- 							table += '<td>' +  '<input type="button" value="Open" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,status);">' + '</td>';
+ 							table += '<td>' +  '<input type="button" value="Open" id="'+tsID+'" onClick="JavaScript:handleChangeSlot(this.id,0);">' + '</td>';
  							}
  
  				}
