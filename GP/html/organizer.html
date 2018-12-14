@@ -451,7 +451,7 @@ function displaySchedule(response){
  								if(meetings[m].timeslot == days[c].timeslots[r].timeslotID){
  								name = meetings[m].name;
  								meetingID = meetings[m].meetingID;
- 								tsID = days[c].timeslots[r].timeslotID;
+ 								//tsID = days[c].timeslots[r].timeslotID;
  								}
  							}
  							table += '<td>' + name +  '<br><input type="button" value="Cancel Meeting" id="'+meetingID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
@@ -473,12 +473,12 @@ function displaySchedule(response){
  				}
  				else{
  				tsID = days[c].timeslots[r].timeslotID;
- 							if(meetings[c]!=null){
+ 							if(meetings[0]!=null){
  							for(m=0;m<meets;m++){
- 								if(meetings[m].timeslot == days[c].timeslots[r].timeslotID){
+ 								if(meetings[m].timeslot == tsID){
  								name = meetings[m].name;
  								meetingID = meetings[m].meetingID;
- 								tsID = days[c].timeslots[r].timeslotID;
+ 								//tsID = days[c].timeslots[r].timeslotID;
  								}
  							}
  							table += '<td>' + name +  '<br><input type="button" value="Cancel Meeting" id="'+meetingID+'" onClick="JavaScript:handleCancelMeeting(this.id);">' + '</td>';
